@@ -1,0 +1,28 @@
+Contribution: 
+This paper presents a new model to calculate. 
+Also it proposes a prototype tool which can .
+
+An empirical analyzes has been applied into the projects to compare the results of the model with Reuse Percent. 
+The results show that the model has better indication of the improvement of software quality and productivity rather than Reuse Percent which I think can be very useful.
+I think the paper makes an acceptable for publication.
+
+
+
+The paper I reviewed is pretty interesting and attractive. 
+I strongly recommend the conference to accept this paper except the author can explain the plagiarism questions below:
+
+There is another paper written by "" who are not related to the paper author I reviewed. 
+This paper is called "" which is published at " and could be found at "www"
+
+Both these two papers are 80% similar, in how to organise the paper, the chart, the figure, even the results.
+Here some examples are given: (Left is the paper I reviewed, right is the publish paper)
+1. A: equations at the page 2            B. Figure at Page 132
+2. A: Figure 1 at the page 2             B. Figure 1 at Page 132
+3. A: Figure 2 and 3 at Page 3           B: Figure 3. Watermark Recovery at Page 133
+4. A: Figure 4 and 5                     B: Figure 4
+
+The examples are exactly the same, they could not be a coincidence. 
+Also in the paper I found some equations are images and they are blurred. 
+They should not be that way, the author should type the equation. 
+So maybe the author make a screen shot from the original paper.
+

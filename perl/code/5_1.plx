@@ -1,0 +1,4 @@
+use warnings;
+
+print reverse(<>);
+

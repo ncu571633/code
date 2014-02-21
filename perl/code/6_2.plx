@@ -1,0 +1,1 @@
+my $names = chomp(<STDIN>);

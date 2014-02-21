@@ -1,0 +1,56 @@
+1. How the virtual function is implemented in C++
+virtual table
+
+2. difference between virtual function and pure virtual function.
+
+
+3. Implement an ordered linked list.
+
+#include ""
+
+int main(int argc, char **argv)
+{
+    Node * n = NULL;
+
+    addNode(n, 1);
+    addNode(n, -1);
+    addNode(n, 2);
+    addNode(n, 3);
+    printLinkList(n);
+    return 1;
+}
+
+Result: -1, 1, 2, 3
+
+4.Determine if a Sudoku is valid
+ The Sudoku board could be partially filled, where empty cells are filled with the character '.'.
+
+class Solution {
+public:
+    bool isValidSudoku(vector<vector<char> > &board) {
+
+       
+    }
+};
+
+
+
+Given a binary tree, check whether it is a mirror of itself (ie, symmetric around its center).
+
+For example, this binary tree is symmetric:
+
+    1
+   / \
+  2   2
+ / \ / \
+3  4 4  3
+
+But the following is not:
+
+    1
+   / \
+  2   2
+   \   \
+   3    3
+
+

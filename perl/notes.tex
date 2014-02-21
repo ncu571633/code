@@ -1,0 +1,117 @@
+\title{Perl Notes}
+%\author{}
+\date{\today}
+
+\documentclass[12pt]{article}
+
+\begin{document}
+\maketitle
+
+\begin{enumerate}
+\item Perl Built-in Warnings 
+\begin{verbatim}
+#!/usr/bin/perl
+use warnings; 
+use diagnostics; 
+\end{verbatim}
+Or
+\begin{verbatim}
+\$ perl -w program 
+\end{verbatim}
+
+\item Single-Quoted and Double-Quoted String
+
+if you wish to use a backslash escape (like $\backslash n$ to mean a newline character), you'll need to use the double quotes. 
+
+\item String Operators 
+\begin{enumerate}
+\item concatenate, or join, string values: . Operator. 
+\item string repetition operator: single lowercase letter x 
+\end{enumerate}
+
+\item Automatic Conversion Between Numbers and Strings 
+
+\item Getting User Input 
+Each time you use $\textless STDIN\textgreater$ in a place where Perl expects a scalar value, Perl reads the 
+next complete text line from standard input (up to the first newline) 
+chomp() removes $\backslash n$ 
+
+
+\item String comparison operators
+\begin{enumerate}
+\item qual: eq
+\item Not equal: ne
+\item Less than: lt
+\item Greater than: gt
+\item Less than or equal to le
+\item Greater than or equal to: ge
+\end{enumerate}
+
+\item 
+Special Array Indices
+the last element index: \$\#name
+1 (the last element), 2 (the middle element)
+
+List Literals:
+a list of comma separated values enclosed in parentheses.
+(1, 2, 3)
+
+.. range operator
+(1..5) \# same as (1, 2, 3, 4, 5)
+(5..1) \# empty list; .. only counts "uphill"
+
+The qw Shortcut
+qw( fred barney betty wilma dino ) # same as above, but less typing
+qw stands for quoted words or quoted by whitespace,
+The previous two examples have used parentheses as the delimiter, but Perl actually lets you choose any punctuation character as the delimiter. 
+qw! fred barney betty wilma dino !
+qw/ fred barney betty wilma dino /
+qw# fred barney betty wilma dino # # like in a comment!
+
+List Assignment
+\begin{verbatim}
+($fred, $barney, $dino) = ("flintstone", "rubble", undef);
+\end{verbatim}
+
+swap:
+\begin{verbatim}
+($fred, $barney) = ($barney, $fred); # swap those values
+($betty[0], $betty[1]) = ($betty[1], $betty[0]);
+\end{verbatim}
+
+\begin{verbatim}
+($rocks[0], $rocks[1], $rocks[2], $rocks[3]) = qw/talc mica feldspar quartz/;
+@rocks is all of the rocks.
+@rocks  = qw/ bedrock slate lava /;
+@tiny   = ( );                       # the empty list
+@giant  = 1..1e5;                    # a list with 100,000 elements
+@stuff  = (@giant, undef, @giant);   # a list with 200,001 elements
+$dino   = "granite";
+@quarry = (@rocks, "crushed rock", @tiny, $dino);
+\end{verbatim}
+
+The pop and push Operators: do things to the end of an array
+\begin{verbatim}
+$fred = pop(@array);
+push(@array, 0);
+\end{verbatim}
+
+The shift and unshift Operators: perform the corresponding actions on
+the start of the array
+
+splice operator: remove or add elements to the middle
+
+
+\end{enumerate}
+
+
+%\bibliographystyle{abbrv}
+%\bibliography{main}
+
+
+\end{document}
+
+
+
+
+
