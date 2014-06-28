@@ -7,18 +7,14 @@
 
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
-#HISTCONTROL=ignoreboth
-export HISTCONTROL=ignoredups:erasedups
+HISTCONTROL=ignoreboth
 
 # append to the history file, don't overwrite it
 shopt -s histappend
 
-# After each command, save and reload history
-export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
-
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-HISTSIZE=3000
-HISTFILESIZE=3000
+HISTSIZE=1024
+HISTFILESIZE=2048
 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
@@ -91,12 +87,13 @@ fi
 alias l='ls -CF'
 alias la='ls -A'
 alias ll='ls -alF'
-alias ls="ls -latrh --color"
+alias ls="ls -lah --color"
 alias list="ls -latrh --color"  
 #alias rm="bin\safe_rm" 
 #alias mv="mv -i" 
 #alias cp="cp -i" 
 alias vi="vim"
+alias g++="g++ -std=c++0x"
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
@@ -118,3 +115,8 @@ fi
 if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
 fi
+
+# echo each command before executing
+# leave it at the end of the file to avoid printing all previous commands
+# when open a new shell
+set -x
