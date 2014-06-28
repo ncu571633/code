@@ -93,7 +93,7 @@ alias list="ls -latrh --color"
 #alias mv="mv -i" 
 #alias cp="cp -i" 
 alias vi="vim"
-alias g++="g++ -std=c++0x"
+alias g++="g++ -std=c++0x -Wall"
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
@@ -118,5 +118,5 @@ fi
 
 # echo each command before executing
 # leave it at the end of the file to avoid printing all previous commands
-# when open a new shell
-set -x
+# when open a new shell ('tab' is annoying)
+# set -x
