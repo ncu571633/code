@@ -5,9 +5,10 @@ use diagnostics;
 
 my $linkname = "http://www.metropcs.com/metro/category/PhonesandMore/Phones/cat170019";
 my $filename = "cat170019";
-my $cellname = "TOUCH Evolve";
-#my $cellname = "LG Optimus F6";
+#my $cellname = "TOUCH Evolve";
+my $cellname = "LG Optimus F6";
 my $onStock = "addItemToCart";
+my $timeSlot = 5;
 
 sub downloadWebPage()
 {
@@ -31,15 +32,20 @@ sub parseWeb()
 		}
 	}
 
-	printf ("Woops! Cell phone out of stock.\n");
+	printf ("Woops! Cell phone out of stock.\n\n");
 	close(FILE1);
 	#remove file
 	unlink $filename;
 	return 0;
 }
 
-
-downloadWebPage();
-if(parseWeb()) {
-	printf ("Congrations! Cell phone on stock.\n");
+while(1)
+{
+	downloadWebPage();
+	if(parseWeb()) {
+		printf ("Congrations! Cell phone on stock.\n\n");
+		exit;
+	}
+	printf ("Checking in the next %d seconds.\n\n", $timeSlot);
+	sleep($timeSlot);
 }
