@@ -16,3 +16,10 @@ public:
         return count;
     }
 };
+
+
+or 
+
+if(n%2)
+	count++;
+n = n/2;
