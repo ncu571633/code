@@ -43,8 +43,7 @@ void idle()
 void cntl_c_handler(int dummy)
 {
     std::cout<< "You just typed cntl-c\n";
-    // longjmp() out of a signal handler, and back into your program
-    
+    return; 
     signal(SIGINT, cntl_c_handler);
 }
 
