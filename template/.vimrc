@@ -35,17 +35,17 @@ set smarttab
 set nu
 set mouse=a
 
+set sm "show matching brace or parentheses while inserting 
 "auto match {}
-set sm
-inoremap ( ()<LEFT>
-inoremap { {}<LEFT>
-inoremap [ []<LEFT>
+"inoremap ( ()<LEFT>
+"inoremap { {}<LEFT>
+"inoremap [ []<LEFT>
 
 set ruler
 set background=dark
 
 " uncomment to insert spaces instead of a tab when tab is pressed
-"set expandtab
+set expandtab
 
 " uncomment to use a different color map
 ":hi Comment   term=bold cterm=NONE ctermfg=Blue ctermbg=NONE gui=NONE guifg=Blue guibg=NONE
