@@ -16,11 +16,11 @@ For example:
 class Solution {
 public:
     int titleToNumber(string s) {
-        int no = 0;
-        for(int i=s.length()-1; i>=0; i--)
+        int n = 0;
+        for(int i=s.size()-1; i>=0; i--)
         {
-            no += (s[i]-'A'+1)*pow(26, (s.length()-i-1));
+            n += (s[i]-'A'+1)*pow(26, s.size()-i-1);
         }
-        return no;
+        return n;
     }
 };
