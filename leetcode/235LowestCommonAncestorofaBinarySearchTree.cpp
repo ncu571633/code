@@ -24,37 +24,34 @@ For example, the lowest common ancestor (LCA) of nodes 2 and 8 is 6. Another exa
  */
 class Solution {
 public:
-    bool isDescendant(TreeNode* a, TreeNode* p)
-    {
-        if(!a)
-            return false;
-        if(a==p)
-            return true;
-        return isDescendant(a->left, p) || isDescendant(a->right, p);
-    }
-    
     TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
         if(!root)
-            return nullptr;
-            
-        bool a = isDescendant(root->left, q), c = isDescendant(root->left, p);
-        // q left, p left
-        if(a && c)
+            return root;
+        if(p->val > q->val)
+            swap(p, q);
+        if(p->val>root->val)
+            return lowestCommonAncestor(root->right, p, q);
+        if(q->val<root->val)
             return lowestCommonAncestor(root->left, p, q);
-        
-        bool b = isDescendant(root->right, q), 
-        d = isDescendant(root->right, p);
-        // q right, p right
-        if(b && d)
-            return lowestCommonAncestor(root->right, p, q);       
-        
-        // q left, p right; q right, p left
-        if(a&&d || b&&c)
-            return root;
-        
-        if((root==p)&&(a||b) || (root==q)&&(c||d))
-            return root;
-            
-        return nullptr;
+        return root;
+    }
+};
+
+
+class Solution {
+public:
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        if(p->val > q->val)
+            swap(p, q);
+        while(root) {
+            if(root->val < p->val) {
+                root = root->right;
+            } else if(root->val > q->val) {
+                root = root->left;
+            } else {
+                return root;
+            }
+        }
+        return root;
     }
 };
