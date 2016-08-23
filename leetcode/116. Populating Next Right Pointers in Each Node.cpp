@@ -51,3 +51,21 @@ public:
         connect(root->right);
     }
 };
+
+
+
+
+class Solution {
+public:
+    void connect(TreeLinkNode *root) {
+        for(TreeLinkNode* i=root; i; i=i->left){
+            if(i->left == nullptr)
+                break ;
+            for(TreeLinkNode* j=i; j; j=j->next) {
+                j->left->next = j->right;
+                if(j->next)
+                    j->right->next = j->next->left;
+            }
+        }
+    }
+};
