@@ -21,29 +21,25 @@ After calling your function, the tree should look like:
     4-> 5 -> 7 -> NULL
 */
 
-/**
+/*
  * Definition for binary tree with next pointer.
- * struct TreeLinkNode {
- *  int val;
- *  TreeLinkNode *left, *right, *next;
- *  TreeLinkNode(int x) : val(x), left(NULL), right(NULL), next(NULL) {}
- * };
  */
+ #include "stdio.h"
+ struct TreeLinkNode {
+   int val;
+   TreeLinkNode *left, *right, *next;
+   TreeLinkNode(int x) : val(x), left(NULL), right(NULL), next(NULL) {}
+  };
+
+#if 0
 class Solution {
 public:
-    TreeLinkNode *findNext(TreeLinkNode *node)
-    {
-        if(!node)
-            return nullptr;
-            
-        TreeLinkNode *p = node;
-        while(p)
-        {
-            if(p->left)
-                return p->left;
-            if(p->right)
-                return p->right;
-            p = p->next;
+    TreeLinkNode * findNext(TreeLinkNode *first) {
+        for(TreeLinkNode *t=first; t; t=t->next) {
+            if(t->left)
+                return t->left;
+            if(t->right)
+                return t->right;
         }
         return nullptr;
     }
@@ -64,3 +60,47 @@ public:
         connect(root->left);
     }
 };
+#endif
+
+TreeLinkNode * findNext(TreeLinkNode *root) {
+    for(TreeLinkNode *t=root->next; t; t=t->next) {
+        if(t->left)
+            return t->left;
+        if(t->right)
+            return t->right;
+    }
+    return nullptr;
+}
+void connect(TreeLinkNode *root) {
+    if(!root)
+        return;
+    TreeLinkNode *nexti = root;
+    while(nexti) {
+        TreeLinkNode *nextj = nexti;
+        while(nextj) {
+            if(nextj->left) {
+                if(nextj->right) {
+                    nextj->left->next = nextj->right;
+                } else {
+                    nextj->left->next = findNext(nextj);
+                }
+            }
+            if(nextj->right) {
+                nextj->right->next = findNext(nextj); 
+            }
+            nextj = nextj->next;
+        }
+
+        if(nexti->left)
+            nexti=nexti->left;
+        else if(nexti->right)
+            nexti=nexti->right;
+        else nexti = findNext(nexti);
+    }
+}
+
+int main() 
+{
+    TreeLinkNode t(0);
+    connect(&t);
+}
