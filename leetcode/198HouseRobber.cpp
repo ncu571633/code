@@ -11,11 +11,9 @@ public:
             return 0;
         vector<int> v(nums.size(), 0);
         int r = 0;
-        v[0] = nums[0];
-        v[1] = max(nums[0], nums[1]);
-        for(int i=2; i<nums.size(); i++) {
+        for(int i=0; i<nums.size(); i++) {
             v[i] = nums[i];
-            for(int j=0; j<i-1; i++) {
+            for(int j=0; j<i-1; j++) {
                 v[i] = max(v[i], v[j]+nums[i]);
             }
             if(r < v[i])
@@ -24,4 +22,3 @@ public:
         return r;
     }
 };
-
