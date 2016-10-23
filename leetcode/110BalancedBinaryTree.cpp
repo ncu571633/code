@@ -8,9 +8,7 @@ public:
     int getHeight(TreeNode* root) {
         if(!root)
             return 0;
-        int l = getHeight(root->left) + 1;
-        int r = getHeight(root->right) + 1;
-        return (l>r)? l: r;
+        return 1 + max(getHeight(root->left), getHeight(root->right));
     }    
     bool isBalanced(TreeNode* root) {
         if(!root)
