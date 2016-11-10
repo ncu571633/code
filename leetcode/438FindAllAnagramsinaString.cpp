@@ -1,3 +1,4 @@
+/*
 Given a string s and a non-empty string p, find all the start indices of p's anagrams in s.
 
 Strings consists of lowercase English letters only and the length of both strings s and p will not be larger than 20,100.
@@ -41,6 +42,29 @@ public:
             string t = string(s, i, p.size());
             sort(t.begin(), t.end());
             if(t == p)
+                v.push_back(i);
+        }
+        return v;
+    }
+};
+*/
+#include 
+class Solution {
+public:
+    vector<int> findAnagrams(string s, string p) {
+        vector<int> v;
+        if(s.size()<p.size())
+            return v;
+        map<char, int> t1, t2;
+        for(int i=0; i<p.size(); i++) {
+            t1[s[i]] ++, t2[p[i]]++;
+        }
+        if(t1==t2)
+            v.push_back(0);
+        for(int i=1; i<=s.size()-p.size(); i++) {
+            t1[s[i-1]]--;
+            t1[s[i+p.size()-1]]++;
+            if(t1 == t2)
                 v.push_back(i);
         }
         return v;
