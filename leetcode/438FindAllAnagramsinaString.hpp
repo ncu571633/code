@@ -63,10 +63,7 @@ public:
         if(t1==t2)
             v.push_back(0);
         for(int i=1; i<=s.size()-p.size(); i++) {
-            if(t1[s[i-1]]==1)
-                t1.erase(s[i-1]);
-            else
-                t1[s[i-1]]--;
+            t1[s[i-1]]--;
             t1[s[i+p.size()-1]]++;
             if(t1 == t2)
                 v.push_back(i);
