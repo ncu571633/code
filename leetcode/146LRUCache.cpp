@@ -1,0 +1,40 @@
+ Design and implement a data structure for Least Recently Used (LRU) cache. It should support the following operations: get and set.
+
+get(key) - Get the value (will always be positive) of the key if the key exists in the cache, otherwise return -1.
+set(key, value) - Set or insert the value if the key is not already present. When the cache reached its capacity, it should invalidate the least recently used item before inserting a new item. 
+
+class LRUCache{
+private:
+    map<int, list<pair<int, int>>::iterator> m;
+    list<pair<int, int>> l;
+    int size;
+public:
+    LRUCache(int capacity) {
+        size = capacity;
+    }
+    
+    int get(int key) {
+        if(m.count(key) == 0)
+            return -1;
+        int value = m[key]->second;
+        if(m[key] != l.begin()) {
+            l.erase(m[key]);
+            l.push_front({key, value});
+            m[key] = l.begin();
+        }
+        return value;
+    }
+    
+    void set(int key, int value) {
+       if(!m.count(key)) {
+           if(l.size() == size) {
+                m.erase(prev(l.end())->first);
+                l.erase(prev(l.end()));
+           }
+       } else {
+            l.erase(m[key]);
+       }
+       l.push_front({key, value});
+       m[key] = l.begin();
+    }
+};
