@@ -58,9 +58,40 @@ public:
  * int param_4 = obj.getMin();
  */
  
+class MinStack {
+private:
+    stack<int> s;
+    stack<int> smin;
+public:
+    /** initialize your data structure here. */
+    MinStack() {
+        
+    }
+    
+    void push(int x) {
+        s.push(x);
+        if(smin.empty() || smin.top()>=x)
+            smin.push(x);
+    }
+    
+    void pop() {
+        if(s.empty())
+            return ;
+        if(s.top() == smin.top()) 
+            smin.pop();
+        s.pop();
+    }
+    
+    int top() {
+        return s.top();
+    }
+    
+    int getMin() {
+        return smin.top();
+    }
+}; 
  
- 
- class MinStack {
+class MinStack {
 private:
     stack<int> s;
     stack<pair<int, int>> smin;
@@ -72,17 +103,23 @@ public:
     
     void push(int x) {
         s.push(x);
-        if(smin.empty() || smin.top().first>x)
-            smin.push(make_pair(x, 1));
-        if(!smin.empty() && smin.top().first==x)
-            smin.top().second++;
+        if(smin.empty()) {
+            smin.push({x, 1});
+        } else {
+            if(smin.top().first==x)
+                smin.top().second++;
+            if(smin.top().first>x)
+                smin.push({x, 1});
+        }
     }
     
     void pop() {
-        if(s.top()==smin.top().first && smin.top().second>0)
+        if(s.top()==smin.top().first)
+        {
             smin.top().second--;
-        if(s.top()==smin.top().first && smin.top().second==1)
-            smin.pop();            
+            if(smin.top().second==0)
+                smin.pop();
+        }
         s.pop();
     }
     
@@ -94,4 +131,3 @@ public:
         return smin.top().first;
     }
 };
-
