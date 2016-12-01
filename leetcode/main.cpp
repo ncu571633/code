@@ -1,9 +1,8 @@
-#include "44WildcardMatching.hpp"
+#include "69Sqrt.hpp"
 
 int main(int argc, char** argv) {
     Solution s;
-    s.isMatch(string("aaabbbaabaaaaababaabaaabbabbbbbbbbaabababbabbbaaaaba"), string("a*******b"));
-
+    cout << s.mySqrt(0.01);
     return 1;
 }
 
