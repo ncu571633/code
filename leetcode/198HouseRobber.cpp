@@ -18,6 +18,6 @@ public:
         for(int i=2; i<nums.size(); i++) {
             v[i] = max(v[i-1], v[i-2]+nums[i]);
         }
-        return v[nums.size()-1];
+        return v.back();
     }
 };
