@@ -9,19 +9,16 @@ s = "rat", t = "car", return false.
 class Solution {
 public:
     bool isAnagram(string s, string t) {
-        if(s.length() != t.length())
+        if(s.size()!=t.size())
             return false;
-        if(s.length() == 0)
+        if(s.empty())
             return true;
-        std::vector<int> temp(26, 0);
-        for(int i=0; i<s.length(); i++)
-        {
-            temp[s[i]-'a']++;
-            temp[t[i]-'a']--;
+        vector<int> v(256, 0);
+        for(int i=0; i<s.size(); i++) {
+            v[s[i]]++, v[t[i]]--;
         }
-        for(int i=0; i<26; i++)
-        {
-            if(temp[i])
+        for(int i=0; i<256; i++) {
+            if(v[i] != 0)
                 return false;
         }
         return true;
