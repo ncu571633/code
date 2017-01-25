@@ -14,14 +14,28 @@ public:
     ListNode* reverseList(ListNode* head) {
         if(!head || head->next == nullptr)
             return head;
-        ListNode* t = head->next;
-        while(t)
+        ListNode* p = head->next;
+        head->next = nullptr;
+        while(p)
         {
-            ListNode* a = t->next;
-            t->next = head;
-            head = t;
-            t = a;
+            ListNode* t = p->next;
+            p->next = head;
+            head = p;
+            p = t;
         }
         return head;
+    }
+};
+
+class Solution {
+public:
+    ListNode* reverseList(ListNode* head) {
+        if(!head || head->next==nullptr)
+            return head;
+        ListNode* p = head->next;
+        ListNode* n = reverseList(head->next);
+        head->next = nullptr;  
+        p->next = head;  
+        return n;        
     }
 };
