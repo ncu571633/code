@@ -31,27 +31,24 @@ public:
 
 class Solution {
 public:
-    ListNode *swapPairs(ListNode *head) {
-        // Start typing your C/C++ solution below
-        // DO NOT write int main() function
-        if(head==NULL || head->next==NULL)
+    ListNode* swapPairs(ListNode* head) {
+        if(!head || head->next==nullptr)
             return head;
-        ListNode *l = new ListNode (0);
-        l->next = head;
-        ListNode *p1 = head, *p2 = head->next;
-        head = NULL;
-        while(p1!=NULL && p2!=NULL)
-        {
-            p1->next = p2->next;
-            p2->next = p1;            
-            l->next = p2;
-            if(head==NULL)
-               head = l;
-            l = p1;
-            p1=p1->next;
-            if(p1!=NULL)
-                p2= p1->next;
+
+        ListNode* t1=head, *t2=head->next;
+        head=t2;
+        while(t1 && t2) {
+            ListNode* t = t2->next;
+            t2->next = t1;
+            if(t && t->next)
+                t1->next = t->next;
+            else
+                t1->next = t;
+            t1 = t;
+            if(t) {
+                t2=t->next;
+            }
         }
-        return head->next;
+        return head;
     }
 };

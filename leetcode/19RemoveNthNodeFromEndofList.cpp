@@ -18,17 +18,17 @@ For example,
 class Solution {
 public:
     ListNode* removeNthFromEnd(ListNode* head, int n) {
-        ListNode* newNode = new ListNode(0);
-        newNode->next = head;
-        head = newNode;
-        if(!(head->next))
-            return nullptr;
-        ListNode*l1=head, *l2=head;
-        for(int i=1; i<=n; i++)
-            l2=l2->next;
-        for(; l2->next; l2=l2->next)
-            l1=l1->next;
-        l1->next = l1->next->next;
+        ListNode* t1 = new ListNode(0);
+        t1->next = head;
+        head = t1;
+        for(int i=0; i<n; i++)
+            t1=t1->next;
+        ListNode* t2=head;
+        while(t1->next) {
+            t1=t1->next;
+            t2=t2->next;
+        }
+        t2->next = t2->next->next;
         return head->next;
     }
 };

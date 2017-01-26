@@ -12,24 +12,6 @@ Reverse a singly linked list.
 class Solution {
 public:
     ListNode* reverseList(ListNode* head) {
-        if(!head || head->next == nullptr)
-            return head;
-        ListNode* p = head->next;
-        head->next = nullptr;
-        while(p)
-        {
-            ListNode* t = p->next;
-            p->next = head;
-            head = p;
-            p = t;
-        }
-        return head;
-    }
-};
-
-class Solution {
-public:
-    ListNode* reverseList(ListNode* head) {
         if(!head || head->next==nullptr)
             return head;
         ListNode* p = head->next;
@@ -39,3 +21,22 @@ public:
         return n;        
     }
 };
+
+class Solution {
+public:
+    ListNode* reverseList(ListNode* head) {
+        if(!head)
+            return head;
+
+        ListNode* t = head->next;
+        head->next = nullptr;
+        while(t) {
+            ListNode* n = t->next;
+            t->next = head;
+            head = t;
+            t = n;
+        }
+        return head;
+    }
+};
+

@@ -18,13 +18,12 @@ public:
     ListNode* deleteDuplicates(ListNode* head) {
         if(!head)
             return head;
-        for(ListNode* t1=head, *t2=head->next; t2; ) {
-            if(t2->val == t1->val) {
-                t1->next = t2->next;
-            } else {
-                t1 = t2;
-            }
-            t2 = t1->next;
+        ListNode *t = head;
+        while(t && t->next) {
+            if(t->val == t->next->val)
+                t->next = t->next->next;
+            else
+                t = t->next;
         }
         return head;
     }

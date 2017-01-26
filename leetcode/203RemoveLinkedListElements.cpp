@@ -15,14 +15,34 @@ Return: 1 --> 2 --> 3 --> 4 --> 5
 class Solution {
 public:
     ListNode* removeElements(ListNode* head, int val) {
-        ListNode* node = new ListNode(0);
-        node->next = head;
-        for(head = node; head && head->next; ) {
-            if(head->next->val == val)
-                head->next = head->next->next;
-            else 
-                head = head->next;
+        if(!head)
+            return head;
+
+        if(head->val==val)
+            return removeElements(head->next, val);
+        else {
+            head->next = removeElements(head->next, val);
+            return head;
         }
-        return node->next;
+    }
+};
+
+class Solution {
+public:
+    ListNode* removeElements(ListNode* head, int val) {
+        if(!head)
+            return head;
+
+        ListNode* t = new ListNode(0);
+        t->next = head;
+        head = t;
+        while(t->next) {
+            if(t->next->val == val) {
+                t->next = t->next->next;
+            } else {
+                t = t->next;
+            }
+        }
+        return head->next;
     }
 };
