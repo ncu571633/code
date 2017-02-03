@@ -10,33 +10,24 @@ Here is an example of version numbers ordering:
 
 0.1 < 1.1 < 1.2 < 13.37
 */
-#include <string>
-using namespace std;
-
+#include "main.hpp"
 class Solution {
 public:
     int compareVersion(string version1, string version2) {
-        int i = version1.find('.'), j = version2.find('.');
-        int a = stoi(string(version1, 0, i));
-        int b = stoi(string(version2, 0, j));
-        if(a>b)
-            return -1;
-        if(a<b)
+        int index1 = version1.find('.'), index2 = version2.find('.');
+        int v1 = atoi(version1.substr(0, index1).c_str());
+        int v2 = atoi(version2.substr(0, index2).c_str());
+        if(v1>v2)
             return 1;
-        a = stoi(string(version1, i+1, version1.size()-i));
-        b = stoi(string(version2, j+1, version2.size()-i));
-        if(a>b)
+        if(v1<v2)
             return -1;
-        if(a<b)
+        if(index1==-1 && index2==-1)
+            return 0;
+        if(index1==-1 && index2!=-1)
+            return -1;
+        if(index1!=1 && index2==-1)
             return 1;
-        return 0;
+        return compareVersion(version1.substr(version1.find('.')+1), 
+            version2.substr(version2.find('.')+1));
     }
 };
-
-
-int main()
-{
-	Solution s;
-    s.compareVersion(string("0.1"), string("13.37"));
-    return 0;
-}
