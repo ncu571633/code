@@ -59,3 +59,25 @@ public:
         return r;
     }
 };
+
+class Solution {
+public:
+    string frequencySort(string s) {
+        if(s.empty())
+            return s;
+        map<char, int> m;
+        for(int i=0; i<s.size(); i++) {
+            m[s[i]]++;
+        }
+        multimap<int, char> t;
+        for(auto it=m.begin(); it!=m.end(); it++) {
+            t.insert({it->second, it->first});
+        }
+        string r;
+        for(auto it=t.begin(); it!=t.end(); it++) {
+            r = r+string(it->first, it->second);
+        }
+        reverse(r.begin(), r.end());
+        return r;
+    }
+};

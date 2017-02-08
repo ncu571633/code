@@ -47,6 +47,33 @@ private:
     multiset<long> large;
 };
 
+class MedianFinder {
+    priority_queue<int> maxq;
+    priority_queue<int, vector<int>, greater<int>> minq;
+public:
+    /** initialize your data structure here. */
+    MedianFinder() {
+        
+    }
+    
+    void addNum(int num) {
+        maxq.push(num);
+        minq.push(maxq.top());
+        maxq.pop();
+        if(minq.size()>maxq.size()) {
+            maxq.push(minq.top());
+            minq.pop();
+        }
+    }
+    
+    double findMedian() {
+        if(maxq.size() == minq.size())
+            return (maxq.top()+minq.top())/2.0;
+        else
+            return maxq.top();
+    }
+};
+
 int main() {
     MedianFinder m;
     m.addNum(4);

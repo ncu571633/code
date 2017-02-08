@@ -29,3 +29,45 @@ public:
         return v;
     }
 };
+
+
+class Solution {
+public:
+    vector<int> topKFrequent(vector<int>& nums, int k) {
+        unordered_map<int, int> m;
+        for(int i=0; i<nums.size(); i++) {
+            m[nums[i]]++;
+        }
+        multimap<int, int> m2;
+        for(auto it=m.begin(); it!=m.end(); it++) {
+            m2.insert({it->second, it->first});
+        }
+        int i=0;
+        vector<int> v;
+        for(auto it=m2.rbegin(); it!=m2.rend()&&i<k; i++, it++) {
+            v.push_back(it->second);
+        }
+        return v;
+    }
+};
+
+
+class Solution {
+public:
+    vector<int> topKFrequent(vector<int>& nums, int k) {
+        unordered_map<int, int> m;
+        for(int i=0; i<nums.size(); i++) {
+            m[nums[i]]++;
+        }
+        multimap<int, int, greater<int>> m2;
+        for(auto it=m.begin(); it!=m.end(); it++) {
+            m2.insert({it->second, it->first});
+        }
+        int i=0;
+        vector<int> v;
+        for(auto it=m2.begin(); it!=m2.end()&&i<k; i++, it++) {
+            v.push_back(it->second);
+        }
+        return v;
+    }
+};
