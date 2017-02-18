@@ -36,3 +36,23 @@ public:
         return m;
     }
 };
+
+class Solution {
+public:
+    void subsetsWithDup(vector<int>& nums, set<vector<int>> &m, vector<int>&v, int start) {
+        for(int j=start; j<nums.size(); j++) {
+            v.push_back(nums[j]);
+            m.insert(v);
+            subsetsWithDup(nums, m, v, j+1);
+            v.pop_back();
+        }
+    }
+    vector<vector<int>> subsetsWithDup(vector<int>& nums) {
+        set<vector<int>> m;
+        vector<int>v;
+        m.insert(v);
+        sort(nums.begin(), nums.end());
+        subsetsWithDup(nums, m, v, 0);
+        return vector<vector<int>> (m.begin(), m.end());
+    }
+};
