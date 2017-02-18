@@ -9,13 +9,11 @@ the contiguous subarray [4,-1,2,1] has the largest sum = 6.
 class Solution {
     public:
         int maxSubArray(vector<int>& nums) {
-            int maxSum = INT_MIN;
-            int sum = 0;
+            int maxSum = INT_MIN, sum = 0;
             for(int i=0; i<nums.size(); i++) {
                 sum += nums[i];
                 maxSum = max(sum, maxSum);
-                if(sum<0)
-                    sum=0;
+                sum = max(sum, 0);
             }
             return maxSum;
         }
