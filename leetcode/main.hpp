@@ -4,6 +4,8 @@
 #include <list>
 #include <vector>
 #include <string>
+#include <queue>
+#include <bitset>
 #include <iostream>
 
 using namespace std;
