@@ -1,8 +1,17 @@
-#include "165CompareVersionNumbers.hpp"
+#include "379DesignPhoneDirectory.hpp"
 
 int main(int argc, char** argv) {
-    Solution s;
-    cout << s.compareVersion(string("1.0"), string("1"));
+    
+    PhoneDirectory directory(3);
+    cout << directory.get() << endl;
+    cout << directory.get() << endl;
+    cout << directory.check(2) << endl;
+    cout << directory.get() << endl;
+    cout << directory.check(2) << endl;
+    cout << directory.get() << endl;
+    directory.release(2);
+    cout << directory.get() << endl;
+    cout << directory.check(2) << endl;
     return 1;
 }
 
