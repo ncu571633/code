@@ -33,7 +33,7 @@ Follow up:
 What if the number of hits per second could be very large? Does your design scale? 
 
 
-
+////////////////////////////////////////////////////////////
 class HitCounter {
 public:
     void hit(int timestamp) {
@@ -51,6 +51,7 @@ private:
     queue<int> q;
 };
 
+////////////////////////////////////////////////////////////
 class HitCounter {
 public:
     void hit(int timestamp) {
@@ -76,3 +77,49 @@ private:
     unordered_map<int, int> time, count;
 };
 
+////////////////////////////////////////////////////////////
+
+class HitCounter {
+private:
+    volatile int reader_count; 
+    pthread_mutex_t lock; 
+public:
+    void hit(int timestamp) {
+        int index = timestamp%300;
+        if(time[index] != timestamp) {
+            counter[index] = 1;
+            time[index] = timestamp;
+        } else {
+            counter[index]++;
+        }
+    }
+      int written = FALSE; 
+  while (!written) 
+  { 
+    pthread_mutex_lock(&b->lock); 
+    if (b->reader_count == 0) 
+    { 
+      write(b, buf); 
+      written = TRUE; 
+    } 
+    pthread_mutex_unlock(&b->lock); 
+      
+      
+    int getHits(int timestamp) {
+        pthread_mutex_lock(&b->lock); 
+        b->reader_count++; 
+        pthread_mutex_unlock(&b->lock); 
+        int ret = 0;
+        for(int i=0; i<300; i++) {
+            if(timestamp - time[i] <= 300)
+                ret += count[index];
+        }
+        pthread_mutex_lock(&b->lock); 
+        b->reader_count--; 
+        pthread_mutex_unlock(&b->lock); 
+        return ret;
+    }
+
+private:
+    unordered_map<int, int> time, count;
+};
