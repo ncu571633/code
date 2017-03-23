@@ -1,17 +1,11 @@
-#include "379DesignPhoneDirectory.hpp"
+#include "291WordPatternII.hpp"
 
 int main(int argc, char** argv) {
     
-    PhoneDirectory directory(3);
-    cout << directory.get() << endl;
-    cout << directory.get() << endl;
-    cout << directory.check(2) << endl;
-    cout << directory.get() << endl;
-    cout << directory.check(2) << endl;
-    cout << directory.get() << endl;
-    directory.release(2);
-    cout << directory.get() << endl;
-    cout << directory.check(2) << endl;
+    Solution s;
+    cout<<s.wordPatternMatch("abab", "redblueredblue")<<endl;   //1
+    cout<<s.wordPatternMatch("aaaa", "asdasdasdasd")<<endl; // 1
+    cout<<s.wordPatternMatch("aabb", "xyzabcxzyabc")<<endl; // 0
     return 1;
 }
 

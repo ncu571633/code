@@ -145,3 +145,15 @@ class PhoneDirectory {
             v[number] = 1;
         }
 };
+
+
+    PhoneDirectory directory(3);
+    cout << directory.get() << endl;
+    cout << directory.get() << endl;
+    cout << directory.check(2) << endl;
+    cout << directory.get() << endl;
+    cout << directory.check(2) << endl;
+    cout << directory.get() << endl;
+    directory.release(2);
+    cout << directory.get() << endl;
+    cout << directory.check(2) << endl;
