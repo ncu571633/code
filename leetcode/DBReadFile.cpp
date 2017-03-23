@@ -2,34 +2,53 @@
 // find whether the string is in a file
 
 bool substr(string s, string buffer) {
-    return buffer.substr(s);
+    if(buffer.empty())
+        return false;
+    return buffer.find(s)!=string:npos; // -1
 }
 
 bool findStringInFile(string s, string path) {
     if(s.empty())
         return true;
     
-    string buffer = read(path); 
+    string buffer = read(path);
     return substr(s, buffer);
 }
 
 /////////////////////////////////////////////////////////////////
+// buffer size = 2*s.size()
+bool substr(string s, string buffer) {
+    int size = s.size();
+    for(int i=0; i<size; i++) {
+        string temp = buffer.substr(i, size);
+        if(temp == s)
+            return true;
+    }
+    return false;
+}
+
 bool findStringInFile(string s, string path) {
      if(s.empty())
         return true;
 
      int size = s.size();
-     string buffer = read(s, 2*size);
-     while() {
-
+     FILE* id = fopen(path, 'r');
+     string buffer = read(id, 2*size);
+     while(!buffer.empty()) {
+        if(substr(s, buffer))
+            return true;
+        buffer = buffer.substr(size, size);
+        buffer += read(id, size);
      }
+     close(id);
 }
 
-// What happen when reading a file
-// time for reading a large array, small array
-
-
 /*
+What happen when reading a file
+Time for reading a large array, small array
+Buffer IO
+Unbuffered IO
+
 Memory Mapping:
 Mapping Files into virtual Memory
 treat the mapped portion as if it were primary memory.
