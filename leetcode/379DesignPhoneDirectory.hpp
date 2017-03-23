@@ -146,6 +146,71 @@ class PhoneDirectory {
         }
 };
 
+O(lgn) time
+Binary search 
+
+left     0 0 1 1 1 1 1 1
+v        0 0 1 0 0 0 0 1
+index    0 1 2 3 4 5 6 7
+
+left     0 0 0 0 0 0 0 1
+v        0 0 0 0 0 0 0 1    
+index    0 1 2 3 4 5 6 7
+    
+v[2] -> 0
+clear memory left (2, 6)    
+    
+class PhoneDirectory {
+    private:
+        bitset<32> v;   // size: 32
+        int size;
+        bit<32> left;
+    public:  
+        /** Initialize your data structure here 
+          @param maxNumbers - The maximum numbers that can be stored in the phone directory. */  
+        PhoneDirectory(int maxNumbers){
+            size = maxNumbers;
+            for(int i=0; i<maxNumbers; i++)
+                v[i] = 1, left[i] = 1, right[i] = 1;
+        }
+
+        // find first 1 in [i, j] region
+        int get(int i, j) {
+            if(!v[j])
+                return -1;
+            int i=0, j=size-1;
+            while(i<=j) {
+                int k = (j-i)/2;
+                if(v[k] = 1) {
+                    v[k] = 0;
+                    if(k!=size-1)
+                        v[k+1]=v[k-1];
+                    
+                    return k;
+                }
+                if(v[k]==0)
+            }        
+        }
+        
+        /** Provide a number which is not assigned to anyone.         
+        @return - Return an available number. Return -1 if none is available. */
+        int get() {
+            int first = get(0, size-1);
+            int second = get(first, size-1);
+            memset(v, first, second);
+        }
+
+        /** Check if a number is available or not. */  
+        bool check(int number) {
+            return v[number];
+        }
+
+        /** Recycle or release a number. */  
+        void release(int number) {
+            v[number] = 1;
+            memset(v, number, size-1);
+        }
+};
 
     PhoneDirectory directory(3);
     cout << directory.get() << endl;
