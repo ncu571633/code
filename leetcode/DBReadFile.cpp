@@ -18,9 +18,9 @@ bool findStringInFile(string s, string path) {
 /////////////////////////////////////////////////////////////////
 // buffer size = 2*s.size()
 bool substr(string s, string buffer) {
-    int size = s.size();
-    for(int i=0; i<size; i++) {
-        string temp = buffer.substr(i, size);
+    int m = s.size();
+    for(int i=0; i<m; i++) {
+        string temp = buffer.substr(i, m);
         if(temp == s)
             return true;
     }
@@ -31,17 +31,21 @@ bool findStringInFile(string s, string path) {
      if(s.empty())
         return true;
 
-     int size = s.size();
+     int m = s.size();
      FILE* id = fopen(path, 'r');
-     string buffer = read(id, 2*size);
+     string buffer = read(id, 2*m);
      while(!buffer.empty()) {
         if(substr(s, buffer))
             return true;
-        buffer = buffer.substr(size, size);
-        buffer += read(id, size);
+        buffer = buffer.substr(m, m);
+        buffer += read(id, m);
      }
      close(id);
 }
+
+// s: size m
+// text: size n
+// time complexity: m*n
 
 /*
 What happen when reading a file
