@@ -24,6 +24,14 @@ public:
     }
 };
 
+///////////////////////////////////////////////////////////////////
+
+bitset<32> b;
+each bit means each byte
+
+
+
+///////////////////////////////////////////////////////////////////
 
 class Solution {
 public:
@@ -64,5 +72,18 @@ public:
             */
         }
         return vector<Interval>(s.begin(), s.end());
+    }
+
+    bool isComplete(set<Interval, classcomp> s)
+    {
+        if(s.empty())
+            return false;
+        int end = s.begin()->end;
+        for(auto it=next(s.begin()); it!=s.end(); it++) {
+            if(it->start != end)
+                return false;
+            end = it->end;
+        }
+        return true;
     }
 };
