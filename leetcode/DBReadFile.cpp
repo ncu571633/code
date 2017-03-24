@@ -46,9 +46,51 @@ bool findStringInFile(string s, string path) {
 // s: size m
 // text: size n
 // time complexity: m*n
-
 /*
+KMP:
+A, B
+Try to find A in B.
+starting from B[i], check each element of A and B
+you can skip some iterations for which no match is possible
+B[i+1], a partial match of j characters starting at position i, you know what's in positions T[i]...T[i+j-1].
+
+Partial match table
+B[i], don't need to start from B[i+1]
+know which index to start
+
+overlap[j] array stores the values of overlap(pattern[0..j-1],pattern)
+
+bool substr(string s, string buffer) {
+    int n = s.size();
+
+    // i for buffer, j for s
+    int i=0, k=0;
+    while (i<n)
+    {
+        int j;
+        for (j=k; i+j<2*n && j<n && buffer[i+j]==s[j]; j++) ;
+        
+        if (j==n) 
+            return true;
+        
+        k = overlap(table, j-1);
+        i = i + max(1, j-k);
+    }
+    return false;
+}
+
+
+
 What happen when reading a file
+1. OS make a system call
+2. check path
+3. permission
+.....inode
+4. open file return a file id, descriptor
+5. use id to access the file
+
+
+
 Time for reading a large array, small array
 Buffer IO
 Unbuffered IO
