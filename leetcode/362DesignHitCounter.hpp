@@ -83,43 +83,36 @@ class HitCounter {
 private:
     volatile int reader_count; 
     pthread_mutex_t lock; 
+    unordered_map<int, int> time, count;
 public:
     void hit(int timestamp) {
         int index = timestamp%300;
-        if(time[index] != timestamp) {
-            counter[index] = 1;
-            time[index] = timestamp;
-        } else {
-            counter[index]++;
+        int written = false; 
+        while(!written) {
+            if(reader_count==0) {
+                pthread_mutex_lock(&lock); 
+                if(time[index] != timestamp) {
+                    counter[index] = 1;
+                    time[index] = timestamp;
+                } else {
+                    counter[index]++;
+                }
+                written = true;
+                pthread_mutex_unlock(&lock); 
+            }
         }
-    }
-      int written = FALSE; 
-  while (!written) 
-  { 
-    pthread_mutex_lock(&b->lock); 
-    if (b->reader_count == 0) 
-    { 
-      write(b, buf); 
-      written = TRUE; 
-    } 
-    pthread_mutex_unlock(&b->lock); 
-      
+    }      
       
     int getHits(int timestamp) {
-        pthread_mutex_lock(&b->lock); 
-        b->reader_count++; 
-        pthread_mutex_unlock(&b->lock); 
         int ret = 0;
+        pthread_mutex_lock(&b->lock); 
+        reader_count++; 
         for(int i=0; i<300; i++) {
             if(timestamp - time[i] <= 300)
                 ret += count[index];
         }
-        pthread_mutex_lock(&b->lock); 
-        b->reader_count--; 
+        reader_count--; 
         pthread_mutex_unlock(&b->lock); 
         return ret;
     }
-
-private:
-    unordered_map<int, int> time, count;
 };
