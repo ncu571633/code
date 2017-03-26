@@ -56,6 +56,35 @@ private:
     stack<NestedInteger> s;
 };
 
+
+class NestedIterator {
+    NestedInteger ni;
+    queue<int> q;
+    
+public:
+    void parseList(vector<NestedInteger>& v) {
+        for(int i=0; i<v.size(); i++) {
+            if (v[i].isInteger()) {
+                q.push(v[i].getInteger());
+            } else {
+                parseList(v[i].getList());
+            }
+        }
+    }
+    NestedIterator(vector<NestedInteger> &nestedList) {
+        parseList(nestedList);
+    }
+
+    int next() {
+        int t = q.front();
+        q.pop();
+        return t;
+    }
+
+    bool hasNext() {
+        return q.size()>0;
+    }
+};
 /**
  * Your NestedIterator object will be instantiated and called as such:
  * NestedIterator i(nestedList);
