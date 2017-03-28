@@ -89,8 +89,8 @@ public:
         int index = timestamp%300;
         int written = false; 
         while(!written) {
+            pthread_mutex_lock(&lock); 
             if(reader_count==0) {
-                pthread_mutex_lock(&lock); 
                 if(time[index] != timestamp) {
                     counter[index] = 1;
                     time[index] = timestamp;
@@ -98,8 +98,8 @@ public:
                     counter[index]++;
                 }
                 written = true;
-                pthread_mutex_unlock(&lock); 
             }
+            pthread_mutex_unlock(&lock); 
         }
     }      
       
