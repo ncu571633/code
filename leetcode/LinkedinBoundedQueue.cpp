@@ -4,33 +4,63 @@
 #include <condition_variable>
  
 template <typename T>
-class Queue
+class BlockingBoundedQueue
 {
- public:
- 
-  void pop(T& item)
-  {
-    std::unique_lock<std::mutex> mlock(mutex_);
-    while (queue_.empty())
-    {
-      cond_.wait(mlock);
-    }
-    item = queue_.front();
-    queue_.pop();
-  }
- 
-  void push(T&& item)
-  {
-    std::unique_lock<std::mutex> mlock(mutex_);
-    queue_.push(std::move(item));
-    mlock.unlock();
-    cond_.notify_one();
-  }
- 
- private:
-  std::queue<T> queue_;
-  std::mutex mutex_;
-  std::condition_variable cond_;
+    public:
+        BlockingBoundedQueue() {
+            q = nullptr;
+            capacity = 0;
+        }
+
+        void init(int n) {
+            std::unique_lock<std::mutex> mlock(mutex_);
+            try {
+                if(q) {
+                    throw;
+                } else {
+                    q = new(queue<int>);
+                    capacity = n;
+                }
+            } catch(...) {
+                mlock.unlock();
+            }
+        }
+
+        void pop(T& item)
+        {
+            std::unique_lock<std::mutex> mlock(mutex_);
+            
+            while (q.empty())
+            {
+                notEmpty.wait(mlock);
+            }
+            item = q.front();
+            q.pop();
+            notFull.notifyAll();
+            
+            mlock.unlock();
+        }
+
+        void push(T&& item)
+        {
+            std::unique_lock<std::mutex> mlock(mutex_);
+            
+            while (q.size() == capacity)
+            {
+                notFull.wait(mlock);
+            }
+            q.push(std::move(item));
+            notEmpty.notify_all();
+            
+            mlock.unlock();
+        }
+
+    private:
+        std::queue<T> q;
+        int capacity;
+        std::mutex mutex_;
+        std::condition_variable notEmpty;
+        std::condition_variable notFull;
 };
 
 
@@ -76,4 +106,3 @@ class Queue
          this.lock.unlock();
      }
  }
-
