@@ -42,3 +42,23 @@ public:
         return isValidBST(root->right);
     }
 };
+
+
+class Solution {
+private:
+    TreeNode* last;
+public:
+    Solution() {
+        last = nullptr;
+    }
+    bool isValidBST(TreeNode* root) {
+        if(!root)
+            return true;
+        if(!isValidBST(root->left))
+            return false;
+        if(last && root->val <= last->val)
+            return false;
+        last = root;
+        return isValidBST(root->right);
+    }
+};

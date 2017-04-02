@@ -6,6 +6,26 @@ return "blue is sky the".
 
 class Solution {
 public:
+    void reverseWords(string &s) {
+        if(s.empty())
+            return ;
+        string t;
+        istringstream in(s);
+        for(string word; in>>word; ) {
+            reverse(word.begin(), word.end());
+            t = t+word+string(" ");
+        }
+        s = t;
+        if(!s.empty()) {
+            s.pop_back();
+            reverse(s.begin(), s.end());
+        }
+    }
+};
+
+
+class Solution {
+public:
     void reverseWords(string&s, int i, int j) {
         while(i<j)
             swap(s[i++], s[j--]);

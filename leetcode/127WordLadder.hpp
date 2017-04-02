@@ -24,27 +24,31 @@ Note:
 
 class Solution {
 public:
-    int ladderLength(string beginWord, string endWord, vector<string>& wordList) {
-        unordered_set<string> wordListSet(wordList.begin(), wordList.end());
+    int ladderLength(string beginWord, string endWord, vector<string>& words) {
+        unordered_set<string> wordDict(words.begin(), words.end());
         unordered_map<string, int> m;
-        queue<string> q;
+        queue<string> q;  
         q.push(beginWord);
-        while(!q.empty()) {
-            string s = q.front();
+        m[beginWord] = 1;
+        while(!q.empty())  
+        {  
+            string word = q.front();  
             q.pop();
-            for(int i=0; i<s.size(); i++) {
-                for(char c='a'; c<='z'; c++) {
-                    string t = s;
-                    if(t[i] == c)
-                        continue;
-                    t[i] = c;
-                    if(t == endWord)
-                        return m[s]+1;
-                    m[t] = 1;
-                    
-                }
-            }
-        }
-        return 0;
-    }
+            for(int i =0; i< word.size(); i++)  
+            {  
+                string newWord = word;  
+                for(int j = 'a'; j <= 'z'; j++)  
+                {  
+                    newWord[i] = j;
+                    if(newWord == endWord) return m[word]+1;  
+                    if(wordDict.count(newWord)==1 && m.count(newWord)==0)
+                    {  
+                        q.push(newWord);
+                        m[newWord] = m[word]+1;
+                    }  
+                }  
+            }  
+        }  
+        return 0;  
+    }  
 };
