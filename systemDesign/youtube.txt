@@ -1,0 +1,1 @@
+database model, video/image storage, scalability, recommendation, security and so on.

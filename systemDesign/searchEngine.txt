@@ -1,0 +1,57 @@
+
+
+
+crawl and store all the data, and to rank the results, to make it crawl almost the entire web
+
+
+BigTable
+Where do you store the data? Where do Google stores the data? Google has a unique NOSQL database called BigTable where they store the entire search data. BigTable works on a distributed system which works on much reliable HDFS system. This file system supports distributed computing to support thousands of notes attached in the network.
+
+
+PageRank (PR) is an algorithm used by Google Search to rank websites in their search engine results. 
+
+
+
+A mammoth question like that isn't looking for you to waste your time in the nitty-gritty of implementing a PageRank-type algorithm or how to do distributed indexing. Instead, focus on the complete picture of what it would take. It sounds like you already know all of the big pieces (BigTable, PageRank, Map/Reduce). So the question is then, how do you actually wire them together?
+
+Here's my stab.
+
+Phase 1: Indexing Infrastructure (spend 5 minutes explaining)
+
+The first phase of implementing Google (or any search engine) is to build an indexer. This is the piece of software that crawls the corpus of data and produces the results in a data structure that is more efficient for doing reads.
+
+To implement this, consider two parts: a crawler and indexer.
+
+The web crawler's job is to spider web page links and dump them into a set. The most important step here is to avoid getting caught in infinite loop or on infinitely generated content. Place each of these links in one massive text file (for now).
+
+Second, the indexer will run as part of a Map/Reduce job. (Map a function to every item in the input, and then Reduce the results into a single 'thing'.) The indexer will take a single web link, retrieve the website, and convert it into an index file. (Discussed next.) The reduction step will simply be aggregating all of these index files into a single unit. (Rather than millions of loose files.) Since the indexing steps can be done in parallel, you can farm this Map/Reduce job across an arbitrarily-large data center.
+
+Phase 2: Specifics of Indexing Algorithms (spend 10 minutes explaining)
+
+Once you have stated how you will process web pages, the next part is explaining how you can compute meaningful results. The short answer here is 'a lot more Map/Reduces', but consider the sorts of things you can do:
+
+    For each web site, count the number of incoming links. (More heavily linked-to pages should be 'better'.)
+    For each web site, look at how the link was presented. (Links in an < h1 > or < b > should be more important than those buried in an < h3 >.)
+    For each web site, look at the number of outbound links. (Nobody likes spammers.)
+    For each web site, look at the types of words used. For example, 'hash' and 'table' probably means the web site is related to Computer Science. 'hash' and 'brownies' on the other hand would imply the site was about something far different.
+
+Unfortunately I don't know enough about the sorts of ways to analyze and process the data to be super helpful. But the general idea is scalable ways to analyze your data.
+
+Phase 3: Serving Results (spend 10 minutes explaining)
+
+The final phase is actually serving the results. Hopefully you've shared some interesting insights in how to analyze web page data, but the question is how do you actually query it? Anecdotally 10% of Google search queries each day have never been seen before. This means you cannot cache previous results.
+
+You cannot have a single 'lookup' from your web indexes, so which would you try? How would you look across different indexes? (Perhaps combining results -- perhaps keyword 'stackoverflow' came up highly in multiple indexes.)
+
+Also, how would you look it up anyways? What sorts of approaches can you use for reading data from massive amounts of information quickly? (Feel free to namedrop your favorite NoSQL database here and/or look into what Google's BigTable is all about.) Even if you have an awesome index that is highly accurate, you need a way to find data in it quickly. (E.g., find the rank number for 'stackoverflow.com' inside of a 200GB file.)
+
+Random Issues (time remaining)
+
+Once you have covered the 'bones' of your search engine, feel free to rat hole on any individual topic you are especially knowledgeable about.
+
+    Performance of the website frontend
+    Managing the data center for your Map/Reduce jobs
+    A/B testing search engine improvements
+    Integrating previous search volume / trends into indexing. (E.g., expecting frontend server loads to spike 9-5 and die off in the early AM.)
+
+There's obviously more than 15 minutes of material to discuss here, but hopefully it is enough to get you started.
