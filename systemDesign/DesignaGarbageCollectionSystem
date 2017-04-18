@@ -1,0 +1,19 @@
+http://blog.gainlo.co/index.php/2016/07/25/design-a-garbage-collection-system-part-i/
+
+garbage collection is a system that automatically recycles unused memory in programming languages. 
+
+Pros & cons
+The most obvious benefit of having garbage collection is that it makes programming much easier
+garbage collection helps developers avoid several memory problems
+First, it prevents accessing dangling pointers that point to an object that no longer exists. Secondly, it prevents freeing a region of memory that is already freed (double free). Last, it avoids memory leak
+
+
+disadvantage is that garbage collection consumes computing resources
+developer has the full control over how memory is used, which gives the program much more flexibility and much easier to optimize
+
+the big problem has been simplified to a graph problem – find unreachable nodes in a graph.
+The most notable problem is that the entire system must be suspended during garbage collection. In other words, once in a while, the problem will be frozen when doing garbage collection and no mutation of the working set can be allowed. 
+
+Reference counting
+Disadvantage of reference counting
+If two objects reference each other, they will never be recycled.

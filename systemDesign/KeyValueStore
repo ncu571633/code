@@ -1,0 +1,33 @@
+http://blog.gainlo.co/index.php/2016/06/21/design-key-value-store-part-ii/
+
+How would you design a simple key-value storage system in a single machine?
+
+1. a hash table
+2. Compress your data
+store reference instead of the actual data
+using different data representations like bit array (integer) or vectors
+
+
+Storing in a disk
+Frequently visited data is kept in memory and the rest is on a disk.
+
+Distributed key-value storage
+
+Sharding
+Suppose all the keys are URLs like http://gainlo.co and we have 26 machines. One approach is to divide all keys (URLs) based on the first character of the URL (after “www”) to these 26 machines. For example, http://gainlo.co will be stored at machine G and http://blog.gainlo.co will be stored at machine B.
+
+balance the traffic
+
+System availability
+suppose one of our machines crashes for some reason
+The most common solution is replica
+By setting machines with duplicate resources, we can significantly reduce the system downtime
+
+Sharding is basically used to splitting data to multiple machines since a single machine cannot store too much data. Replica is a way to protect the system from downtime.
+
+Consistency
+First approach is to keep a local copy in coordinator. Whenever updating a resource, the coordinator will keep the copy of updated version. So in case the update fails, the coordinator is able to re-do the operation.
+
+commit log
+
+resolve conflict in read. Suppose when the requested resource locates in A1, A2 and A3, the coordinator can ask from all three machines. If by any chance the data is different, the system can resolve the conflict on the fly.
