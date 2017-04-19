@@ -1,0 +1,24 @@
+给一个string, 和一个数N，能把string 分成N个substring, 然后每个substring开始的字母各不相同
+bool splitString(string s, int n) {
+  unordered_set<char> ch(s.begin(), s.end());
+  return ch.size() >= n;
+}
+*************************************
+bool splitString(string s, int n) {
+  unordered_set<char> ch;
+  return splitString(s, n, ch, 0);
+}
+
+bool splitString(string s, int n, unordered_set<char>& ch, int start) {
+  if(ch.size()>=n)
+    return true;
+  if(start>s.size() || ch.count(s))
+    return false;
+  for(int i=start; i<s.size(); i++) {
+    ch.insert(s[i]);
+    if(splitString(s, n, ch, i))
+      return true;
+    ch.erase(s[i]);
+  }
+  return false;
+}
