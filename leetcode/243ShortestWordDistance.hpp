@@ -23,5 +23,7 @@ public:
             j=k;
         if(i!=-1 && j!=-1)
             ret = min(ret, abs(i-j));
+        }
+	return ret;
     }
 };
