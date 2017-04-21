@@ -1,0 +1,24 @@
+Define the problem
+
+Data modeling – If we want to use a relational database like MySQL, we can define user object and feed object. Two relations are also necessary. One is user can follow each other, the other is each feed has a user owner.
+
+
+
+Serve feeds – The most straightforward way is to fetch feeds from all the people you follow and render them by time.
+
+
+
+1. When users followed a lot of people, fetching and rendering all their feeds can be costly. How to improve this?
+each time we only need to fetch the most recent N feeds instead of all of them. 
+
+
+2. How to detect fake users?
+related to machine learning
+identify several related features like registration date, the number of followers, the number of feeds etc. and build a machine learning system to detect if a user is fake.
+
+
+
+4. How to implement the @ feature and retweet feature?
+For @ feature, we can simply store a list of user IDs inside each feed. So when rendering your feeds, you should also include feeds that have your ID in its @ list. 
+
+For retweet feature, we could do the similar thing. Inside each feed, a feed ID (pointer) is stored, which indicates the original post if there’s any.

@@ -1,0 +1,14 @@
+http://blog.gainlo.co/index.php/2016/05/17/design-a-cache-system/
+
+LRU design
+
+Concurrency
+The common solution of course is using a lock
+split the cache into multiple shards and have a lock for each of them
+given that hot entries are more likely to be visited, certain shards will be more often locked than others.
+
+use commit logs. To update the cache, we can store all the mutations into logs rather than update immediately. And then some background processes will execute all the logs asynchronously
+
+
+Distributed cache
+keep a hash table that maps each resource to the corresponding machine

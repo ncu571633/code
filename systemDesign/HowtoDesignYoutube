@@ -1,0 +1,46 @@
+database model, video/image storage, scalability, recommendation, security
+
+
+    Storage. How do you design the database schema? What database to use? Videos and images can be a subtopic as they are quite special to store.
+    Scalability. When you get millions or even billions of users, how do you scale the storage and the whole system? This can be an extremely complicated problem, but we can at least discuss some high-level ideas.
+    Web server. The most common structure is that front ends (both mobile and web) talk to the web server, which handles logics like user authentication, sessions, fetching and updating users’ data, etc.. And then the server connects to multiple backends like video storage, recommendation server and so forth.
+    Cache is another important components. We’ve discussed in details about cache before, but there are still some differences here, e.g. we need cache in multiple layers like web server, video serving, etc..
+    There are a couple of other important components like recommendation system, security system and so on. As you can see, just a single feature can be used as a stand-alone interview question.
+
+
+Video and image storage
+large static files
+Imagine that each video has thumbnails of different sizes for different screens
+
+ CDN (Content delivery network).multiple data centers
+3rd party network
+CDN replicates content in multiple places
+closer to the user
+
+long-tailed, which are videos have only 1-20 views a day.
+One straightforward approach is to host popular videos in CDN and less popular videos are stored in our own servers by location
+
+
+
+    Popular videos are viewed by a huge number of audiences in different locations
+
+Scale the database
+sharding approach. For instance, you can split the database by users’ location and when a request comes, you’ll route the request to the corresponding database.
+we can prioritize traffic by splitting the data into two clusters: a video cluster and a general cluster. We can give a lot of resources to the video cluster and other social network features will be routed to the less capable cluster. A more general idea here is that when solving scalability issue, you should first identify the bottleneck and then optimize it. In this case, the bottleneck is watching videos.
+
+To scale the web server, you can simply have multiple replicas and build a load-balancer on top of them.
+
+
+Security
+particular IP issues too many requests, just block it.
+we can even restrict the number of view count per IP.
+The system can also check information like browser agent and user’s past history, which potentially can block a lot of hacks.
+For instance, a video with high view count but low engagement is very suspicious.
+patterns of real view count
+comment count view time
+
+
+
+For instance, Youtube recommendation is a very big topic and it drives user engagement metrics dramatically. How would you build the recommendation system? In addition, how do you identify trending videos of the day and recommend to the relevant audience?
+
+

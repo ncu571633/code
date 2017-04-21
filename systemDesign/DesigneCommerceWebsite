@@ -2,4 +2,35 @@ http://blog.gainlo.co/index.php/2016/08/22/design-ecommerce-website-part/
 
 Design eCommerce Website
 
+database design, 
+
 we need three major objects: Product, User and Order.
+
+price, the amount left, name, description, and the category
+product ID, user ID, amount, timestamp, status
+
+Although relational database is the most common approach, we notice that NoSQL database like MongoDB provides a lot of advantages and flexibilities when building an eCommerce website. 
+
+
+
+Concurrency
+let’s say there’s only one book left in the store and two people buy it simultaneously
+add lock
+
+Optimistic concurrency control 
+before committing changes, each transaction should check if the data has the same state as it did when you last read it
+
+
+
+system availability
+
+
+Consistency
+
+Strong consistency
+One approach is to force all updates to happen in the same order atomically. 
+Weak consistency
+
+Another extreme case is that we can provide minimum curation. Every replica will see every update, however, they may be in different orders
+
+Dynamo 
