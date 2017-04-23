@@ -1,0 +1,18 @@
+machine learning
+based on videos a user has watched, we can simply suggest videos from same authors
+similar titles or labels
+use the popularity (number of comments, shares) as another signal
+
+user-based collaborative filtering
+to recommend videos for a user, I can provide videos liked by similar users. For instance, if user A and B have watched a bunch of same videos, it’s highly likely that user A will like videos liked by B. 
+
+Explicit features can be ratings, favorites etc.. In Youtube, it can be the like/share/subscribe actions
+Implicit features If a user has watched a video for only a couple of seconds, probably it’s a negative sign
+if a user clicks one over another, it can mean that he prefer to the one clicked
+
+Infrastructure
+Given that comparing similar users/videos can be time-consuming on Youtube, this part should be done in offline pipelines
+
+similar users/videos are also running regularly in order to keep data updated
+
+For the online part, based on the user profile and his actions (like videos just watched), we should be able to provide a list of recommended videos from offline data.

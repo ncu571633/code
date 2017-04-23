@@ -1,0 +1,39 @@
+http://blog.gainlo.co/index.php/2016/03/01/system-design-interview-question-create-a-photo-sharing-app/
+
+
+
+More specifically, the system allows people to follow each other, share/comment/like pictures, and maybe some other features like explore, advertisement 
+
+
+High-level solution
+
+user object and picture object.
+relational database
+a user table which contains information like name, email, registration date and so on
+two relations – user follow relation and user-picture relation
+
+
+1. Response time
+one costly operation is to render users feed
+The server has to go over everyone the user follows, fetch all the pictures from them, and rank them based on particular algorithms
+
+read the top N most recent pictures
+offline pipelines to precompute some signals that can speed up the ranking.
+
+
+Scale architecture
+divide the whole system into small components
+database separate from web apps --- different computers
+
+scale the database. For this specific problem, we can either do the vertical splitting (partitioning) by splitting the database into sub-databases like user database, comment database etc. or horizontal splitting (sharding) by splitting based on attributes like US users, European users
+a separate system for image storage has a lot of advantages. For instance, cache and replication can be much simpler when files are static.
+
+
+Image optimization: to save space, images should be compressed
+
+
+Feed ranking
+rank everything in chronological order
+an algorithm that combines time and how likely the user will like this picture is definitely promising.
+features that matter a lot include like/comment numbers, whether the user has liked many photos of the owner and so on
+

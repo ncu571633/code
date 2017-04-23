@@ -22,3 +22,14 @@ identify several related features like registration date, the number of follower
 For @ feature, we can simply store a list of user IDs inside each feed. So when rendering your feeds, you should also include feeds that have your ID in its @ list. 
 
 For retweet feature, we could do the similar thing. Inside each feed, a feed ID (pointer) is stored, which indicates the original post if there’s any.
+
+
+1. How to get trending topic candidates?
+2. How to rank those candidates?
+most frequent hashtags over the last N hours. We can also get the hottest search queries. Or we may even fetch the recent most popular feeds and extract some common words or phrases
+
+The most straightforward way is to rank based on frequency
+
+Twitter also shows you suggestions about who to follow.
+
+
