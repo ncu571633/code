@@ -20,8 +20,6 @@ closer to the user
 long-tailed, which are videos have only 1-20 views a day.
 One straightforward approach is to host popular videos in CDN and less popular videos are stored in our own servers by location
 
-
-
     Popular videos are viewed by a huge number of audiences in different locations
 
 Scale the database
