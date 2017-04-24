@@ -1,0 +1,91 @@
+
+
+1. Database design
+(1)Memory: a hash table
+   Compress your data
+store reference instead of the actual data
+using different data representations like bit array (integer) or vectors
+
+(2)relational database
+relationship between tables
+
+2. Scale architecture  replicas and build a load-balancer
+divide the whole system into small components
+database separate from web apps --- different computers
+
+vertical splitting (partitioning): splitting the database into sub-databases like user database, comment database
+horizontal splitting: US users, European users
+
+Static Data:
+Image optimization: to save space, images should be compressed
+large static files
+Imagine that each video has thumbnails of different sizes for different screens
+
+CDN (Content delivery network). multiple data centers
+3rd party network: CDN replicates content in multiple places
+closer to the user
+
+long-tailed, which are videos have only 1-20 views a day.
+One straightforward approach is to host popular videos in CDN and less popular videos are stored in our own servers by location
+
+Popular videos are viewed by a huge number of audiences in different locations
+
+3. System availability
+suppose one of our machines crashes for some reason
+The most common solution is replica
+By setting machines with duplicate resources, we can significantly reduce the system downtime
+
+
+
+4. Machine learning
+(1)Feed ranking: 
+one costly operation is to render users feed
+The server has to go over everyone the user follows, fetch all the pictures from them, and rank them based on particular algorithms
+
+read the top N most recent pictures
+offline pipelines to precompute some signals that can speed up the ranking.
+
+rank everything in chronological order
+an algorithm that combines time and how likely the user will like this picture
+like/comment numbers, whether the user has liked many photos of the owner and so on
+
+(2) machine learning - recommendation system
+Explicit features: ratings, favorites
+Implicit features: If a user has watched a video for only a couple of seconds, probably it’s a negative sign
+Offline: similiar videos 
+Online: user profile and his actions
+if user A and B have watched a bunch of same videos, it’s highly likely that user A will like videos liked by B. 
+
+
+
+
+5. Concurrency
+(1)The common solution of course is using a let’s say there’s only one book left in the store and two people buy it simultaneously
+add lock
+
+Optimistic concurrency control 
+before committing changes, each transaction should check if the data has the same state as it did when you last read itlock
+split the cache into multiple shards and have a lock for each of them
+given that hot entries are more likely to be visited, certain shards will be more often locked than others.
+
+First approach is to keep a local copy in coordinator. Whenever updating a resource, the coordinator will keep the copy of updated version. So in case the update fails, the coordinator is able to re-do the operation.
+
+(2)resolve conflict in read. Suppose when the requested resource locates in A1, A2 and A3, the coordinator can ask from all three machines. If by any chance the data is different, the system can resolve the conflict on the fly.
+
+(3)use commit logs. To update the cache, we can store all the mutations into logs rather than update immediately. And then some background processes will execute all the logs asynchronously
+
+(4) Strong consistency
+One approach is to force all updates to happen in the same order atomically. 
+Weak consistency
+
+Another extreme case is that we can provide minimum curation. Every replica will see every update, however, they may be in different orders
+
+Dynamo 
+
+
+5. Security
+(1)How to detect fake users?
+identify several related features like registration date, the number of followers, the number of feeds etc. and build a machine learning system to detect if a user is fake.
+
+(2) particular IP issues too many requests
+
