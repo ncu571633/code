@@ -13,7 +13,7 @@ class BlockingBoundedQueue
         }
 
         void init(int n) {
-            std::unique_lock<std::mutex> mlock(mutex_);
+            mutex_.lock();
             try {
                 if(q) {
                     throw;
@@ -22,13 +22,14 @@ class BlockingBoundedQueue
                     capacity = n;
                 }
             } catch(...) {
-                mlock.unlock();
+                
             }
+            mlock.unlock();
         }
 
         void pop(T& item)
         {
-            std::unique_lock<std::mutex> mlock(mutex_);
+            mutex_.lock();
             
             while (q.empty())
             {
@@ -43,7 +44,7 @@ class BlockingBoundedQueue
 
         void push(T&& item)
         {
-            std::unique_lock<std::mutex> mlock(mutex_);
+            mutex_.lock();
             
             while (q.size() == capacity)
             {
