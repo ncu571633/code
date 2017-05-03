@@ -56,6 +56,23 @@ vector<string> parseWeb(string base, queue<string> q)
     }
 }
 
+void WebCrawler(string base) {
+    q.push(base);
+    int level = 1;
+    while(q.empty()) {
+        int size = q.size();
+        for(int i=0; i<size; i++) {
+            string t = q.top();
+            q.pop();
+            if(level == limit)
+                continue;
+
+        }
+        level++;
+    }
+}
+
+
 pthread_mutex_t lock;
 pthread_cond_t cond;
 queue<string> seeds;
@@ -88,20 +105,4 @@ crawl() {
                 if(!seeds.empty()) pthread_cond_broadcast(&cond);
                 pthread_mutex_unlock(&lock);
         }
-}
-
-void WebCrawler(string base) {
-    q.push(base);
-    int level = 1;
-    while(q.empty()) {
-        int size = q.size();
-        for(int i=0; i<size; i++) {
-            string t = q.top();
-            q.pop();
-            if(level == limit)
-                continue;
-
-        }
-        level++;
-    }
 }
