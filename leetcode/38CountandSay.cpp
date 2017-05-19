@@ -9,26 +9,28 @@ Given an integer n, generate the nth sequence.
 
 class Solution {
 public:
-    string countAndSay(int n) {
-        string a;
-        if(!n)
-            return a;
-        a = string("1");
-        for(int i=2; i<=n; i++) {
-            string b;
-            char c = a[0];
-            int count = 1;
-            for(int j=1; j<a.size(); j++) {
-                if(a[j]!=c) {
-                    b = b + to_string(count) + string(&c);
-                    c = a[j], count=1;
-                } else {
-                    count++;
-                }
+    string getNext(string s) {
+        int count = 1;
+        string t;
+        for(int i=1; i<s.size(); i++) {
+            if(s[i]==s[i-1]) {
+                count++;
+            } else {
+                t = t+to_string(count)+string(1, s[i-1]);
+                count = 1;
             }
-            b = b + to_string(count) + string(&c);
-            swap(a, b);
         }
-        return a;
+        t = t+to_string(count)+string(1, s.back());
+        return t;
+    }
+    string countAndSay(int n) {
+        if(n<=0)
+            return "";
+        string s = "1";
+        for(int i=1; i<n; i++) {
+            cout<< s << endl;
+            s = getNext(s);
+        }
+        return s;
     }
 };

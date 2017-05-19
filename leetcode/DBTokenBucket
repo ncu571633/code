@@ -1,0 +1,7 @@
+token bucket
+
+a token every x seconds
+如果token不够就block
+不能有专门的thread产生token，怎样用最简单的方法实现
+ 多线程tokenbucket, 实现gettoken(int n), token不够就block。 我用的pthread_cond_timedwait, 但是要注意sleep 的时间不保证是准确的， 所以需要while loop sleep 
+有thread要求的token比较少，可以先给它token的
