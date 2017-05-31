@@ -87,17 +87,17 @@ MS
 
 
 fb
-283	Move Zeroes	49.1%	Easy	
-325	Maximum Size Subarray Sum Equals k 	42.1%	Medium	
-301	Remove Invalid Parentheses	34.9%	Hard	
-67	Add Binary	31.6%	Easy	
-311	Sparse Matrix Multiplication 	50.6%	Medium	
-314	Binary Tree Vertical Order Traversal 	36.1%	Medium	
+y 283	Move Zeroes	49.1%	Easy	
+m 325	Maximum Size Subarray Sum Equals k 	42.1%	Medium	
+y 301	Remove Invalid Parentheses	34.9%	Hard	
+y 67	Add Binary	31.6%	Easy	
+y 311	Sparse Matrix Multiplication 	50.6%	Medium	
+y 314	Binary Tree Vertical Order Traversal 	36.1%	Medium	
 273	Integer to English Words	21.7%	Hard	
-17	Letter Combinations of a Phone Number	33.7%	Medium	
+m 17	Letter Combinations of a Phone Number	33.7%	Medium	
 278	First Bad Version	24.8%	Easy	
-91	Decode Ways	19.3%	Medium	
-253	Meeting Rooms II 	38.7%	Medium	
+m 91	Decode Ways	19.3%	Medium	
+y 253	Meeting Rooms II 	38.7%	Medium	
 10	Regular Expression Matching	24.0%	Hard	
 15	3Sum	21.5%	Medium	
 277	Find the Celebrity 	35.3%	Medium	
