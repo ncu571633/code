@@ -20,12 +20,12 @@ public:
         unordered_map<int, int> m;  // from sum(0, i) -> index
         int ret = -1, sum = 0;
         for(int i=0; i<nums.size(); i++) {
-            sum += nums[0];
+            sum += nums[i];
             if(sum == k)
                 ret = i+1;
             else {
-                if(m.count(sum - k))
-                    ret = max(ret, i-m[sum-k]);
+                if(m.count(k-sum))
+                    ret = max(ret, i-m[k-sum]);
             }
             if(!m.count(sum))
                 m[sum] = i;
