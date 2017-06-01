@@ -50,15 +50,13 @@ public:
         queue<TreeLinkNode*> q;
         q.push(root);
         while(!q.empty()) {
-            TreeLinkNode * pre = q.front();
-            q.pop();
+            TreeLinkNode * pre = nullptr;
             int size = q.size();
-            if(pre->left) q.push(pre->left);
-            if(pre->right) q.push(pre->right);
             for(int i=0; i<size; i++) {
                 TreeLinkNode* cur = q.front();
                 q.pop();
-                pre->next = cur;
+                if(pre)
+                    pre->next = cur;
                 pre = cur;
                 if(pre->left) q.push(pre->left);
                 if(pre->right) q.push(pre->right);

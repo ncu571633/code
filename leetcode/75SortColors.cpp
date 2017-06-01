@@ -22,3 +22,21 @@ public:
             nums[i] = 2;
     }
 };
+
+
+class Solution {
+public:
+    void sortColors(vector<int>& nums) {
+        int a=0, b=nums.size()-1;
+        for(int i=0; i<=b; i++)
+        {
+            if(nums[i]==0) {
+                swap(nums[a], nums[i]);
+                a++;
+            } else if(nums[i]==2) {
+                swap(nums[b], nums[i]);
+                b--, i--;
+            }
+        }
+    }
+};
