@@ -1,0 +1,1 @@
+系统设计，问搜索引擎在用户打字是会给出建议，比如打出c会建议costco, cnn，打出co会建议costco, coach，怎样设计数据结构，数据量特别大的时候怎样设计distributed system
