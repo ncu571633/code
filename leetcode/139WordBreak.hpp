@@ -25,3 +25,23 @@ public:
         return v.back();
     }
 };
+
+class Solution {
+public:
+    bool wordBreak(string s, vector<string>& wordDict) {
+        int n = s.size();
+        if(!n || !wordDict.size())
+            return false;
+        unordered_set<string> m(wordDict.begin(), wordDict.end());
+        vector<int> v(n+1, 0);
+        v[0] = 1;
+        for(int i=1; i<n+1; i++) {
+            for(int j=i; j<n+1; j++) {
+                if(!v[j] && v[i-1] && m.count(s.substr(i-1, j-i+1))) {
+                    v[j] = true;
+                }
+            }
+        }
+        return v.back();
+    }
+};
