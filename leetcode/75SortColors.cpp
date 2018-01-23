@@ -31,9 +31,13 @@ public:
         for(int i=0; i<=b; i++)
         {
             if(nums[i]==0) {
+                // both [a] and [i] are visited
+                // doesn't need to i--
                 swap(nums[a], nums[i]);
                 a++;
             } else if(nums[i]==2) {
+                // [b] is not visited
+                // need to visit [b]: i--
                 swap(nums[b], nums[i]);
                 b--, i--;
             }
