@@ -43,6 +43,8 @@ set sm "show matching brace or parentheses while inserting
 
 set ruler
 set background=dark
+syntax on
+colorscheme torte
 
 " uncomment to insert spaces instead of a tab when tab is pressed
 set expandtab

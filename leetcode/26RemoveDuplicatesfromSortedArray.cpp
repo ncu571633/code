@@ -7,21 +7,22 @@ Given input array nums = [1,1,2],
 
 Your function should return length = 2, with the first two elements of nums being 1 and 2 respectively. It doesn't matter what you leave beyond the new length. 
 
-
 class Solution {
-public:
-    int removeDuplicates(vector<int>& nums) {
-        if(nums.size()==0)
-            return 0;
-        int size = 1;
-        for(int i=0, j=1; j<nums.size(); i++, j++) {
-            while(nums[i] == nums[j] && j<nums.size())
-                j++;
-            if(i+1 != j)
-                nums[i+1] = nums[j];
-            if(j<nums.size())
-                size++;
+    public:
+        int removeDuplicates(vector<int>& nums) {
+            int n = nums.size();
+            if(!n)
+                return 0;
+            int i=1, pre = nums[0];
+            for(int j=1; j<n; j++)
+            {
+                if(pre != nums[j])
+                {
+                    pre = nums[j];
+                    nums[i] = nums[j];
+                    i++;
+                }
+            }
+            return i;
         }
-        return size;
-    }
 };

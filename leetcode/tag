@@ -1,3 +1,9 @@
+min heap
+priority_queue <int, vector<int>, greater<int> > pq;
+
+max heap
+priority_queue <int> pq;
+
 MS
 206	Reverse Linked List	44.7%	Easy	
 138	Copy List with Random Pointer	26.5%	Medium	
