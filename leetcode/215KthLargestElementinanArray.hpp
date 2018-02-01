@@ -39,3 +39,40 @@ class Solution {
             return q.top();
         }
 };
+
+class Solution {
+public:
+    int partition(vector<int>& v, int l, int r)
+    {
+        int left = l;
+        int pivot = v[l++];
+        while(l <= r)
+        {
+            if(v[r] > pivot && v[l] < pivot)
+            {
+                swap(v[l++], v[r--]);
+            }
+            if(v[r] <= pivot)
+                r--;
+            if(v[l] >= pivot)
+                l++;
+        }
+        swap(v[left], v[r]);
+        return r;
+    }
+    int findKthLargest(vector<int>& nums, int k) {
+        int l = 0, r =nums.size()-1;
+        while(true)
+        {
+            int p = partition(nums, l, r);
+            if(p == k-1)
+                return nums[p];
+            if(p > k-1)
+                r = p - 1;
+            else
+                l = p + 1;
+        }
+        return -1;
+    }
+};
+
