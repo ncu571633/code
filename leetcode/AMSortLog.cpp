@@ -18,25 +18,26 @@ typedef struct logData
 {
     string id;
     string data;
-    bool operator< (const logData& rhs)
-    {
-        char c1 = data[0], c2 = rhs.data[0];
-        if(isdigit(c1) && isdigit(c2)) {
-            if(data != rhs.data)
-                return data < rhs.data;
-            return id > rhs.id;
-        } else if(isdigit(c1) && !isdigit(c2)) {
-            return 1;
-        } else if(!isdigit(c1) && isdigit(c2)) {
-            return 0;
-        } else if(!isdigit(c1) && !isdigit(c2)) {
-            if(data != rhs.data)
-                return data > rhs.data;
-            return id > rhs.id;
-        }
+} logData;
+
+bool comp(const logData& lhs, const logData& rhs)
+{
+    char c1 = lhs.data[0], c2 = rhs.data[0];
+    if(isdigit(c1) && isdigit(c2)) {
+        if(lhs.data != rhs.data)
+            return lhs.data < rhs.data;
+        return lhs.id < rhs.id;
+    } else if(isdigit(c1) && !isdigit(c2)) {
         return 0;
+    } else if(!isdigit(c1) && isdigit(c2)) {
+        return 1;
+    } else if(!isdigit(c1) && !isdigit(c2)) {
+        if(lhs.data != rhs.data)
+            return lhs.data < rhs.data;
+        return lhs.id < rhs.id;
     }
-}logData;
+    return 0;
+}
 
 vector<string> reorder(vector<string> logLines)
 {
@@ -50,7 +51,7 @@ vector<string> reorder(vector<string> logLines)
         v.push_back(l);
     }
 
-    sort(v.begin(), v.end());
+    sort(v.begin(), v.end(), comp);
     vector<string> ret;
     for(size_t i=0; i<v.size(); i++)
     {
@@ -67,7 +68,13 @@ int main()
         "ab1 off Key dog",
         "a8 act zoo"
     };
-    vector<string> ret = reorder(vector<string>(s, s+5));
+
+    string s2[] = {"fhie 1df8 sfds",
+        "fdsf 2def sees",
+        "efe2 br9o fjsd",
+        "asd1 awer jik9"
+    };
+    vector<string> ret = reorder(vector<string>(s2, s2+4));
     for(size_t i=0; i<ret.size(); i++)
         cout<<ret[i]<<"\n";
 }
