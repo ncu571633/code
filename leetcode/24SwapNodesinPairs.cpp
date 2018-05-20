@@ -52,3 +52,34 @@ public:
         return head;
     }
 };
+
+
+
+
+
+class Solution {
+public:
+    ListNode* swapPairs(ListNode* head) {
+        if (!head || head->next==nullptr)
+            return head;
+        
+        ListNode* t = new ListNode(0);
+        t->next = head;
+        head = t;
+        while(t)
+        {
+            ListNode* p1 = t->next;
+            ListNode* p2 = nullptr;
+            if(p1) {
+                p2 = p1->next;
+            }
+            if(!p1 || !p2)
+                break;
+            t->next = p2;
+            p1->next = p2->next;
+            p2->next = p1;
+            t = p2->next;
+        }
+        return head->next;
+    }
+};
