@@ -23,3 +23,22 @@ public:
         return nums[i];
     }
 };
+
+
+class Solution {
+public:
+    int findMin(vector<int>& v) {
+        int i=0, j = v.size()-1;
+        while(i<j)
+        {
+            int k = (i+j)/2;
+            if(v[i] <= v[j])
+                return v[i];
+            if(v[k] < v[j])
+                j = k;
+            else 
+                i = k+1;
+        }
+        return v[i];
+    }
+};
