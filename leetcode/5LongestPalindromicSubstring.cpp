@@ -41,3 +41,30 @@ int main()
     Solution s;
     s.longestPalindrome("a");
 }
+
+
+
+class Solution {
+public:
+    string longestPalindrome(string s) {
+        string ret;
+        int n = s.size();
+        vector<vector<int>> m(n, vector<int>(n, 0));
+        
+        for(int i=0; i<n; i++)
+        {
+            for(int j=0; j<=i; j++)
+            {
+                if(s[i] == s[j] && (i-j<2 || m[j+1][i-1]))
+                {
+                    m[j][i] = 1;
+                    if (ret.size() < i-j+1)    
+                        ret = s.substr(j, i-j+1);
+                }    
+                else
+                    m[j][i] = 0;
+            }
+        }
+        return ret;
+    }
+};
