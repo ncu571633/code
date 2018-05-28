@@ -39,12 +39,6 @@ https://zhuanlan.zhihu.com/p/20346977?refer=jiuzhang
 请教专家等等。
 
 6. 当你100%肯定你的上司是错的，你会怎么做？
-通常，你可以说，“这取决于当时情形和上司的脾性”。
-比如，如果上司不太喜欢别人挑战他的权威。那我可能不会当面反对他的观点。我会先接下这个任务，然后按自己的方法去做，得出上司期望的结果。
-然后在跟他汇报的时候，告诉他，我已经把任务按照他的期望完成了，不过中间过程做了XX小改动。这个时候，老板不会专注于我没有按照他的方法做。
-而我，也避免了冲突。
-
-而如果老板是一个比较随和的人。那我可能就会当面告诉他。
 
 7. 介绍一个你做的最成功/最有挑战的一件事或者一个项目。
 
@@ -163,3 +157,21 @@ Reference: https://collegegrad.com/tough-in ... r-greatest-weakness  这个问�
 
 3. Always get prepared. 
     enough evidence, logically reasonable and professionally. 
+
+
+
+
+Performance analysis of Outlook Search Engine (Azure Cosmos).
+Cosmos:    Cosmos is a platform for building Big Data applications.
+Scope language: 	The power to process that data by using our programming language called Scope
+             with basic SQL and C# knowledge 
+Cosmos implements its own form of MapReduce on CFS which is a massively distributed file system.
+
+
+
+Avocado is a tool for analyzing and moving 
+
+Run interactive queries and cook data in Cosmos, Kusto, SQL databases, ADW, and other data stores.
+Create Reports and Dashboards from the Cosmos, ADL, Kusto, SQL, ADW, and other data --either using JavaScript or with Power BI embedded in Avocado.
+Easily create a Power BI Report directly from Cosmos or Kusto data without any intermediate steps or connectors.
+Move data from one data source to another (Extract, Transfer, and Load) either ad hoc or according to a schedule.

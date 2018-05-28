@@ -1,13 +1,23 @@
-
-
 1. Database design
 (1)Memory: a hash table
    Compress your data
 store reference instead of the actual data
 using different data representations like bit array (integer) or vectors
 
-(2)relational database
-relationship between tables
+(2)relational database: relationship between tables
+
+For complex queries: SQL databases are good fit for the complex query intensive environment whereas NoSQL databases are not good fit for complex queries. 
+
+SQL databases uses SQL ( structured query language ) for defining and manipulating the data, which is very powerful. In NoSQL database, queries are focused on collection of documents. 
+
+SQL databases are vertically scalable whereas the NoSQL databases are horizontally scalable. 
+
+SQL databases are table based databases whereas NoSQL databases are document based, key-value pairs.
+This means that SQL databases represent data in form of tables which consists of n number of rows of data whereas NoSQL databases are the collection of key-value pair, documents, graph databases or wide-column stores which do not have standard schema definitions which it needs to adhered to.
+
+
+
+
 
 2. Scale architecture  replicas and build a load-balancer
 divide the whole system into small components
@@ -88,4 +98,8 @@ Dynamo
 identify several related features like registration date, the number of followers, the number of feeds etc. and build a machine learning system to detect if a user is fake.
 
 (2) particular IP issues too many requests
+
+
+
+
 
