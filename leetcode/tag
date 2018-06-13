@@ -1,6 +1,5 @@
 min heap
 priority_queue <int, vector<int>, greater<int> > pq;
-
 max heap
 priority_queue <int> pq;
 
@@ -90,7 +89,6 @@ MS
 213	House Robber II	33.6%	Medium	
 47	Permutations II	32.0%	Medium	
 567	Permutation in String	36.6%	Medium	
-
 
 fb
 y 283	Move Zeroes	49.1%	Easy	
@@ -189,7 +187,6 @@ y 253	Meeting Rooms II 	38.7%	Medium
 554	Brick Wall	42.3%	Medium	
 543	Diameter of Binary Tree	42.9%	Easy	
 572	Subtree of Another Tree	43.8%	Easy
-
 
 Linkedin 
 339Nested List Weight Sum 60.9%Easy
@@ -424,7 +421,6 @@ Google
 524	Longest Word in Dictionary through Deleting
 
 amazon
-
 146	LRU Cache	16.9%	Hard	
 1	Two Sum	32.5%	Easy	
 297	Serialize and Deserialize Binary Tree	32.6%	Hard	
@@ -501,3 +497,44 @@ Dropbox
 1Two Sum32.5%Easy
 4Median of Two Sorted Arrays21.3%Hard
 
+bloomberg
+445	Add Two Numbers II	46.0%	Medium
+138	Copy List with Random Pointer	26.0%	Medium
+121	Best Time to Buy and Sell Stock	42.3%	Easy
+582	Kill Process 	50.1%	Medium
+692	Top K Frequent Words	41.3%	Medium
+1	Two Sum	36.7%	Easy
+117	Populating Next Right Pointers in Each Node II	33.9%	Medium
+387	First Unique Character in a String	47.2%	Easy
+20	Valid Parentheses	33.8%	Easy
+283	Move Zeroes	51.0%	Easy
+155	Min Stack	30.2%	Easy
+146	LRU Cache	19.0%	Hard
+56	Merge Intervals	31.3%	Medium
+42	Trapping Rain Water	37.3%	Hard
+206	Reverse Linked List	46.4%	Easy
+122	Best Time to Buy and Sell Stock II	47.8%	Easy
+2	Add Two Numbers	28.2%	Medium
+50	Pow(x, n)	26.0%	Medium
+69	Sqrt(x)	28.5%	Easy
+714	Best Time to Buy and Sell Stock with Transaction Fee	43.0%	Medium
+98	Validate Binary Search Tree	23.9%	Medium
+62	Unique Paths	42.2%	Medium
+160	Intersection of Two Linked Lists	30.9%	Easy
+49	Group Anagrams	37.0%	Medium
+53	Maximum Subarray	40.1%	Easy
+268	Missing Number	44.5%	Easy
+78	Subsets	43.2%	Medium
+232	Implement Queue using Stacks	37.6%	Easy
+287	Find the Duplicate Number	44.0%	Medium
+7	Reverse Integer	24.4%	Easy
+215	Kth Largest Element in an Array	40.1%	Medium
+151	Reverse Words in a String	15.7%	Medium
+102	Binary Tree Level Order Traversal	41.4%	Medium
+139	Word Break	31.0%	Medium
+386	Lexicographical Numbers	42.0%	Medium
+208	Implement Trie (Prefix Tree)	30.0%	Medium
+103	Binary Tree Zigzag Level Order Traversal	35.9%	Medium
+88	Merge Sorted Array	32.1%	Easy
+3	Longest Substring Without Repeating Characters	24.5%	Medium
+33	Search in Rotated Sorted Array	32.1%
