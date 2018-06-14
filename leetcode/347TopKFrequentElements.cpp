@@ -71,3 +71,30 @@ public:
         return v;
     }
 };
+
+
+class Solution {
+public:
+    vector<int> topKFrequent(vector<int>& nums, int k) {
+        unordered_map<int, int> m;
+        for(int i=0; i<nums.size(); i++) {
+            m[nums[i]]++;
+        }
+        vector<vector<int>> bucket(nums.size()+1);
+        for(auto a: m)
+        {
+            bucket[a.second].push_back(a.first);
+        }
+        
+        vector<int> v;
+        for(int i=nums.size(); i>=0; i--) {
+            for(auto a: bucket[i])
+            {
+                v.push_back(a);
+                if(v.size() == k)
+                    return v;
+            }
+        }
+        return v;
+    }
+};
