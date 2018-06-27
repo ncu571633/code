@@ -1,0 +1,46 @@
+addRoute(A,B);
+addRoute(A,C);
+addRoute(C,D);
+addRoute(A,D);
+
+printAll(A, D):
+A->D
+A->C->D
+
+map<string, vector<string>> m;
+
+void addRoute(string a, string b)
+{
+    m[a].push_back(b);
+}
+
+void printRoute(string a, string b)
+{
+    if(!m.count(a))
+        return ;
+
+    set<string> visited;
+    vector<string> v;
+    visited.insert(a);
+    v.push_back(a);
+    printRoute(a, b, visited, v);
+}
+
+void printRoute(string b, set<string>& visited, vector<string>& v)
+{
+    string s = v.back();
+    for(int i=0; i<m[s].size(); i++)
+    {
+        string d = m[s][i];
+        if(visited.count(d))
+            continue;
+        v.push_back(d);
+        visited.insert(d);
+        if(d == b)
+            print v;
+        else
+            printRoute(b, visited, v);
+        v.pop_back(d);
+        visited.remove(d);
+    }
+}
