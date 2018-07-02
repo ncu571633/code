@@ -6,17 +6,18 @@ using different data representations like bit array (integer) or vectors
 
 (2)relational database: relationship between tables
 
+Query:
+    SQL databases uses SQL ( structured query language ) for defining and manipulating the data, which is very powerful. 
+In NoSQL database, queries are focused on collection of documents. 
 For complex queries: SQL databases are good fit for the complex query intensive environment whereas NoSQL databases are not good fit for complex queries. 
 
-SQL databases uses SQL ( structured query language ) for defining and manipulating the data, which is very powerful. In NoSQL database, queries are focused on collection of documents. 
+Scalable:
+    SQL databases are vertically scalable whereas the NoSQL databases are horizontally scalable. 
 
-SQL databases are vertically scalable whereas the NoSQL databases are horizontally scalable. 
-
-SQL databases are table based databases whereas NoSQL databases are document based, key-value pairs.
+Standard schema:
+    SQL databases have predefined schema whereas NoSQL databases have dynamic schema for unstructured data.
+    SQL databases are table based databases whereas NoSQL databases are document based, key-value pairs.
 This means that SQL databases represent data in form of tables which consists of n number of rows of data whereas NoSQL databases are the collection of key-value pair, documents, graph databases or wide-column stores which do not have standard schema definitions which it needs to adhered to.
-
-
-
 
 
 2. Scale architecture  replicas and build a load-balancer
