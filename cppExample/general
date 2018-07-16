@@ -10,3 +10,12 @@ A unique_ptr does not share its pointer. It cannot be copied to another unique_p
   std::unique_ptr<int> u3 (new int);
 
   The shared_ptr type is a smart pointer in the C++ standard library that is designed for scenarios in which more than one owner might have to manage the lifetime of the object in memory. After you initialize a shared_ptr you can copy it, pass it by value in function arguments, and assign it to other shared_ptr instances. All the instances point to the same object
+
+
+Stack unwinding:
+As you create objects statically (on the stack as opposed to allocating them in the heap memory) and perform function calls, they are "stacked up".
+
+When a scope (anything delimited by { and }) is exited (by using return XXX;, reaching the end of the scope or throwing an exception) everything within that scope is destroyed (destructors are called for everything). This process of destroying local objects and calling destructors is called stack unwinding.
+
+avoiding memory leaks (anything dynamically allocated that is not managed by a local object and cleaned up in the destructor will be leaked) 
+the C++ specifications state that you should never throw an exception before any existing exception has been handled. This means that the stack unwinding process should never throw an exception
