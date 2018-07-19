@@ -1,3 +1,60 @@
+int main()
+{
+    int a=5, b=0;
+    int &r = a;
+    r = b++;
+    cout<<a<<r<<b;   //001
+
+    return 0;
+}
+
+     struct A{
+         ~A()
+         {
+             cout<< "~A";
+         }
+     };
+     
+     struct B: public A
+     {
+         virtual ~B()
+         {
+             cout<< "~B";
+         }
+     };
+     
+int main()
+{
+
+
+    A*a = new B();    // ~A
+    delete a;
+    return 0;
+}
+
+     struct A{
+         virtual void print(int x = 1)
+         {
+             cout<< "A" << x;
+         }
+     };
+     
+     struct B: public A
+     {
+          virtual void print(int x = 2)
+         {
+             cout<< "B" << x;
+         }
+     };
+     
+int main()
+{
+    A*a = new B;
+    a->print();
+    return 0;
+}
+
+B1
 
 lvalue, rvalue
 An lvalue refers to an object that persists beyond a single expression. You can think of an lvalue as an object that has a name.
