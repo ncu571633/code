@@ -56,6 +56,34 @@ int main()
 
 B1
 
+
+
+The difference between vector and deque
+One main difference between vectors and deques is that the latter allows efficient insertion at the front of the structure as well as the back.
+
+Deques also do not guarantee that their elements are contiguous in memory so the at-style operator (indexing) may not be as efficient.
+
+A deque is somewhat recursively defined: internally it maintains a double-ended queue of chunks (“blocks” in the graphic below) of fixed size. Each chunk is a vector, and the queue (“map” in the graphic below) of chunks itself is also a vector.
+
+
+placement new
+The simplest use is to place an object at a particular location in memory. This is done by supplying the place as a pointer parameter to the new part of a new expression
+void someCode()
+{
+  char memory[sizeof(Fred)];     // Line #1
+  void* place = memory;          // Line #2
+
+  Fred* f = new(place) Fred();   // Line #3 (see "DANGER" below)
+  // The pointers f and place will be equal
+
+  ...
+}
+
+Order of Constructor/ Destructor Call in C++
+ base class is called first to initialize all the inherited members.
+
+
+
 lvalue, rvalue
 An lvalue refers to an object that persists beyond a single expression. You can think of an lvalue as an object that has a name.
 An rvalue is a temporary value that does not persist beyond the expression that uses it.
