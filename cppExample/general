@@ -104,3 +104,7 @@ When a scope (anything delimited by { and }) is exited (by using return XXX;, re
 
 avoiding memory leaks (anything dynamically allocated that is not managed by a local object and cleaned up in the destructor will be leaked) 
 the C++ specifications state that you should never throw an exception before any existing exception has been handled. This means that the stack unwinding process should never throw an exception
+
+
+Exception safety guarantees, guidelines that class library implementers and clients can use when reasoning about exception handling safety in any programming language that uses exceptions, particularly C++.
+no-leak guarantee
