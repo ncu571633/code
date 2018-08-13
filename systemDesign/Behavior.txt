@@ -175,3 +175,45 @@ Run interactive queries and cook data in Cosmos, Kusto, SQL databases, ADW, and 
 Create Reports and Dashboards from the Cosmos, ADL, Kusto, SQL, ADW, and other data --either using JavaScript or with Power BI embedded in Avocado.
 Easily create a Power BI Report directly from Cosmos or Kusto data without any intermediate steps or connectors.
 Move data from one data source to another (Extract, Transfer, and Load) either ad hoc or according to a schedule.
+
+
+
+is not a News company, but a high tech company. 
+deliver million of data to all terminals in realtime. 
+Challange work is large data set, performance and reliable. 
+The job I am doing is important which effects millions of customers
+I will feel excited when I am doing the job
+
+Leader of the area
+there is a large impact of decision making: Billions of dollars
+used by all finincial companies all over the world
+
+
+
+Business model
+triditional companies: subscription
+Internet companies: ads
+
+
+
+Career path
+1. Expert
+2. Field/area
+leading company in the area
+data driven
+
+
+
+many years experience in large scale software development
+
+
+
+what kind of job are challanging
+what do you like the most about this company
+what kind of people do you want to work with
+
+
+
+
+
+Project:
