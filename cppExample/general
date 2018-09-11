@@ -1,3 +1,8 @@
+volatile: ask the compiler not to optimization for this variable
+optimization (of some parts of your program) may be undesirable, because it may be that someone else is changing the value of some_int from outside the program which compiler is not aware of
+
+
+
 int main()
 {
     int a=5, b=0;
@@ -108,3 +113,35 @@ the C++ specifications state that you should never throw an exception before any
 
 Exception safety guarantees, guidelines that class library implementers and clients can use when reasoning about exception handling safety in any programming language that uses exceptions, particularly C++.
 no-leak guarantee
+
+
+
+Memory management
+static variable: 
+
+
+
+The OFFSETOF() macro
+#define OFFSETOF(TYPE, ELEMENT) ((size_t)&(((TYPE *)0)->ELEMENT))
+
+#include <stdio.h>
+ 
+#define OFFSETOF(TYPE, ELEMENT) ((size_t)&(((TYPE *)0)->ELEMENT))
+ 
+typedef struct PodTag
+{
+   int     i;
+   double  d;
+   char    c;
+} PodType;
+ 
+int main()
+{
+   printf("%d", OFFSETOF(PodType, c) );
+    
+   getchar();
+   return 0;
+}
+
+((size_t)&(((PodType *)0)->c))
+Since we are considering 0 as address of the structure variable, c will be placed after 16 bytes of its base address i.e. 0x00 + 0x10. Applying & on the structure element (in this case it is c) returns the address of the element which is 0x10. Casting the address to unsigned int (size_t) results in number of bytes the element is placed in the structure.
