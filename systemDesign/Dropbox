@@ -1,0 +1,65 @@
+1. 
+
+    DB       AWS S3
+        |       |
+        |       |
+        |-------|
+    Server      
+        |       
+---------------------------
+        |
+    Clients
+
+DB: mySQL
+Issue:
+stop sending files from server to S3
+downloading/uploading syncing
+new changes happen, clients keep pulling server
+    increase pulling timeout, reduce the load of server, less respondsive
+
+
+2. 
+    DB                  AWS S3
+        |                   |
+        |                   |
+        |-------------------|
+                |           |
+NotServer  -  MetaServer  BlockServer 
+    |           |           |
+---------------------------------
+                |
+            Clients
+
+
+
+blockserver = storage service: database, S3
+metaserver = metadata service: database
+NotServer = notifications service: user
+
+Storage service
+The actual contents of users’ files are stored in encrypted blocks with this service.
+
+Metadata service
+Basic information about user data (including file names and types), called metadata, is kept in its own discrete storage service separate from file blocks. This metadata acts as an index for data in users’ accounts.
+
+Notification service
+
+This is a separate service dedicated to monitoring if changes have been made to Dropbox accounts. No file data or metadata is stored or transferred here. Instead, clients establish a long poll connection to this service and wait for a change, which then signals a change to the relevant clients.
+
+
+Database call:
+a couple of round trip calls
+now use store procedure: 
+a set of Structured Query Language (SQL) statements with an assigned name, which are stored in a relational database management system as a group
+
+RPC
+
+1 database
+partition
+shard: A database shard is a horizontal partition of data in a database or search engine
+Memcached
+a general-purpose distributed memory caching system. It is often used to speed up dynamic database-driven websites by caching data and objects in RAM to reduce the number of times an external data source (such as a database or API) must be read.
+
+a key–value associative array;
+Each client knows all servers; the servers do not communicate with each other. If a client wishes to set or read the value corresponding to a certain key, the client's library first computes a hash of the key to determine which server to use
+The server computes a second hash of the key to determine where to store or read the corresponding value
