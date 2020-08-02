@@ -19,16 +19,21 @@ word = "ABCB", -> returns false.
 
 class Solution {
 public:
-    bool dfs(vector<vector<char>> board, string word, int i, int j, int k) {
+    bool dfs(vector<vector<char>>& board, string word, int i, int j, int k) {
         if(i<0 || i>=board.size() || j<0 || j>=board[0].size() || board[i][j]!=word[k])
             return false;
         
+        char c = board[i][j];
         board[i][j] = '#';
-        if(k == word.size()-1
-        || dfs(board, word, i-1, j, k+1) || dfs(board, word, i, j-1, k+1) 
+        
+        if(k == word.size()-1)
+            return true;
+        if(dfs(board, word, i-1, j, k+1) || dfs(board, word, i, j-1, k+1) 
         || dfs(board, word, i+1, j, k+1) || dfs(board, word, i, j+1, k+1)) {
             return true;
         }
+        
+        board[i][j] = c;
         return false;
     }
     bool exist(vector<vector<char>>& board, string word) {
