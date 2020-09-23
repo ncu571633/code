@@ -31,3 +31,25 @@ public:
         return ret;
     }
 };
+
+
+class Solution {
+public:
+    void preorder(Node* root, vector<int>& ret)
+    {
+        if(!root)
+            return;
+
+        ret.push_back(root->val);
+        for(int i=0; i<root->children.size(); i++)
+        {
+            preorder(root->children[i], ret);
+        }        
+    }
+    
+    vector<int> preorder(Node* root) {
+        vector<int> ret;
+        preorder(root, ret);
+        return ret;
+    }
+};
