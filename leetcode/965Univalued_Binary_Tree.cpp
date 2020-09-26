@@ -31,19 +31,18 @@ Each node's value will be an integer in the range [0, 99].
  *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
  * };
  */
+
 class Solution {
 public:
-    bool helper(TreeNode* root, int val) {
+    bool isUnivalTree(TreeNode* root, int v) {
         if(!root)
             return true;
-        if(root->val != val)
-            return false;
-        return helper(root->right, val) && helper(root->left, val);
+        return root->val == v && isUnivalTree(root->left, v) && isUnivalTree(root->right, v);
     }
     
     bool isUnivalTree(TreeNode* root) {
         if(!root)
             return true;
-        return helper(root, root->val);
+        return isUnivalTree(root, root->val);
     }
 };
