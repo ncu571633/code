@@ -56,3 +56,30 @@ public:
         return ret + 1;
     }
 };
+
+
+class Solution {
+public:
+    int maxDepth(Node* root) {
+        if(!root)
+            return 0;
+        queue<Node*> q;
+        int ret = 0;
+        q.push(root);
+        while(!q.empty())
+        {
+            int count = q.size();
+            for(int i=0; i<count; i++)
+            {
+                Node* p = q.front();
+                q.pop();
+                for(int j=0; j<p->children.size(); j++)
+                {
+                    q.push(p->children[j]);
+                }
+            }
+            ret ++;
+        }
+        return ret;
+    }
+};
