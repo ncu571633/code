@@ -1,0 +1,99 @@
+博弈类
+1. 递归： 当前玩家赢返回 true 的条件就是递归调用下一个玩家输返回 false。这里需要一个变量来标记当前是第几个玩家，还需要两个变量来分别记录两个玩家的当前数字和
+2. dp + 递归
+
+486. Predict the Winner
+Given an array of scores that are non-negative integers. Player 1 picks one of the numbers from either end of the array followed by the player 2 and then player 1 and so on. Each time a player picks a number, that number will not be available for the next player. This continues until all the scores have been chosen. The player with the maximum score wins.
+Given an array of scores, predict whether player 1 is the winner. You can assume each player plays to maximize his score.
+
+Example 1:
+Input: [1, 5, 2]
+Output: False
+Explanation: Initially, player 1 can choose between 1 and 2. 
+If he chooses 2 (or 1), then player 2 can choose from 1 (or 2) and 5. If player 2 chooses 5, then player 1 will be left with 1 (or 2). 
+So, final score of player 1 is 1 + 2 = 3, and player 2 is 5. 
+Hence, player 1 will never be the winner and you need to return False.
+
+Example 2:
+Input: [1, 5, 233, 7]
+Output: True
+Explanation: Player 1 first chooses 1. Then player 2 have to choose between 5 and 7. No matter which number player 2 choose, player 1 can choose 233.
+Finally, player 1 has more score (234) than player 2 (12), so you need to return True representing player1 can win.
+
+递归：
+class Solution {
+public:
+    bool PredictTheWinner(vector<int>& nums) {
+        return canWin(nums, 0, 0, 1);
+    }
+    bool canWin(vector<int> nums, int sum1, int sum2, int player) {
+        if (nums.empty()) return sum1 >= sum2;
+        if (nums.size() == 1) {
+            if (player == 1) return sum1 + nums[0] >= sum2;
+            else if (player == 2) return sum2 + nums[0] > sum1;
+        }
+        vector<int> va = vector<int>(nums.begin() + 1, nums.end());
+        vector<int> vb = vector<int>(nums.begin(), nums.end() - 1);
+        if (player == 1) {
+            return !canWin(va, sum1 + nums[0], sum2, 2) || !canWin(vb, sum1 + nums.back(), sum2, 2);
+        } else if (player == 2) {
+            return !canWin(va, sum1, sum2 + nums[0], 1) || !canWin(vb, sum1, sum2 + nums.back(), 1);
+        }
+    }
+};
+
+dp + 递归：
+class Solution {
+public:
+    bool PredictTheWinner(vector<int>& nums) {
+        int n = nums.size();
+        vector<vector<int>> dp(n, vector<int>(n, -1));
+        return canWin(nums, 0, n - 1, dp) >= 0;
+    }
+    int canWin(vector<int>& nums, int s, int e, vector<vector<int>>& dp) {
+        if (dp[s][e] == -1) {
+            dp[s][e] = (s == e) ? nums[s] : max(nums[s] - canWin(nums, s + 1, e, dp), nums[e] - canWin(nums, s, e - 1, dp));
+        }
+        return dp[s][e];
+    }
+};
+
+
+375. Guess Number Higher or Lower II
+We are playing the Guess Game. The game is as follows: 
+
+I pick a number from 1 to n. You have to guess which number I picked.
+
+Every time you guess wrong, I'll tell you whether the number I picked is higher or lower.
+
+However, when you guess a particular number x, and you guess wrong, you pay $x. You win the game when you guess the number I picked.
+
+Example:
+
+n = 10, I pick 8.
+
+First round:  You guess 5, I tell you that it's higher. You pay $5.
+Second round: You guess 7, I tell you that it's higher. You pay $7.
+Third round:  You guess 9, I tell you that it's lower. You pay $9.
+
+Game over. 8 is the number I picked.
+
+You end up paying $5 + $7 + $9 = $21.
+
+class Solution {
+public:
+    int getMoneyAmount(int n) {
+        vector<vector<int>> memo(n + 1, vector<int>(n + 1, 0));
+        return helper(1, n, memo);
+    }
+    int helper(int start, int end, vector<vector<int>>& memo) {
+        if (start >= end) return 0;
+        if (memo[start][end] > 0) return memo[start][end];
+        int res = INT_MAX;
+        for (int k = start; k <= end; ++k) {
+            int t = k + max(helper(start, k - 1, memo), helper(k + 1, end, memo));
+            res = min(res, t);
+        }
+        return memo[start][end] = res;
+    }
+};
