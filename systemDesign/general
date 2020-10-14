@@ -1,3 +1,12 @@
+
+    A cab booking service was discussed.
+    the discussion included a lot of discussion on Driver and customer matching service, map service, and load balancing.
+    also included discussion on the type of connections (web-socket or Long poll)
+    A discussion on scale and numbers, type of DB, and why that DB was chosen apart from other DBs took place.
+    Schema was discussed as well.
+    this interview plays a huge role in levelling so talk and drive this to your benefit.
+
+
 1. Database design
 (1)Memory: a hash table
    Compress your data
