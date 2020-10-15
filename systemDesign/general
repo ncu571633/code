@@ -1,6 +1,62 @@
 https://github.com/donnemartin/system-design-primer
 
 
+https://www.lecloud.net/post/7295452622/scalability-for-dummies-part-1-clones
+Scalability for Dummies - Part 1: Clones
+Public servers of a scalable web service are hidden behind a load balancer.
+
+first golden rule for scalability
+1. every server contains exactly the same codebase and does not store any user-related data, like sessions or profile pictures, on local disc or memory. 
+Sessions need to be stored in a centralized data store which is accessible to all your application servers. It can be an external database or an external persistent cache, like Redis
+An external persistent cache will have better performance than an external database
+a code change is sent to all your servers without one server still serving old code
+
+Scalability for Dummies - Part 2: Database
+SQL databases are vertically scalable, NoSQL databases are horizontally scalable.
+In most situations, SQL databases are vertically scalable, which means that you can increase the load on a single server by increasing things like CPU, RAM or SSD. NoSQL databases, on the other hand, are horizontally scalable. This means that you handle more traffic by sharding, or adding more servers in your NoSQL database
+
+think about what happens if you need to lock two tables for an atomic transaction, and they are on different servers
+
+Database shard, is a horizontal partition of data in a database or search engine. rows of a database table are held separately
+Horizontal partitioning involves putting different rows into different tables
+Vertical partitioning involves creating tables with fewer columns and using additional tables to store the remaining columns
+
+Scalability for Dummies - Part 3: Cache
+A cache is a simple key-value store and it should reside as a buffering layer between your application and your data storage. 
+There are 2 patterns of caching your data
+  #1 - Cached Database Queries: Whenever you do a query to your database, you store the result dataset in cache. 
+  A hashed version of your query is the cache key. 
+  The next time you run the query, you first check if it is already in the cache. 
+  The next time you run the query, you check at first the cache if there is already a result. 
+  This pattern has several issues. The main issue is the expiration. It is hard to delete a cached result when you cache a complex query (who has not?). When one piece of data changes (for example a table cell) you need to delete all cached queries who may include that table cell. You get the point?
+  
+  #2 - Cached Objects
+In general, see your data as an object like you already do in your code (classes, instances, etc.). Let your class assemble a dataset from your database and then store the complete instance of the class or the assembed dataset in the cache. 
+You have, for example, a class called “Product” which has a property called “data”. It is an array containing prices, texts, pictures, and customer reviews of your product. The property “data” is filled by several methods in the class doing several database requests which are hard to cache, since many things relate to each other. N
+ow, do the following: when your class has finished the “assembling” of the data array, directly store the data array, or better yet the complete instance of the class, in the cache! This allows you to easily get rid of the object whenever something did change and makes the overall operation of your code faster and more logical.
+
+And the best part: it makes asynchronous processing possible! Just imagine an army of worker servers who assemble your objects for you! The application just consumes the latest cached object and nearly never touches the databases anymore!
+
+Some ideas of objects to cache:
+    user sessions (never use the database!)
+    fully rendered blog articles
+    activity streams
+    user<->friend relationships 
+
+As you maybe already realized, I am a huge fan of caching. It is easy to understand, very simple to implement and the result is always breathtaking. In general, I am more a friend of Redis than Memcached, because I love the extra database-features of Redis like persistence and the built-in data structures like lists and sets. With Redis and a clever key’ing there may be a chance that you even can get completly rid of a database. But if you just need to cache, take Memcached, because it scales like a charm.
+
+
+
+  
+Memcached (mem-cash-dee) is a distributed memory-caching system. 
+It is often used to speed up dynamic database-driven websites by caching data and objects in RAM to reduce the number of times an external data source (such as a database or API) must be read
+The system uses a client–server architecture. 
+    The servers maintain a key–value associative array; the clients populate this array and query it by key. 
+    If a client wishes to set or read the value corresponding to a certain key, the client's library first computes a hash of the key to determine which server to use. This gives a simple form of sharding and scalable shared-nothing architecture across the servers. 
+    The server computes a second hash of the key to determine where to store or read the corresponding value. The servers keep the values in RAM; 
+    if a server runs out of RAM, it discards the oldest values. 
+
+
 
     A cab booking service was discussed.
     the discussion included a lot of discussion on Driver and customer matching service, map service, and load balancing.
