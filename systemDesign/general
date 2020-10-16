@@ -29,7 +29,7 @@ There are 2 patterns of caching your data
   The next time you run the query, you first check if it is already in the cache. 
   The next time you run the query, you check at first the cache if there is already a result. 
   This pattern has several issues. The main issue is the expiration. It is hard to delete a cached result when you cache a complex query (who has not?). When one piece of data changes (for example a table cell) you need to delete all cached queries who may include that table cell. You get the point?
-  
+
   #2 - Cached Objects
 In general, see your data as an object like you already do in your code (classes, instances, etc.). Let your class assemble a dataset from your database and then store the complete instance of the class or the assembed dataset in the cache. 
 You have, for example, a class called “Product” which has a property called “data”. It is an array containing prices, texts, pictures, and customer reviews of your product. The property “data” is filled by several methods in the class doing several database requests which are hard to cache, since many things relate to each other. N
@@ -42,10 +42,6 @@ Some ideas of objects to cache:
     fully rendered blog articles
     activity streams
     user<->friend relationships 
-
-As you maybe already realized, I am a huge fan of caching. It is easy to understand, very simple to implement and the result is always breathtaking. In general, I am more a friend of Redis than Memcached, because I love the extra database-features of Redis like persistence and the built-in data structures like lists and sets. With Redis and a clever key’ing there may be a chance that you even can get completly rid of a database. But if you just need to cache, take Memcached, because it scales like a charm.
-
-
 
   
 Memcached (mem-cash-dee) is a distributed memory-caching system. 
