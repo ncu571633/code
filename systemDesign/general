@@ -52,7 +52,26 @@ The system uses a client–server architecture.
     The server computes a second hash of the key to determine where to store or read the corresponding value. The servers keep the values in RAM; 
     if a server runs out of RAM, it discards the oldest values. 
 
+Load Balancing:
+Round Robin:
+ • The first request is sent to Server A.
+• The second request is sent to Server B.
+• The third request is sent to Server C.
 
+ Weighted Load Balancing
+• Server A can handle 15 requests per second, on average
+• Server B can handle 10 requests per second, on average
+• Server C can handle 5 requests per second, on average
+
+Next, assume that the load balancer receives 6 requests.
+
+• 3 requests are sent to Server A
+• 2 requests are sent to Server B
+• 1 request is sent to Server C.
+
+
+A load balancer that keeps sticky sessions will create a unique session object for each client. 
+For each request from the same client, the load balancer processes the request to the same web server each time, where data is stored and updated as long as the session exists. 
 
     A cab booking service was discussed.
     the discussion included a lot of discussion on Driver and customer matching service, map service, and load balancing.
