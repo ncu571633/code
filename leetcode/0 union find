@@ -1,0 +1,37 @@
+ [LeetCode] 261. Graph Valid Tree
+
+ 
+
+Given n nodes labeled from 0 to n-1 and a list of undirected edges (each edge is a pair of nodes), write a function to check whether these edges make up a valid tree.
+
+Example 1:
+
+Input: n = 5, and edges = [[0,1], [0,2], [0,3], [1,4]]
+Output: true
+
+Example 2:
+
+Input: n = 5, and edges = [[0,1], [1,2], [2,3], [1,3], [1,4]]
+Output: false
+
+Note: you can assume that no duplicate edges will appear in edges. Since all edges are undirected, [0,1] is the same as [1,0] and thus will not appear together in edges.
+
+这种方法对于解决连通图的问题很有效，思想是遍历节点，如果两个节点相连，将其 roots 值连上，这样可以找到环，初始化 roots 数组为 -1，然后对于一个 pair 的两个节点分别调用 find 函数，得到的值如果相同的话，则说明环存在，返回 false，不同的话，将其 roots 值 union 上
+
+// Union Find
+class Solution {
+public:
+    bool validTree(int n, vector<pair<int, int>>& edges) {
+        vector<int> roots(n, -1);
+        for (auto a : edges) {
+            int x = find(roots, a.first), y = find(roots, a.second);
+            if (x == y) return false;
+            roots[x] = y;
+        }
+        return edges.size() == n - 1;
+    }
+    int find(vector<int> &roots, int i) {
+        while (roots[i] != -1) i = roots[i];
+        return i;
+    }
+};
