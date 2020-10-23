@@ -1,4 +1,11 @@
-DP:
+DP: 
+overlapping sub-problem: compute only once and store the solution for future use
+reduce time complexity: exponential to polynomial
+if sub-problem don't overlap: divide and conquer like merge sort
+
+Top-down: recursion with memorization
+Bottom-up: DP
+
 1D 
 题目给出n，则dp = vector<int>(n+1, 0)
 题目给出m, n，则dp = vector<vector<int>> (m+1, vector<int>（n+1, 0)）
