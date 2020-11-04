@@ -1,5 +1,21 @@
 https://github.com/donnemartin/system-design-primer
 
+Push vs Pull 
+
+Push: when a client requests work from a server — the work is “pushed” to the server
+Push Disadvantages
+load balancing
+a push system is you need to know where to send your request: DNS
+
+
+Pull: when the server requests work, usually not directly from the client. The most common approach here is when there is some kind of work queue that clients enqueue messages on, and the server pulls messages from that queue. 
+Pull Advantages
+The biggest advantage of pull systems is that they distribute work to those that can process it
+
+Pull Disadvantages
+The biggest problem with pull systems is probably when you have a request/response communication pattern. It is easy enough to send the request, but how do you get the response
+
+
 
 https://www.lecloud.net/post/7295452622/scalability-for-dummies-part-1-clones
 Scalability for Dummies - Part 1: Clones
