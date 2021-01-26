@@ -24,3 +24,34 @@ public:
 };
 
 
+
+https://www.geeksforgeeks.org/set-vs-unordered_set-c-stl/
+Differences :
+
+                |     set             | unordered_set
+---------------------------------------------------------
+Ordering        | increasing  order   | no ordering
+                | (by default)        |
+
+Implementation  | Self balancing BST  | Hash Table
+                | like Red-Black Tree |  
+
+search time     | log(n)              | O(1) -> Average 
+                |                     | O(n) -> Worst Case
+
+Insertion time  | log(n) + Rebalance  | Same as search
+                      
+Deletion time   | log(n) + Rebalance  | Same as search
+
+Use set when
+
+    We need ordered data.
+    We would have to print/access the data (in sorted order).
+    We need predecessor/successor of elements.
+    Since set is ordered, we can use functions like binary_search(), lower_bound() and upper_bound() on set elements. These functions cannot be used on unordered_set().
+    See advantages of BST over Hash Table for more cases.
+
+Use unordered_set when
+
+    We need to keep a set of distinct elements and no ordering is required.
+    We need single element access i.e. no traversal.
