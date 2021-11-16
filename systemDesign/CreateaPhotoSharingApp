@@ -7,18 +7,18 @@ More specifically, the system allows people to follow each other, share/comment/
 
 High-level solution
 
-user object and picture object.
-relational database
-a user table which contains information like name, email, registration date and so on
-two relations – user follow relation and user-picture relation
+    user object and picture object.
+    relational database
+    a user table which contains information like name, email, registration date and so on
+    two relations – user follow relation and user-picture relation
 
 
 1. Response time
-one costly operation is to render users feed
-The server has to go over everyone the user follows, fetch all the pictures from them, and rank them based on particular algorithms
+  one costly operation is to render users feed
+  The server has to go over everyone the user follows, fetch all the pictures from them, and rank them based on particular algorithms
 
-read the top N most recent pictures
-offline pipelines to precompute some signals that can speed up the ranking.
+    read the top N most recent pictures
+    offline pipelines to precompute some signals that can speed up the ranking.
 
 
 Scale architecture
