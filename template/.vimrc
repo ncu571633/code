@@ -4,6 +4,20 @@ set autoindent
 " don't highlight the last search upon startup
 set viminfo="h"
 
+" set font size
+if has("gui_running")
+  if has("gui_gtk2")
+    set guifont=Inconsolata\ 12
+  elseif has("gui_macvim")
+    set guifont=Menlo\ Regular:h14
+  elseif has("gui_win32")
+    set guifont=Consolas:h11:cANSI
+  endif
+endif
+
+" max vim window
+set lines=999 columns=999
+
 " Do C-style auto indentation on C/C++/Perl files only :)
 :filetype on
 :autocmd FileType c,cpp,perl :set cindent
