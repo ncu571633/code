@@ -45,3 +45,59 @@ public:
         return h->next;
     }
 };
+
+class Solution {
+public:
+    int getListSize(ListNode *l)
+    {
+        int n = 0;
+        for(ListNode* p=l; p!=nullptr; p=p->next)
+            n ++;
+        return n;
+    }
+    
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        int s1 = getListSize(l1);
+        int s2 = getListSize(l2);
+        
+        if (s1 < s2)
+            return addTwoNumbers(l2, l1);
+        
+        // assume l1 is longer than or equal to l2
+        bool carry = false;
+        ListNode* p = nullptr;
+        ListNode* p1 = l1;
+        for(ListNode *p2 = l2; p2!=nullptr; p1 = p1->next, p2 = p2 -> next)
+        {
+            p = p1;
+            p1->val = p1->val + p2->val + carry;
+            if (p1->val >= 10)
+            {
+                p1->val -= 10;
+                carry = true;
+            }
+            else
+                carry = false;
+        }
+        
+        for (; p1!=nullptr && carry; p1 = p1->next)
+        {
+            p = p1;
+            p1->val += carry;
+            if (p1->val >= 10)
+            {
+                p1->val -= 10;
+                carry = true;
+            }
+            else
+                carry = false;            
+        }
+        
+        if (carry)
+        {
+            p->next = new ListNode(1);
+        }            
+        
+        return l1;
+    }
+};
