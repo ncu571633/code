@@ -35,6 +35,18 @@ int z = x + y;   // ok
 
 forbidden conversion from rvalue to lvalue
 
+
+If X is any type, then X&& is called an rvalue reference to X. 
+the ordinary reference X& is now also called an lvalue reference.
+
+X& X::operator=(X const & rhs); // classical implementation
+X& X::operator=(X&& rhs)
+{
+  // Move semantics: exchange content between this and rhs
+  return *this;
+}
+
+
 Move semantics:
 
 Range-based for loops
