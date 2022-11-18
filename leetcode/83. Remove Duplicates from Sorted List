@@ -28,3 +28,20 @@ public:
         return head;
     }
 };
+
+class Solution {
+public:
+    ListNode* deleteDuplicates(ListNode* head) {
+        for(ListNode* p = head; p!=nullptr;)
+        {
+            ListNode* t = p;
+            while(t && t->val==p->val)
+            {
+                t=t->next;
+            }
+            p->next = t;
+            p=t;
+        }
+        return head;
+    }
+};
