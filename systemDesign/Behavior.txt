@@ -222,3 +222,21 @@ LP - Tell me about an experience where you started working on a project, without
 	  Some follow up questions based on it. 
 LP - Tell me about a time where you took a decision without taking help from others 
 	  Some follow up questions based on it. 
+	  
+
+Situation, Task, Action, Result
+1. 介绍简历项目
+如果仅仅是从简历上挑一个项目让你介绍，那么最好的方法就是根据上面提到的STAR原则来介绍。往往简历上项目细节中会介绍一些成就，比如你简历上写了你做了一些事情，提高系统运行效率，那么就可以这样介绍：
+
+    Situation（情景）：我们需要开发一个新项目/我们某个功能出问题了。
+
+    Our product have serious performance issue. A single page take minute to load.
+
+    Task（任务）：我觉得这个机会很好，自告奋勇来解决xxx问题。
+
+    同时体现下自己契合公司的文化，比如说你面试Facebook，脸书比较看重你工作的Impact，你就可以说: If the page is slow, users will be unsatisfied with our product. I believe improving the performance will have huge impact on our product. So I take this job to investigate the issue.
+
+    Action（行动）：我分析了一下产品需求/问题症结，研究了一下目前的代码和业界通用的代码，我觉得问题出在xxx。然后我写了一些脚本对整个生命周期进行分析，做了大量测试，发现确实问题在xxx，一般针对这种问题，我们有几种解决办法，考虑到我们的情况，我做了xxxx, xxxx改进。
+
+    Result（结果）：最后速度是以前的xx倍，而且我的方案作为best practice被大家认可，推广。
+
