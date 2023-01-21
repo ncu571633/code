@@ -1,0 +1,16 @@
+Scale from zero to millions of users
+
+1. Single server setup
+User  DNS
+1 server(web app, database, cache)
+
+2. Database
+
+User  DNS
+1 server(web app, cache)
+database server:
+  relational database: SQL
+  nonrelational database: unstructured data, low latency, store large data
+  
+  vertical scaling: add more powers(CPU, RAM)
+  horizontal scaling: more servers
