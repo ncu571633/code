@@ -22,27 +22,6 @@ Example 2:
 
 Binary tree [1,2,3], return false. 
 
-class Solution {
-private:
-    bool first;
-    int lastVal;
-public:
-    Solution() {
-        first = true;
-        lastVal = INT_MIN;
-    }
-    bool isValidBST(TreeNode* root) {
-        if(!root)
-            return true;
-        if(!isValidBST(root->left))
-            return false;
-        if(root->val <= lastVal && !first)
-            return false;
-        first = false, lastVal = root->val;
-        return isValidBST(root->right);
-    }
-};
-
 
 class Solution {
 private:
@@ -60,5 +39,24 @@ public:
             return false;
         last = root;
         return isValidBST(root->right);
+    }
+};
+
+class Solution {
+public:
+    bool isValidBST(TreeNode* root) {
+        TreeNode* pre = nullptr;
+        return isValidBST(root, pre);
+    }
+
+    bool isValidBST(TreeNode* root, TreeNode*& p) {
+        if(!root)
+            return true;
+        if(!isValidBST(root->left, p))
+            return false;
+        if(p && p->val >= root->val)
+            return false;
+        p = root;
+        return isValidBST(root->right, p);
     }
 };
