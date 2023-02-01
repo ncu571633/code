@@ -14,3 +14,9 @@ database server:
   
   vertical scaling: add more powers(CPU, RAM)
   horizontal scaling: more servers
+  
+Memcached is a general-purpose distributed memory-caching system: cache data from db.
+
+Asynchronous processing: user doesn't need to wait the job to finish, and continue to do the next task.
+   for example: upload video/photo
+   message queue: kafka
