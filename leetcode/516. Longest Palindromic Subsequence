@@ -2,25 +2,21 @@
 
 Example 1:
 Input:
-
 "bbbab"
-
 Output:
-
 4
-
 One possible longest palindromic subsequence is "bbbb".
 
 Example 2:
 Input:
-
 "cbbd"
-
 Output:
-
 2
-
 One possible longest palindromic subsequence is "bb". 
+
+
+m[i][j] = m[i+1][j-1] + 2 (s[i] == s[j])
+        = max(m[i+1][j], m[i][j-1]) (s[i] != s[j])
 
 class Solution {
 public:
