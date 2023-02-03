@@ -15,10 +15,9 @@ public:
             }
         }
         if(i==-1)
+        {
             for(; k>=0; j--)
                 nums1[k--] = nums2[j];
-        if(j==-1)
-            for(; k>=0; i--)
-                nums1[k--] = nums1[i];
+        }
     }
 };
