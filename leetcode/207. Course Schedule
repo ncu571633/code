@@ -48,3 +48,35 @@ public:
         return true;
     }
 };
+
+
+class Solution {
+public:
+    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+        map<int, vector<int>> g; // start->end
+        for(int i=0; i<prerequisites.size(); i++)
+        {
+            g[prerequisites[i][1]].push_back(prerequisites[i][0]);
+        }
+
+        vector<int> visit(numCourses);
+        for (int i = 0; i < numCourses; ++i) {
+            if (!canFinishDFS(g, visit, i)) return false;
+        }
+        return true;
+    }
+
+    // 1 -> 3 -> 4
+    //   -> 2 ->
+    // 3 status: -1 invalid, 1 visited, 0 not visited
+    bool canFinishDFS(map<int, vector<int>>& graph, vector<int>& visit, int i) {
+        if (visit[i] == -1) return false;
+        if (visit[i] == 1) return true;
+        visit[i] = -1;
+        for (auto a : graph[i]) {
+            if (!canFinishDFS(graph, visit, a)) return false;
+        }
+        visit[i] = 1;
+        return true;
+    }
+};
