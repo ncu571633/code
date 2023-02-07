@@ -62,12 +62,13 @@ char16_t and char32_t
     static_assert (based on a Boost library) 
 
 Smart pointer:
-    (1). auto_ptr:
+    (1). auto_ptr: cannot be used in STL containers because it has a copy constructor that does not meet requirements of container CopyConstructible. 
+unique_ptr does not implement a copy constructor, so containers use alternate methods. 
     (2). unique_ptr: at most one unique_ptr pointing at any one resource.
     (3). shared_ptr: wraps a reference counting mechanism around a raw pointer. 
     So for each instance of the shared_ptr the reference count is increased by one. 
     If two share_ptr objects refer the each other they will never get deleted because they will never end up with a reference count of zero.
-    (4). weak_ptr: points to a shared_ptr but does not increase its reference count.
+    (4). weak_ptr: points to a shared_ptr but does not increase its reference count, it is not considered an owner. 
     This means that the underying object can still be deleted even though there is a weak_ptr reference to it.
 
         class A { shared_ptr<B> b; ... };
