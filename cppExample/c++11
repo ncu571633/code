@@ -1,4 +1,5 @@
 https://www.stroustrup.com/C++11FAQ.html
+https://en.wikipedia.org/wiki/C++11
 
 Core language features
 1. auto and decltype
@@ -40,7 +41,10 @@ Core language features
     brace-or-equal initializers
     nullptr
     long long
-    char16_t and char32_t
+
+char16_t and char32_t
+    16-bit wide character used to store Unicode encoded as UTF-16LE
+    
     type aliases
     variadic templates
     generalized (non-trivial) unions
@@ -56,3 +60,29 @@ Core language features
     GC interface (removed in C++23)
     range-for (based on a Boost library)
     static_assert (based on a Boost library) 
+
+Smart pointer:
+    (1). auto_ptr:
+    (2). unique_ptr: at most one unique_ptr pointing at any one resource.
+    (3). shared_ptr: wraps a reference counting mechanism around a raw pointer. 
+    So for each instance of the shared_ptr the reference count is increased by one. 
+    If two share_ptr objects refer the each other they will never get deleted because they will never end up with a reference count of zero.
+    (4). weak_ptr: points to a shared_ptr but does not increase its reference count.
+    This means that the underying object can still be deleted even though there is a weak_ptr reference to it.
+
+        class A { shared_ptr<B> b; ... };
+        class B { shared_ptr<A> a; ... };
+        shared_ptr<A> x(new A);  // +1
+        x->b = new B;            // +1
+        x->b->a = x;             // +1
+        // Ref count of 'x' is 2.
+        // Ref count of 'x->b' is 1.
+        // When 'x' leaves the scope, there will be a memory leak:
+        // 2 is decremented to 1, and so both ref counts will be 1.
+        // (Memory is deallocated only when ref count drops to 0)
+
+Can weak_ptr be used in case the programmer cannot tell the ownership relationship and cannot establish any static ownership 
+because of lack of privilege or lack of information? The answer is: If ownership among objects is unclear, weak_ptr cannot help. 
+If there is a cycle, the programmer has to find it and break it. 
+An alternative remedy is to use a programming language with full garbage collection (such as: Java, C#, Go, Haskell), 
+or to use a conservative (=imperfect) garbage collector which works with C/C++ (such as: Boehm GC).
