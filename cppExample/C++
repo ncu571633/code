@@ -2,6 +2,9 @@ volatile: ask the compiler not to optimization for this variable
 optimization (of some parts of your program) may be undesirable, because it may be that someone else is changing the value of some_int from outside the program which compiler is not aware of
 
 
+stack unwinding:
+
+
 
 int main()
 {
