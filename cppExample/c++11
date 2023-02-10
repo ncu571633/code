@@ -80,7 +80,55 @@ type aliases
 
 lambda expressions:
     allow inline functions which can be used for short snippets of code that are not going to be reused and therefore do not require a name. 
+    auto greet = []() {
+      // lambda function body
+    };
+  
+    auto greet =: defines a function pointer. 
+    [] is called the lambda introducer which denotes the start of the lambda expression
+    () is called the parameter list which is similar to the () operator of a normal function
 
+    auto add = [] (int a, int b) {
+     cout << "Sum = " << a + b;
+    };
+    
+    auto add = [] (int a, int b) 
+    { // The compiler can implicitly deduce the return type of the lambda expression based on the return statement(s).
+      // always returns an 'int'
+      return a + b;
+    };
+    
+    auto operation = []  (int a, int b,  string op) -> double 
+    {
+        if (op == "sum") {
+            // returns integer value
+            return a + b;
+        } 
+        else {
+            // returns double value
+            return (a + b) / 2.0;
+        }
+    };
+    
+    C++ Lambda Function Capture Clause
+    By default, lambda functions cannot access variables of the enclosing function. In order to access those variables, we use the capture clause.
+
+    We can capture the variables in two ways:
+    Capture by Value, Capture by Reference
+    
+    int num_main = 100;
+
+    // get access to num_main from the enclosing function
+    auto my_lambda = [num_main] () {
+      cout << num_main;
+    };
+    
+    // access the address of num_main variable
+    auto my_lambda = [&num_main] () {
+      num_main = 900;
+    };
+    
+    
 noexcept specifier and noexcept operator
 
 
