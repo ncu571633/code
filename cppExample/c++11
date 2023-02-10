@@ -77,14 +77,50 @@ type aliases
     Unicode string literals
     user-defined literals
     attributes
-    lambda expressions
-    noexcept specifier and noexcept operator
-    alignof and alignas
-    multithreaded memory model
-    thread-local storage
-    GC interface (removed in C++23)
-    range-for (based on a Boost library)
-    static_assert (based on a Boost library) 
+
+lambda expressions:
+    allow inline functions which can be used for short snippets of code that are not going to be reused and therefore do not require a name. 
+
+noexcept specifier and noexcept operator
+
+
+alignof and alignas
+    Alignment is a restriction on which memory positions a value's first byte can be stored. (It is needed to improve performance on processors and to permit use of certain instructions that works only on data with particular alignment, for example SSE need to be aligned to 16 bytes, while AVX to 32 bytes.)
+    Alignment of 16 means that memory addresses that are a multiple of 16 are the only valid addresses.
+    alignas: force alignment to the required number of bytes. You can only align to powers of 2: 1, 2, 4, 8, 16, 32, 64, 128, ...
+        alignas(16) int a[4];
+        alignas(1024) int b[4];
+        printf("%p\n", a);
+        printf("%p", b);
+    alignof: Returns the alignment
+        assert(alignof(a) == 16);
+        assert(alignof(b) == 1024);
+
+
+multithreaded memory model
+thread-local storage
+
+
+range-for (based on a Boost library)
+    for ( auto address_entry : address_book )
+
+static_assert (based on a Boost library) 
+    Traditional assert means to end the execution of your program
+    Static assertions are a way to check if a condition is true when the code is compiled
+
+cast:
+    static_cast: implicit conversions between types (such as int to float, or pointer to void*), and it can also call explicit conversion functions (or implicit ones).
+    dynamic_cast: handling polymorphism: You can cast a pointer or reference to any polymorphic type to any other class type 
+(a polymorphic type has at least one virtual function, declared or inherited). 
+You can use it for more than just casting downwards – you can cast sideways or even up another chain.
+    const_cast: remove or add const to a variable; no other C++ cast is capable of removing it
+    reinterpret_cast
+    (type)value (C-style cast)
+    type(value) (function-style cast)
+    difference: static_cast<> and C style casting
+        char c = 65; //1-byte data. ASCII of ‘A’
+        int *ptr = static_cast<int>(&c);
+        This will generate compile time error.
 
 Smart pointer:
     (1). auto_ptr: cannot be used in STL containers because it has a copy constructor that does not meet requirements of container CopyConstructible. 
