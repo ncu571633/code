@@ -66,9 +66,8 @@ B1
 
 
 
-The difference between vector and deque
+The difference between vector and deque(Double-ended queues)
 One main difference between vectors and deques is that the latter allows efficient insertion at the front of the structure as well as the back.
-
 Deques also do not guarantee that their elements are contiguous in memory so the at-style operator (indexing) may not be as efficient.
 
 A deque is somewhat recursively defined: internally it maintains a double-ended queue of chunks (“blocks” in the graphic below) of fixed size. Each chunk is a vector, and the queue (“map” in the graphic below) of chunks itself is also a vector.
@@ -179,8 +178,6 @@ void main (int argc, char *argv[])
     printf ("%s: %p\n", argv[1], p);
     aligned_free (p);
 }
-
-
 
     You need an offset if you want to support alignments beyond what your system's malloc() does. For example if your system malloc() aligns to 8 byte boundaries, and you want to align to 16 bytes, you ask for 15 bytes extra so you know for sure you can shift the result around to align it as requested. You also add sizeof(void*) to the size you pass to malloc() to leave room for bookkeeping.
 
