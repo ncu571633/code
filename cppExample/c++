@@ -65,6 +65,17 @@ int main()
 B1
 
 
+What are pointer and reference? 
+1. A pointer can be re-assigned any number of times while a reference can not be reassigned after initialization. 
+Once defined, a reference cannot be reassigned because it is an alias to its target.
+2. A pointer can point to NULL while reference can never point to NULL 
+3. You can't take the address of a reference like you can with pointers. 
+That is because a reference is not an object, it is an alias (this means it is another name for an object).
+4. There's no "reference arithmetics" (but you can take the address of an object pointed by a reference and do pointer arithmetics on it as in &obj + 5). 
+
+Give an example of when you must use a reference instead of a pointer?
+Copy constructor
+
 
 The difference between vector and deque(Double-ended queues)
 One main difference between vectors and deques is that the latter allows efficient insertion at the front of the structure as well as the back.
