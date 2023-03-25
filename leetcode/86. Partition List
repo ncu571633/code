@@ -65,3 +65,35 @@ public:
         return h1->next;
     }
 };
+
+class Solution {
+public:
+    ListNode* partition(ListNode* head, int x) {
+        ListNode* ret = new ListNode(0);
+        ret->next = head;
+        ListNode* greater = new ListNode(0);
+        
+        ListNode* p = ret;
+        ListNode* p2 = greater;
+        while(head)
+        {
+            if(head->val >= x)
+            {
+                p2->next = head;
+                p->next = head->next;
+                head->next = nullptr;
+                head = p->next;
+                p2=p2->next;   
+            }
+            else
+            {
+                p=head;
+                head=head->next;
+            }
+        }
+        
+        p->next = greater->next;
+        
+        return ret->next;
+    }
+};
