@@ -31,6 +31,7 @@ After calling your function, the tree should look like:
    TreeLinkNode(int x) : val(x), left(NULL), right(NULL), next(NULL) {}
   };
 
+
 class Solution {
 public:
     Node* connect(Node* root) {
@@ -49,74 +50,6 @@ public:
         return root;
     }
 };
-
-#if 0
-class Solution {
-public:
-    TreeLinkNode * findNext(TreeLinkNode *first) {
-        for(TreeLinkNode *t=first; t; t=t->next) {
-            if(t->left)
-                return t->left;
-            if(t->right)
-                return t->right;
-        }
-        return nullptr;
-    }
-    
-    void connect(TreeLinkNode *root) {
-        if(!root)
-            return;
-        if(root->left)
-        {
-            if(root->right)
-                root->left->next = root->right;
-            else 
-                root->left->next = findNext(root->next);
-        }
-        if(root->right)
-            root->right->next = findNext(root->next);
-        connect(root->right);
-        connect(root->left);
-    }
-};
-#endif
-
-TreeLinkNode * findNext(TreeLinkNode *root) {
-    for(TreeLinkNode *t=root->next; t; t=t->next) {
-        if(t->left)
-            return t->left;
-        if(t->right)
-            return t->right;
-    }
-    return nullptr;
-}
-void connect(TreeLinkNode *root) {
-    if(!root)
-        return;
-    TreeLinkNode *nexti = root;
-    while(nexti) {
-        TreeLinkNode *nextj = nexti;
-        while(nextj) {
-            if(nextj->left) {
-                if(nextj->right) {
-                    nextj->left->next = nextj->right;
-                } else {
-                    nextj->left->next = findNext(nextj);
-                }
-            }
-            if(nextj->right) {
-                nextj->right->next = findNext(nextj); 
-            }
-            nextj = nextj->next;
-        }
-
-        if(nexti->left)
-            nexti=nexti->left;
-        else if(nexti->right)
-            nexti=nexti->right;
-        else nexti = findNext(nexti);
-    }
-}
 
     void connect(TreeLinkNode *root) {
         TreeLinkNode* dummy = new TreeLinkNode(0), *t = dummy;
@@ -141,9 +74,3 @@ void connect(TreeLinkNode *root) {
             }
         }
     }
-
-int main() 
-{
-    TreeLinkNode t(0);
-    connect(&t);
-}
