@@ -51,26 +51,26 @@ public:
     }
 };
 
-    void connect(TreeLinkNode *root) {
-        TreeLinkNode* dummy = new TreeLinkNode(0), *t = dummy;
-        while(root)
-        {
-            if(root->left)
-            {
-                t->next = root->left;
-                t= t->next;
+class Solution {
+public:
+    Node* connect(Node* root) {
+        Node *dummy = new Node(-1), *cur = dummy, *head = root;
+        while (root) {
+            if (root->left) {
+                cur->next = root->left;
+                cur = cur->next;
             }
-            if(root->right)
-            {
-                t->next = root->right;
-                t= t->next;
+            if (root->right) {
+                cur->next = root->right;
+                cur = cur->next;
             }
             root = root->next;
-            if(!root)
-            {
-                t = dummy;
+            if (!root) {
+                cur = dummy;
                 root = dummy->next;
-                dummy->next = nullptr;
+                dummy->next = NULL;
             }
         }
+        return head;
     }
+};
