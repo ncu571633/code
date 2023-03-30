@@ -9,12 +9,19 @@ User  DNS
 User  DNS
 1 server(web app, cache)
 database server:
+Which database to use:
   relational database: SQL
   nonrelational database: unstructured data, low latency, store large data
-  
+
+Vertical scaling vs horizontal scaling
   vertical scaling: add more powers(CPU, RAM)
   horizontal scaling: more servers
-  
+
+Cache:
+1. When to use cache: read frequently, not modified infrequently
+2. Expiration policy
+3. Consistency
+
 Memcached is a general-purpose distributed memory-caching system: cache data from db.
 
 Asynchronous processing: user doesn't need to wait the job to finish, and continue to do the next task.
