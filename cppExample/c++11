@@ -1,3 +1,48 @@
+Padding:
+Many processors expect memory for variables to be aligned based on the size of the variable. 
+the structure padding is automatically done by the compiler to make sure all its members are byte aligned.
+A ‘char’ of 1 byte can be allocated anywhere in memory like 0x5000 or 0x5001. 
+An ‘int’ of 4 bytes, must start at a 4-byte boundary like 0x5004 or 0x5008. T
+
+
+Bitfields: save space. They also allow an easier way to set values that aren't byte-aligned. 
+1. A special unnamed bit field of size 0 is used to force alignment on the next boundary
+2. We cannot have pointers to bit field members as they may not start at a byte boundary. 
+3. It is implementation-defined to assign an out-of-range value to a bit field member. 
+4. In C++, we can have static members in a structure/class, but bit fields cannot be static. 
+5. Array of bit fields is not allowed. For example, the below program fails in the compilation. 
+
+https://www.geeksforgeeks.org/bit-fields-c/
+
+
+struct
+{
+    unsigned short icon : 8;
+    unsigned short color : 4;
+    unsigned short underline : 1;
+    unsigned short blink : 1;
+} test1;
+
+struct mybitfields
+{
+    unsigned short a : 4;
+    unsigned short b : 5;
+    unsigned short c : 7;
+} test2;
+
+struct
+{
+    unsigned int first : 9;
+    unsigned int second : 7;
+    unsigned int may_straddle : 5;
+    unsigned int last : 5;
+} test3;
+
+cout<< sizeof(test1) << sizeof(unsigned short) << endl;
+cout<< sizeof(test2) << endl;
+cout<< sizeof(test3) << endl;
+
+
 https://www.stroustrup.com/C++11FAQ.html
 https://en.wikipedia.org/wiki/C++11
 
