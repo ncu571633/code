@@ -77,9 +77,11 @@ Core language features
    return auto type, for template case
    
 4. rvalue references
-lvalue simply means an object that has an identifiable location in memory (i.e. having an address).
+An lvalue is an object which has its permanent memory location where they are stored (and not temporary objects and literals).
+We can use the assignment operator to change the value of lvalue objects
 
-rvalue simply means, an object that has no identifiable location in memory (i.e. having an address).
+
+an rvalue is a temporary object or a literal which doesn't have a permanent memory location. We cannot make assignments to rvalues
 Rvalue references allow programmers to avoid logically unnecessary copying and to provide perfect forwarding functions
     Anything that is capable of returning a constant expression or value.
     Expression like a+b will return some constant.
