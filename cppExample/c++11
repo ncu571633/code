@@ -77,6 +77,13 @@ Core language features
    return auto type, for template case
    
 4. rvalue references
+lvalue simply means an object that has an identifiable location in memory (i.e. having an address).
+
+r-value simply means, an object that has no identifiable location in memory (i.e. having an address).
+    Anything that is capable of returning a constant expression or value.
+    Expression like a+b will return some constant.
+
+
 5. move constructors and move assignment operators
 
 6. scoped enums
