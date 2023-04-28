@@ -5,6 +5,21 @@ optimization (of some parts of your program) may be undesirable, because it may 
 stack unwinding:
 
 
+vector initialization
+class broad
+{
+    public:
+        broad(int m, int n)
+        : m(m, vector<int>(n, 1))
+        {
+            
+        }
+
+    private:
+        vector<vector<int>> m;
+    
+};
+
 
 int main()
 {
