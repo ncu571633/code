@@ -298,3 +298,178 @@ because of lack of privilege or lack of information? The answer is: If ownership
 If there is a cycle, the programmer has to find it and break it. 
 An alternative remedy is to use a programming language with full garbage collection (such as: Java, C#, Go, Haskell), 
 or to use a conservative (=imperfect) garbage collector which works with C/C++ (such as: Boehm GC).
+
+unique_ptr: exclusive ownership 
+2. same size as raw pointer. 
+3. move: transfer ownership, and seource pointer is set to null.
+4. copy: not allowed
+5. customer deleter: second template parameter, its deleter that has a default type std::default_delete<T> .
+    auto log = [](int *p)
+    {
+      cout << "delete" << endl;
+      delete p;
+    };
+    std::unique_ptr<int, decltype(log)> uniqueP(new int(5), log);
+    std::shared_ptr<int> sharedP(new int(5), log);
+    
+6. two forms: unique_ptr<T>, unique_ptr<T[]>
+7. can be converted to shared_ptr
+
+
+template <class T>
+class my_unique_ptr
+{
+private:
+	T * ptr = nullptr;
+
+public:
+	my_unique_ptr() :  // default constructor
+	{ ptr=nullptr; }
+
+	my_unique_ptr(T * ptr)
+	{ ptr = ptr; }
+
+	my_unique_ptr(const my_unique_ptr & obj) = delete; // copy constructor is deleted
+	my_unique_ptr& operator=(const my_unique_ptr & obj) = delete; // copy assignment is deleted
+
+	my_unique_ptr(my_unique_ptr && dyingObj) // move constructor
+	{
+		// Transfer ownership of the memory pointed by dyingObj to this object
+		this->ptr = dyingObj.ptr;
+		dyingObj.ptr = nullptr; 
+	}
+
+	void operator=(my_unique_ptr && dyingObj) // move assignment
+	{
+		__cleanup__(); // cleanup any existing data
+
+		// Transfer ownership of the memory pointed by dyingObj to this object
+		this->ptr = dyingObj.ptr;
+		dyingObj.ptr = nullptr;
+	}
+
+	T* operator->() // deferencing arrow operator
+	{
+		return this->ptr;
+	}
+
+	T& operator*()
+	{
+		return *(this->ptr);
+	}
+
+	~my_unique_ptr() // destructor
+	{
+		__cleanup__();
+	}
+
+private:
+	void __cleanup__()
+	{
+		if (ptr != nullptr)
+			delete ptr;
+	}
+};
+
+shared_ptr: shared ownership
+1. twice the size of raw pointer
+2. memory for the reference count should be dynamically allocated.
+3. increments and decrements of the reference count must be atomic.
+4. copying increment reference count, moving doesn't. 
+5. 
+    auto log = [](int *p)
+    {
+      cout << "delete" << endl;
+      delete p;
+    };
+    std::unique_ptr<int, decltype(log)> uniqueP(new int(5), log);
+    std::shared_ptr<int> sharedP(new int(5), log);
+    
+    
+template<class T>
+class my_shared_ptr
+{
+private:
+	T * ptr = nullptr;
+	unsigned int * refCount = nullptr;	// should be pointer, so the value can be shared between different objects
+
+public:
+	my_shared_ptr() : ptr(nullptr), refCount(new unsigned int(0)) {} // default constructor
+	my_shared_ptr(T * ptr) : ptr(ptr), refCount(new unsigned int(1))  {} // constructor
+
+	my_shared_ptr(const my_shared_ptr & obj) // copy constructor
+	{
+		this->ptr = obj.ptr; // share the underlying pointer
+		this->refCount = obj.refCount;
+		if (nullptr != obj.ptr)
+		{
+			(*this->refCount)++; // if the pointer is not null, increment the refCount
+		}
+	}
+
+	my_shared_ptr& operator=(const my_shared_ptr & obj) // copy assignment
+	{
+		__cleanup__(); // cleanup any existing data
+		
+		// Assign incoming object's data to this object
+		this->ptr = obj.ptr; // share the underlying pointer
+		this->refCount = obj.refCount;
+		if (nullptr != obj.ptr)
+		{
+			(*this->refCount)++; // if the pointer is not null, increment the refCount
+		}
+	}
+
+	/*** Move Semantics ***/
+	my_shared_ptr(my_shared_ptr && dyingObj) // move constructor
+	{
+		this->ptr = dyingObj.ptr; // share the underlying pointer
+		this->refCount = dyingObj.refCount;
+
+		dyingObj.ptr = dyingObj.refCount = nullptr; // clean the dying object
+	}
+
+	my_shared_ptr& operator=(my_shared_ptr && dyingObj) // move assignment
+	{
+		__cleanup__(); // cleanup any existing data
+		
+		this->ptr = dyingObj.ptr; // share the underlying pointer
+		this->refCount = dyingObj.refCount;
+
+		dyingObj.ptr = dyingObj.refCount = nullptr; // clean the dying object
+	}
+
+	unsigned int get_count() const 
+	{
+		return *refCount; // *this->refCount
+	}
+
+	T* get() const { return this->ptr; }
+
+	T* operator->() const
+	{
+		return this->ptr;
+	}
+
+	T& operator*() const
+	{
+		return this->ptr;
+	}
+
+	~my_shared_ptr() // destructor
+	{
+		__cleanup__();
+	}
+
+private:
+	void __cleanup__()
+	{
+		(*refCount)--;
+		if (*refCount == 0)
+		{
+			if (nullptr != ptr)
+				delete ptr;
+			delete refCount;
+		}
+	}
+};
