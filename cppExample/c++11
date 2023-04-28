@@ -384,6 +384,19 @@ shared_ptr: shared ownership
     };
     std::unique_ptr<int, decltype(log)> uniqueP(new int(5), log);
     std::shared_ptr<int> sharedP(new int(5), log);
+6. std::shared_ptr<T>
+  ptr to T    ->    T object
+  Ptr to control block    -> control block (reference count, weak count, custom deleter)
+7. When to create a control block: 
+    make_shared<T>()
+    when shared_ptr is constructed from unique_ptr.
+    shared_ptr is called with raw pointer: more than one: destroyed multiple times, undifined program behavior
+    avoid passing raw pointers to shared_ptr constructor, to use make_shared.
+    if shared_ptr constructor should be used, try to use sharedptr rather than raw pointer
+8. std::enable_shared_from_this: 
+    base class template
+    defines a member function crates a shared_ptr to the current obj, without duplicating coltrol block.
+    looks up the control block for the current obj, and create shared_ptr based on it.
     
     
 template<class T>
@@ -473,3 +486,11 @@ private:
 		}
 	}
 };
+
+weak_ptr: can't be dereferenced, can't be test for nullness. not standalone smart pointer, augmentation of shared_ptr.
+created from shared_ptr, points to the same place, but don't affect the reference count. 
+test: weak_ptr.expired()
+check expired, and return access to the obj:
+    shared_ptr<Widget> sp = weakptr.lock(); // null if expired
+    shared_ptr<Widget> sp(weakptr);  // throw exception
+
