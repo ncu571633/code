@@ -1,0 +1,55 @@
+ Given an input string, reverse the string word by word.
+
+For example,
+Given s = "the sky is blue",
+return "blue is sky the". 
+
+class Solution {
+public:
+    string reverseWords(string s) {
+        string ret;
+        for(int i=0; i<s.size(); )
+        {
+            while(i<s.size() && s[i] == ' ')
+            {
+                i++;
+                continue;
+            }
+            int j = i;
+            while(j<s.size() && s[j]!=' ')
+                j++;
+            string sub = s.substr(i, j-i);
+            i = j;
+            if(sub.empty())
+                continue;
+            reverse(sub.begin(), sub.end());
+            if(ret.empty())
+                ret = sub;
+            else
+                ret = ret+' '+sub;
+        }
+
+        reverse(ret.begin(), ret.end());
+        return ret;    
+    }
+};
+
+class Solution {
+public:
+    void reverseWords(string&s, int i, int j) {
+        while(i<j)
+            swap(s[i++], s[j--]);
+    }
+    void reverseWords(string &s) {
+        reverseWords(s, 0, s.size()-1);
+        
+        for(int i=0, j=0; j<s.size(); ) {
+            while(s[i]==' ' && j<s.size())
+                i++, j++;
+            while(s[j]!=' ' && j<s.size())
+                j++;
+            reverseWords(s, i, j-1);
+            i = j;
+        }
+    }
+};
