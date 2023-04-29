@@ -493,4 +493,9 @@ test: weak_ptr.expired()
 check expired, and return access to the obj:
     shared_ptr<Widget> sp = weakptr.lock(); // null if expired
     shared_ptr<Widget> sp(weakptr);  // throw exception
-
+How to use:
+  std::shared_ptr<int> sp (new int);
+  std::weak_ptr<int> wp1;
+  std::weak_ptr<int> wp2 (wp1);
+  std::weak_ptr<int> wp3 (sp);
+  
