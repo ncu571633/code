@@ -499,3 +499,24 @@ How to use:
   std::weak_ptr<int> wp2 (wp1);
   std::weak_ptr<int> wp3 (sp);
   
+make_unique<T>(), make_shared<T>() is better than shared_ptr<T> sp(new T)
+1. only one allocation: single chunk of memory to hold both the object and control block. 
+2. type T once
+3. memory leak due to exception: two statement: new, run shared_ptr constructore.
+Compiler may insert another statement or function call in between
+process(shared_ptr<widget>, int priority)
+  no process(shared_ptr<T>(new T), computePriority())
+  no shared_ptr<T> sp(new T, customDel)
+     process(sp, computePriority())   performance: copy
+  yes process(move(sp), computePriority())
+
+Not to use make_unique, make_shared:
+1. custom delete. not supported
+2. make function use perfect forwarding, parentheses, not braces. 
+using braced initialized, need to use new directly. 
+Or auto initList = {10, 20}
+auto spv = make_shared<vector<int>>(initList);
+3. As long as weak_ptr refere to a control block, control block needs to exist. 
+The memory containing it should remain allocated. 
+If the obj is large and the time between destructio nof the last shared_ptr/week_ptr is significant, 
+a lag can occur between when an obj is freed and when memory occupied is freed.
