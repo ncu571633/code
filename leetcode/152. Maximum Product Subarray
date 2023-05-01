@@ -1,0 +1,19 @@
+ Find the contiguous subarray within an array (containing at least one number) which has the largest product.
+
+For example, given the array [2,3,-2,4],
+the contiguous subarray [2,3] has the largest product = 6. 
+
+class Solution {
+public:
+    int maxProduct(vector<int>& nums) {
+        int ret = nums[0], maxP = nums[0], minP = nums[0];
+        for(int i=1; i<nums.size(); i++)
+        {
+            int tmax = maxP, tmin = minP;
+            maxP = max(max(tmax*nums[i], tmin*nums[i]), nums[i]);
+            minP = min(min(tmax*nums[i], tmin*nums[i]), nums[i]);
+            ret = max(ret, maxP);
+        }
+        return ret;
+    }
+};
