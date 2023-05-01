@@ -14,6 +14,26 @@ Given {1,2,3,4}, reorder it to {1,4,2,3}.
  *     ListNode(int x) : val(x), next(NULL) {}
  * };
  */
+ 
+class Solution {
+public:
+    void reorderList(ListNode* head) {
+        if(!head || head->next==nullptr)
+            return ;
+        ListNode*p=head, *p2=head->next;
+        while(p2->next)
+        {
+            p2=p2->next, p=p->next;
+        }
+        
+        p->next = nullptr;
+        ListNode* second = head->next;
+        head->next = p2;
+        reorderList(second);
+        p2->next = second;
+    }
+};
+
 class Solution {
 public:
     ListNode* reverseList(ListNode* h) {
