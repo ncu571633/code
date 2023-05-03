@@ -27,3 +27,18 @@ Memcached is a general-purpose distributed memory-caching system: cache data fro
 Asynchronous processing: user doesn't need to wait the job to finish, and continue to do the next task.
    for example: upload video/photo
    message queue: kafka
+   
+Rehashing problem: 
+  most keys are redistributed, not just the ones originally stored in the offline server. 
+
+Consisteng hashing: M hashed key space, and N servers. 
+A partition is the hash space between adjacent servers.
+
+1. Create a circular number line(from 0 to M-1).
+2. Map the server based on IP or name onto the ring. 
+3. Move the hash keys in the clockwise direction until the first server was found. 
+
+  virtual nodes: each server is represented by multiple virtual nodes on the ring. 
+	Each server is responsible for multiple partitions. 
+	As the number of virtual nodes increases, the distribution of keys becomes more balanced. 
+   
