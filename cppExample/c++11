@@ -170,10 +170,24 @@ universal reference(forwarding reference):
     A constexpr function is one whose return value is computable at compile time when consuming code requires it.
     If you need guaranteed compile-time evaluation, use consteval instead. For constexpr compiler constants propagation is not guaranteed. 
     
-    
-    list initialization
-    delegating and inherited constructors
-    brace-or-equal initializers
+delegating and inherited constructors
+*****************************************************************************************************************************************************************************
+brace-or-equal initializers, list initialization
+    parentheses ()
+    brace {}: can be used everywhere
+    1. can't do implicit narrowing conversions among built in types. int sum(double a + double b)
+    2. most vexing parse: widget w(10)  ctor or funciton
+    3. if a ctor takes std::initializer_lists, then a call useing braced initializer will use this ctor. Even copy/move ctor can be hijacked by std::initializer_lists ctor.
+	class Widget
+	{
+	   public:
+	       widget(int i, bool b);
+	       widget(std::initializer_list<long> il);
+	}
+	widget w{10, true} -> initializer_list ctor
+	
+	
+	
     nullptr
     long long
 
