@@ -60,3 +60,29 @@ public:
         return head;
     }
 };
+
+class Solution {
+public:
+    Node* flatten(Node* head) {
+        if(!head)
+            return nullptr;
+        for(Node* p = head; p; p=p->next)
+        {
+            if(p->child)
+            {
+                Node* next = p->next;
+                Node* last = p->child;
+                while(last->next)
+                    last = last->next;
+                last->next = next;
+                if(next)
+                    next->prev = last;
+                p->next = p->child;
+                p->next->prev = p;
+                p->child = nullptr;
+            }
+        }
+
+        return head;
+    }
+};
