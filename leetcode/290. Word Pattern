@@ -31,3 +31,53 @@ public:
         return k==pattern.size();
     }
 };
+
+class Solution {
+public:
+    bool wordPattern(string pattern, string s) {
+        if(pattern.empty())
+            return false;
+        unordered_map<char, string> m;
+        unordered_map<string, char> m2;
+        vector<string> strs;
+        string word;
+        for(int i=0; i<s.size(); i++)
+        {
+            if(s[i]!=' ')
+            {
+                word += s[i];
+                continue;
+            }
+            
+            if(!word.empty())
+                strs.push_back(word);
+            word = "";
+        }
+        if(!word.empty())
+            strs.push_back(word);
+        if(strs.size() != pattern.size())
+            return false;
+        for(int i=0; i<pattern.size(); i++)
+        {
+            char p = pattern[i];
+            string word = strs[i];
+            if(m.count(p))
+            {
+                if(m[p] != word)
+                    return false;
+            }
+            else
+                m[p] = word;
+
+            if(m2.count(word))
+            {
+                if(m2[word]!=p)
+                    return false;                
+            }
+            else
+                m2[word] = p;
+        }
+
+        return true;
+    }
+};
