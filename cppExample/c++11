@@ -221,6 +221,34 @@ type aliases
     Unicode string literals
     user-defined literals
     attributes
+*****************************************************************************************************************************************************************************
+std::enable_if
+
+template< bool B, class T = void >
+struct enable_if;
+If B is true, std::enable_if has a public member typedef type, equal to T; otherwise, there is no member typedef. 
+
+template< bool B, class T = void >
+using enable_if_t = typename enable_if<B,T>::type;
+
+template<int a, int b, typename T = typename std::enable_if<a + b == 10>::type>
+class foo {
+};
+
+template<typename T, typename std::enable_if_t<(sizeof(T) < sizeof(std::int32_t)), int> = 0>
+constexpr bool less_than_int32()
+{
+  return true;
+}
+
+template<typename T, typename std::enable_if_t<(sizeof(T) >= sizeof(std::int32_t)), int> = 0>
+constexpr bool less_than_int32()
+{
+  return false;
+}
+
+static_assert(less_than_int32<std::int16_t>());
+static_assert(less_than_int32<std::int64_t>());
 
 *****************************************************************************************************************************************************************************
 lambda expressions: allow inline functions which can be used for short snippets of code that are not going to be reused and therefore do not require a name. 
