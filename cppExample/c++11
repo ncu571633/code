@@ -222,7 +222,8 @@ type aliases
     user-defined literals
     attributes
 *****************************************************************************************************************************************************************************
-std::enable_if
+std::enable_if: std::enable_if is an important function to enable certain types for template specialization via some predicates known at the compile time. 
+Using types that are not enabled by std::enable_if for template specialization will result in compile-time error.
 
 template< bool B, class T = void >
 struct enable_if;
