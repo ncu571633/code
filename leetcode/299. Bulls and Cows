@@ -37,31 +37,28 @@ Constraints:
     1 <= secret.length, guess.length <= 1000
     secret.length == guess.length
     secret and guess consist of digits only.
-
+    
 class Solution {
 public:
     string getHint(string secret, string guess) {
-        int s1 = secret.size(), s2 = guess.size();
         int bull = 0, cow = 0;
-        for(int i=0; i<min(s1, s2); i++)
+        unordered_map<char, int> m;
+        for(int i=0; i<secret.size(); i++)
         {
             if(secret[i] == guess[i])
                 bull++;
+            else
+                m[secret[i]] ++;
         }
-        unordered_map<char, int> secretSet;
-        for(int i=0; i<secret.size(); i++)
-            secretSet[secret[i]] ++;
-        unordered_map<char, int> guessSet;
         for(int i=0; i<guess.size(); i++)
-            guessSet[guess[i]] ++;
-        for(auto p: guessSet)
         {
-            if(secretSet.count(p.first))
+            if(secret[i] != guess[i] && m[guess[i]])
             {
-                cow += min(secretSet[p.first], p.second);
+                cow++;
+                m[guess[i]]--;
             }
         }
-        cow -= bull;
+
         return to_string(bull)+"A"+to_string(cow)+"B";
     }
 };
