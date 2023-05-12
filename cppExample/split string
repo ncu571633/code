@@ -1,0 +1,19 @@
+#include <iostream>
+#include <sstream>
+using namespace std;
+
+int main()
+{
+    string a("1 2 3");
+    istringstream my_stream(a);
+    while (my_stream) 
+    {
+        string n;
+        my_stream >> n;
+        if(n.empty())
+            continue;
+        cout << n << endl;
+    }
+    
+    return 0;
+}
