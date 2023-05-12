@@ -27,3 +27,28 @@ std::any: replace void*, std::shared_ptr<void>
     assert(a1.type() == typeid(int));
 
     assert(std::any_cast<int&>(a1) == 42);
+    
+*****************************************************************************************************************************
+std::variant  replance union: You don’t have a way to know what’s the currently used type and what’s more they won’t call destructors of the underlying types
+    std::variant<int, float, std::string> intFloatString;
+    static_assert(std::variant_size_v<decltype(intFloatString)> == 3);
+    
+    #include <iostream>
+    #include <variant>
+
+    struct Fluid { };
+    struct LightItem { };
+    struct HeavyItem { };
+    struct FragileItem { };
+
+    struct VisitPackage {
+        void operator()(Fluid& )       { std::cout << "fluid\n"; }
+        void operator()(LightItem& )   { std::cout << "light item\n"; }
+        void operator()(HeavyItem& )   { std::cout << "heavy item\n"; }
+        void operator()(FragileItem& ) { std::cout << "fragile\n"; }
+    };
+
+    int main() {
+    std::variant<Fluid, LightItem, HeavyItem, FragileItem> package { 
+        FragileItem()
+    };
