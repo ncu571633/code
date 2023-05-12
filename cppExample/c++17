@@ -1,1 +1,29 @@
+std::optional: return int value, may not be valid. set this value as -1. or have two variable, one for value, another to  identify whether it is valid. 
+    “value-or-not-value”, or “possibly an answer”, or “object with delayed initialization”
 
+    std::optional<std::string> str{};
+    std::cout << str.has_value()
+              << str.value_or("empty") << '\n';
+ 
+    std::optional<std::string> str1{"abc"};
+    std::cout << str1.has_value()
+              << str1.value_or("empty") << '\n';
+
+*****************************************************************************************************************************
+std::any: replace void*, std::shared_ptr<void> 
+    You can always cast a void* to any pointer type A whether or not the object it points at is actually a type A
+    void* doesn’t manage lifetime like a smart pointer
+    
+    any remembers how to destroy the contained value for you when the any object is destroyed
+    any knows what type it contains:
+    and uses that knowledge to ensure that when you access the contained value – for example, by obtaining a reference with any_cast – you access it with the correct type:
+    
+    
+    std::any a0; 
+    std::any a1 = 42; 
+    std::any a2 = month{"October"};
+
+    assert(!a0.has_value());            // a0 is still empty
+    assert(a1.type() == typeid(int));
+
+    assert(std::any_cast<int&>(a1) == 42);
