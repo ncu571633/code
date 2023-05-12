@@ -1,3 +1,85 @@
+1. clarify the requirement/goal of the system
+    traffic size: daily active user
+    functionalities, components
+    (1) tweet: create, delete
+    (2) timeline/feed: home, user
+    (3) follow a user
+    (4) like a tweet
+    (5) search tweet
+    
+     non-functional requirement
+     (consistency): every read receive the most recent write or an error
+                    sacrifice: eventual consistency
+     availability: every request receive a response, without the guarantee that it contains the most recent write
+                   scalable: performance: low latency
+     partition tolerance: system continues to operate despite a number of messages being dropped/delayed.                
+    
+2. capacity estimation
+	how many daily active user, how many tweets
+	each user: visit timeline 5 times
+	every timeline/page: 20 tweets
+	each tweet has size 280 bytes, metadata 30 bytes, photo/video
+	  storage estimate: write size daily: text 100M * (280+30) = 31GB/day
+	  bandwidth estimate: 200M*(5 home visit) * 20 tweets /page = 32B tweets/day
+	          text: 32B*280bytes/86400 = 100MB/S
+	daily write size
+	replication: redundancy: replication * 3, 
+	      
+
+3. system APIs
+	postTweet(userToken, string tweet)
+	deleteTweet(userToken, string tweetID)
+	likeOrUnlickTweet(userToken, string tweetId, bool like)
+	readHomeTimeLine(userToken, int pageSize, pageToken)
+	readUserTimeLine(userToken, int pageSize, pageToken)
+		
+4. high level system design
+	user -> load balancer  -> tweet writer server  -> DB
+	                       -> timeline service     -> cache   (need low latency, read cache join together on the fly)
+	                       
+	home timeline: 
+	 (1)pull mode: fetch tweets from N followers from DB, merge and return
+	     pros: write is fast: O(1)
+	     cons: read is slow: O(N) db reads
+	 (2) push mode: maintain a feedlist in cache for each user, fanout on write
+	      pros: read is fast: O(1) from the feed list in cache
+	      cons: write needs more efforts: O(n) write for each new tweets:
+	            async tasks
+	            delay in showing latest tweets
+	 fanout on write:
+	    not efficient for user with huge amount of followers
+	    hybrid solution: hot user, not hot users
+
+5. data storage
+	table: user table, tweet table, follower table
+	
+6. scalability
+	identify potential bottleneck
+	discussion solutions, tradeoffs:
+		data sharding: data store, cache
+		loading balancing: between user/server, server/db
+		data caching: read heavy
+data sharding: break large table into smaller shards on multiple servers
+pros: horizontal scaling
+    shard by creation time
+        pros: limited shards to query
+        cons: hot/cold data issue, new shards fill up quickly
+    shard by hash(user id):
+    	pros: simple, query user timeline is straightforward
+    	cons: home timeline still need to query multiple shards
+    	      non-uniform distribvution
+    	      hot user
+    shard by hash(tweetid)
+    	pros: uniform distribution, high availability
+    	cons: need to query all shards in order to generate user/home timeline
+	
+	
+
+
+
+
+
+
 Scale from zero to millions of users
 
 1. Single server setup
