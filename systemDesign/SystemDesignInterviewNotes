@@ -9,12 +9,8 @@
     
      non-functional requirement
      (consistency): every read receive the most recent write or an error
-                    sacrifice: eventual consistency
+                    sacrifice: eventual consistency/strong consistency.
 		    Consistency means that a read request for a specific data made at any of the nodes of the distributed system database should return the same value.
-
-eventual consistency and strong consistency.
-An eventually consistent model guarantees that whenever an update is made at a node of a distributed system, it will eventually be replicated across all the nodes, as long as no new updates are made to the entity during this time.
-
 
      availability: every request receive a response, without the guarantee that it contains the most recent write
                    scalable: performance: low latency
