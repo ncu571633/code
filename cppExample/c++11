@@ -88,7 +88,21 @@ https://www.stroustrup.com/C++11FAQ.html
 https://en.wikipedia.org/wiki/C++11
 
 Core language features
+
+*****************************************************************************************************************************************************************************
 1. auto and decltype
+
+decltype:
+    If e is the name of a variable, i.e. an "id-expression", then the resulting type is the type of the variable.
+    Otherwise, if e evaluates to an lvalue of type T, then the resulting type is T &, and if e evaluates to an rvalue of type T, then the resulting type is T.
+
+int foo();
+int n = 10;
+decltype(n) a = 20;             // a is an "int" [id-expression]
+decltype((n)) b = a;            // b is an "int &" [(n) is an lvalue]
+decltype(foo()) c = foo();      // c is an "int" [rvalue]
+decltype(foo()) && r1 = foo();  // int &&
+decltype((n)) && r2 = n;        // int & [& && collapses to &]
 
 *****************************************************************************************************************************************************************************
 2. defaulted and deleted functions
