@@ -96,13 +96,15 @@ decltype:
     If e is the name of a variable, i.e. an "id-expression", then the resulting type is the type of the variable.
     Otherwise, if e evaluates to an lvalue of type T, then the resulting type is T &, and if e evaluates to an rvalue of type T, then the resulting type is T.
 
-int foo();
-int n = 10;
-decltype(n) a = 20;             // a is an "int" [id-expression]
-decltype((n)) b = a;            // b is an "int &" [(n) is an lvalue]
-decltype(foo()) c = foo();      // c is an "int" [rvalue]
-decltype(foo()) && r1 = foo();  // int &&
-decltype((n)) && r2 = n;        // int & [& && collapses to &]
+int var;
+const int&& fx();
+struct A { double x; }
+const A* a = new A();
+
+decltype(fx()); 	const int&& 	An rvalue reference to a const int.
+decltype(var); 	int 	The type of variable var.
+decltype(a->x); 	double 	The type of the member access.
+decltype((a->x)); 	const double& 	The inner parentheses cause the statement to be evaluated as an expression instead of a member access. And because a is declared as a const pointer, the type is a reference to const double.
 
 *****************************************************************************************************************************************************************************
 2. defaulted and deleted functions
@@ -160,6 +162,20 @@ std::forward<T>() perform conditional cast to an rvalue only if the argument is 
 	  return static_cast<returnType>(param);
 	}
 
+	template <class T>
+	inline T&& forward(typename std::remove_reference<T>::type& t) noexcept
+	{
+	    return static_cast<T&&>(t);
+	}
+
+	template <class T>
+	inline T&& forward(typename std::remove_reference<T>::type&& t) noexcept
+	{
+    		static_assert(!std::is_lvalue_reference<T>::value,
+                	  "Can not forward an rvalue as an lvalue.");
+    		return static_cast<T&&>(t);
+    	}
+    
 Move requests on const object are treated as copy requests.  
 Move doesn't guarantee obj will be eligible to be moved. 
 	string(const string& rhs);
@@ -175,9 +191,45 @@ universal reference(forwarding reference):
 
 *****************************************************************************************************************************************************************************
 5. move constructors and move assignment operators
+// Move constructor.
+MemoryBlock(MemoryBlock&& other) noexcept
+   : _data(nullptr)
+   , _length(0)
+{
+   // Copy the data pointer and its length from the source object.
+   _data = other._data;
+   _length = other._length;
+
+   // Release the data pointer from the source object so that
+   // the destructor does not free the memory multiple times.
+   other._data = nullptr;
+   other._length = 0;
+}
+
+// Move assignment operator.
+MemoryBlock& operator=(MemoryBlock&& other) noexcept
+{
+   if (this != &other)
+   {
+      // Free the existing resource.
+      delete[] _data;
+
+      // Copy the data pointer and its length from the
+      // source object.
+      _data = other._data;
+      _length = other._length;
+
+      // Release the data pointer from the source object so that
+      // the destructor does not free the memory multiple times.
+      other._data = nullptr;
+      other._length = 0;
+   }
+   return *this;
+}
 
 *****************************************************************************************************************************************************************************
 6. scoped enums
+
 *****************************************************************************************************************************************************************************
 7. constexpr and literal types
     Literals are the Constant values that are assigned to the constant variables.
@@ -200,14 +252,11 @@ brace-or-equal initializers, list initialization
 	}
 	widget w{10, true} -> initializer_list ctor
 	
-	
-	
-    nullptr
-    long long
-
+*****************************************************************************************************************************************************************************
 char16_t and char32_t
     16-bit wide character used to store Unicode encoded as UTF-16LE
-    
+
+*****************************************************************************************************************************************************************************
 type aliases
     // type alias, identical to
     // typedef std::ios_base::fmtflags flags;
@@ -228,6 +277,7 @@ type aliases
     // the name 'ptr<T>' is now an alias for pointer to T
     ptr<int> x;
 
+*****************************************************************************************************************************************************************************
 
     variadic templates
     generalized (non-trivial) unions
@@ -377,6 +427,8 @@ cast:
     dynamic cast: used for handling polymorphism
     	downcast/upcasting: do casting between base and derived class pointer.
   	checks consistency at runtime; slower than static cast.
+	The value of a failed cast to pointer type is the null pointer value of the required result type, no exception.
+	If the cast fails and new_type is a reference type, it throws an exception: A failed cast to reference type throws std::bad_cast
     const_cast: remove or add const to a variable; no other C++ cast is capable of removing it
   	Modifying a formerly const value is undefined 
   	Remove const from objects in order to pass to non-const correct functions you know won't modify the argument.
