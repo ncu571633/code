@@ -104,7 +104,8 @@ const A* a = new A();
 decltype(fx()); 	const int&& 	An rvalue reference to a const int.
 decltype(var); 	int 	The type of variable var.
 decltype(a->x); 	double 	The type of the member access.
-decltype((a->x)); 	const double& 	The inner parentheses cause the statement to be evaluated as an expression instead of a member access. And because a is declared as a const pointer, the type is a reference to const double.
+decltype((a->x)); 	const double& 	The inner parentheses cause the statement to be evaluated as an expression instead of a member access. 
+And because a is declared as a const pointer, the type is a reference to const double.
 
 *****************************************************************************************************************************************************************************
 2. defaulted and deleted functions
@@ -150,18 +151,18 @@ whereas you can not bind a (non const) lvalue reference to an rvalue.
     A&  a_ref3 = A();  // Error!
     A&& a_ref4 = A();  // Ok
 
-std::move() unconditionally cast argument to an rvalue
-std::forward<T>() perform conditional cast to an rvalue only if the argument is bound to an rvalue. 
-	function template taking a universal reference parameter, passed to another function.
-
-	Remove universal reference, and cast to rvalue
-	template<typename T>
+std::move() unconditionally cast argument to an rvalue, use move for rvalue reference.
+	template<typename T> 
 	decltype(auto) move(T && p)
 	{
 	  using returnType = remove_reference_t<T>&&;
 	  return static_cast<returnType>(param);
 	}
-
+	
+std::forward<T>() perform conditional cast to an rvalue only if the argument is bound to an rvalue. 
+	function template taking a universal reference parameter, passed to another function.
+	Remove universal reference, and cast to rvalue
+	
 	template <class T>
 	inline T&& forward(typename std::remove_reference<T>::type& t) noexcept
 	{
@@ -286,7 +287,7 @@ type aliases
     user-defined literals
     attributes
 *****************************************************************************************************************************************************************************
-std::enable_if: std::enable_if is an important function to enable certain types for template specialization via some predicates known at the compile time. 
+std::enable_if: enable certain types for template specialization via some predicates known at the compile time. 
 Using types that are not enabled by std::enable_if for template specialization will result in compile-time error.
 
 template< bool B, class T = void >
@@ -312,8 +313,8 @@ constexpr bool less_than_int32()
   return false;
 }
 
-static_assert(less_than_int32<std::int16_t>());
-static_assert(less_than_int32<std::int64_t>());
+static_assert(less_than_int32<std::int16_t>());  // good: call first true
+static_assert(less_than_int32<std::int64_t>());  // bad: call second one
 
 *****************************************************************************************************************************************************************************
 lambda expressions: allow inline functions which can be used for short snippets of code that are not going to be reused and therefore do not require a name. 
