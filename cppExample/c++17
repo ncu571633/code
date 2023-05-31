@@ -1,3 +1,29 @@
+inline variable
+A variable declared inline has the same semantics as a function declared inline: it can be defined, identically, in multiple translation units, 
+must be defined in every translation unit in which it is used, and the behavior of the program is as if there was exactly one variable.
+
+One Definition Rule. Within a program, each static object (if it's used) must be defined once, and only once.
+Class definitions typically go in header files, included in multiple translation units (i.e. from multiple source files). 
+If the static object's declaration in the header were a definition, then you'd end up with multiple definitions, 
+one in each unit that includes the header, which would break the rule. 
+So instead, it's not a definition, and you must provide exactly one definition somewhere else.
+
+struct MyClass
+{
+    static const int sValue;
+};
+
+inline int const MyClass::sValue = 777;
+
+Or even:
+
+struct MyClass
+{
+    inline static const int sValue = 777;
+};
+
+
+*****************************************************************************************************************************
 std::optional: return int value, may not be valid. set this value as -1. or have two variable, one for value, another to  identify whether it is valid. 
     “value-or-not-value”, or “possibly an answer”, or “object with delayed initialization”
 
