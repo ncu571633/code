@@ -1,0 +1,68 @@
+template<typename T, typename U>
+struct is_same 
+{
+    static const bool value = false; 
+};
+
+template<typename T>
+struct is_same<T,T>  //specialization
+{ 
+   static const bool value = true; 
+};
+
+
+    cout<<(typeid(int) == typeid(double)) << endl;
+    std::cout << "int is: " << typeid(int).name() << endl;
+    
+    
+    
+    
+std::allocator is used to separate allocation and do construction in two steps, also separate destruction and deallocation
+
+
+allocator is the memory allocator for the STL containers. a call of vec.reserve(n) of a vector vec allocates only memory for at least n elements. The constructor for each element will not be executed. also v.clear()
+    allocator can be adjusted according to the container of your need, for example, vector where you only want to allocate occasionally.
+    On the contrary, new doesn’t allow to have control over which constructors are called and simply construct all objects at the same time. That’s an advantage of std:: allocator over new
+    
+
+template<class T = void>
+struct My_op_functor { /* ... */ };
+
+My_op_functor<> f;  or My_op_functor f in C++17
+
+
+
+
+
+
+
+
+
+
+
+Variadic Template
+
+base case. Idea: unpack and reduce
+template <typename T>
+double sum(T t) {
+  return t;
+}
+
+template <typename T, typename... Rest> //typename... Rest: template parameter pack
+double sum(T t, Rest... rest) {  //Rest... rest: funciton parameter pack
+  return t + sum(rest...);
+}
+
+
+Not working
+template <typename... Ts> 
+double sum(Ts... ts) {
+  double result = 0.0;
+  for (auto el : ts)
+    result += el;
+  return result;
+}
+
+
+template <typename T1, typename T2, ..., typename Tn>
+void ignore(T1 t1, T2 t2, ..., Tn tn) {}
