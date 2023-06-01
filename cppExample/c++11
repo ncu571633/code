@@ -430,9 +430,11 @@ cast:
   	checks consistency at runtime; slower than static cast.
 	The value of a failed cast to pointer type is the null pointer value of the required result type, no exception.
 	If the cast fails and new_type is a reference type, it throws an exception: A failed cast to reference type throws std::bad_cast
-    const_cast: remove or add const to a variable; no other C++ cast is capable of removing it
+    const_cast: add/remove const to a variable; no other C++ cast is capable of removing it
   	Modifying a formerly const value is undefined 
-  	Remove const from objects in order to pass to non-const correct functions you know won't modify the argument.
+  	Remove const from objects in order to pass to non-const functions you know won't modify the argument.
+	use to change non-const class members inside a const member function
+	casting won’t happen if the type of cast is not same as original object // compiler error
     reinterpret_cast: dangerous, low level bit operations
     	convert raw data into actual data.
     (type)value (C-style cast)
