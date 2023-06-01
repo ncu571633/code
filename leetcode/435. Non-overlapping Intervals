@@ -41,12 +41,9 @@ Explanation: You don't need to remove any of the intervals since they're already
  */
 class Solution {
 public:
-    static bool comp(Interval a, Interval b) {
-        return a.start < b.start;
-    }
     int eraseOverlapIntervals(vector<Interval>& intervals) {
         int ret = 0, last = 0;
-        sort(intervals.begin(), intervals.end(), comp);
+        sort(intervals.begin(), intervals.end());
         for(int i=1; i<intervals.size(); i++) {
             if(intervals[last].end > intervals[i].start) {
                 ret ++;
