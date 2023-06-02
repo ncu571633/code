@@ -19,10 +19,9 @@ Template Specialization: get a special behavior for a particular data type
     }
 
 ********************************************************************************************
-
 Variadic Template
 
-base case. Idea: unpack and reduce
+    base case. Idea: unpack and reduce
     template <typename T>
     double sum(T t) {
       return t;
@@ -34,8 +33,9 @@ base case. Idea: unpack and reduce
     }
 
 ********************************************************************************************
+Variadic data structures
 
-
+********************************************************************************************
 Recursion
 
 template <int N>
