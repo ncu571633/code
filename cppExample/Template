@@ -1,0 +1,90 @@
+Template meta-programming (TMP) refers to uses of the C++ template system to perform computation at compile-time within the code
+
+This is because 'variables' are all immutable, and hence it is necessary to use recursion rather than iteration to process elements of a set
+
+********************************************************************************************
+Recursion
+
+template <int N>
+struct Factorial {
+  static const int value = N * Factorial<N - 1>::value;
+};
+
+// Specialization of Factorial for base case = 1.
+template <>
+struct Factorial<1> {
+  static const int value = 1;
+};
+
+int main() {
+  std::cout << Factorial<5>::value << std::endl;
+}
+
+
+********************************************************************************************
+Branching: 
+A conditional branch can be constructed by writing two alternative specialisations of a template class. 
+The compiler will choose the one that fits the types provided, and a value defined in the instantiated class can then be accessed.
+
+    template<typename T, typename U>
+    struct is_same 
+    {
+        static const bool value = false; 
+    };
+
+    template<typename T>
+    struct is_same<T,T>  //specialization
+    { 
+       static const bool value = true; 
+    };
+
+
+    cout<<(typeid(int) == typeid(double)) << endl;
+    std::cout << "int is: " << typeid(int).name() << endl;
+    
+    
+    
+    
+    
+
+template<class T = void>
+struct My_op_functor { /* ... */ };
+
+My_op_functor<> f;  or My_op_functor f in C++17
+
+
+
+
+
+
+
+
+
+
+
+Variadic Template
+
+base case. Idea: unpack and reduce
+template <typename T>
+double sum(T t) {
+  return t;
+}
+
+template <typename T, typename... Rest> //typename... Rest: template parameter pack
+double sum(T t, Rest... rest) {  //Rest... rest: funciton parameter pack
+  return t + sum(rest...);
+}
+
+
+Not working
+template <typename... Ts> 
+double sum(Ts... ts) {
+  double result = 0.0;
+  for (auto el : ts)
+    result += el;
+  return result;
+}
+
+
+template <typename T1, typename T2, ..., typename Tn>
+void ignore(T1 t1, T2 t2, ..., Tn tn) {}
