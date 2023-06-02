@@ -3,6 +3,39 @@ Template meta-programming (TMP) refers to uses of the C++ template system to per
 This is because 'variables' are all immutable, and hence it is necessary to use recursion rather than iteration to process elements of a set
 
 ********************************************************************************************
+Template Specialization: get a special behavior for a particular data type
+    template <class T>
+    void fun(T a)
+    {
+       cout << "The main template fun(): "
+            << a << endl;
+    }
+
+    template<>
+    void fun(int a)
+    {
+        cout << "Specialized Template for int type: "
+             << a << endl;
+    }
+
+********************************************************************************************
+
+Variadic Template
+
+base case. Idea: unpack and reduce
+    template <typename T>
+    double sum(T t) {
+      return t;
+    }
+
+    template <typename T, typename... Rest> //typename... Rest: template parameter pack
+    double sum(T t, Rest... rest) {  //Rest... rest: funciton parameter pack
+      return t + sum(rest...);
+    }
+
+********************************************************************************************
+
+
 Recursion
 
 template <int N>
@@ -62,28 +95,6 @@ My_op_functor<> f;  or My_op_functor f in C++17
 
 
 
-Variadic Template
-
-base case. Idea: unpack and reduce
-template <typename T>
-double sum(T t) {
-  return t;
-}
-
-template <typename T, typename... Rest> //typename... Rest: template parameter pack
-double sum(T t, Rest... rest) {  //Rest... rest: funciton parameter pack
-  return t + sum(rest...);
-}
-
-
-Not working
-template <typename... Ts> 
-double sum(Ts... ts) {
-  double result = 0.0;
-  for (auto el : ts)
-    result += el;
-  return result;
-}
 
 
 template <typename T1, typename T2, ..., typename Tn>
