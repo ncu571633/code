@@ -35,6 +35,8 @@ Variadic Template
 ********************************************************************************************
 Variadic data structures
 
+https://github.com/mortificador/blog/blob/master/tuple.hpp
+
 #include <cstddef> // for std::size_t
 #include <utility> // for std::foward
 #include <string>
