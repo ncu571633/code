@@ -822,7 +822,7 @@ public:
         _size = _capacity = n;
     }
     
-    myVector(const myVector<T>& v)
+    myVector(const myVector& v)
     {
         _size = v._size;
         _capacity = v._capacity;
@@ -839,8 +839,6 @@ public:
     
     myVector(myVector<T>&& v)
     {
-        cout << "here";
-        
         _data = v._data;
         _size = v._size;
         _capacity = v._capacity;
@@ -901,24 +899,25 @@ private:
 
 int main()
 {
-    /*
+    
     myVector<string> v;
     v.push_back(move("h1"));
     string s = "h2";
     v.push_back(s);
     v.push_back("h3");
     v.push_back("h4");
-    */
     
     
+    /*
     myVector<int> v;
     v.push_back(1);
     v.push_back(2);
     v.push_back(3);
-    v.push_back(4);    
-    myVector<int> v2(v);
+    v.push_back(4);    */
+    myVector<string> v2(v);
      for(size_t i=0; i<v2.size(); i++)
         cout << i << v2[i] << endl;
+        
     
     return 0;
 }
