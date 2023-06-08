@@ -813,12 +813,28 @@ public:
         _data = _a.allocate(n);
         _capacity = n;
     }
+    
     myVector(int n, const T& e)
     {
         _data = allocator_traits<allocator<T>>::allocate(_a, n);
         for(size_t i=0; i<n; i++)
             allocator_traits<allocator<T>>::construct(_a, _data+i, e);
         _size = _capacity = n;
+    }
+    
+    myVector(const myVector<T>& v)
+    {
+        _size = v._size;
+        _capacity = v._capacity;
+
+        if(v._data == nullptr)
+            _data = nullptr;
+        else
+        {
+            _data = allocator_traits<allocator<T>>::allocate(_a, _capacity);
+            for(size_t i=0; i<_size; i++)
+                allocator_traits<allocator<T>>::construct(_a, _data+i, *(v._data+i));
+        }
     }
     
     myVector(myVector<T>&& v)
@@ -900,9 +916,9 @@ int main()
     v.push_back(2);
     v.push_back(3);
     v.push_back(4);    
-    
-     for(size_t i=0; i<v.size(); i++)
-        cout << i << v[i] << endl;
+    myVector<int> v2(v);
+     for(size_t i=0; i<v2.size(); i++)
+        cout << i << v2[i] << endl;
     
     return 0;
 }
