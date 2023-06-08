@@ -794,6 +794,126 @@ Creates a T object initialized with arguments args... at given address p.
     ptr->print(); 
     std::destroy_at(ptr);
     
+    /******************************************************************************
+
+                              Online C++ Compiler.
+               Code, Compile, Run and Debug C++ program online.
+Write your code in this editor and press "Run" button to compile and execute it.
+
+*******************************************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+template<typename T>
+class myVector
+{
+public:
+    myVector()
+    {
+        _capacity = 2;
+        _data = _a.allocate(_capacity);
+    }    
+    myVector(int n)
+    {
+        _data = _a.allocate(n);
+        _capacity = n;
+    }
+    myVector(int n, const T& e)
+    {
+        _data = allocator_traits<allocator<T>>::allocate(_a, n);
+        for(size_t i=0; i<n; i++)
+            allocator_traits<allocator<T>>::construct(_a, _data+i, e);
+        _size = _capacity = n;
+    }
+    
+    myVector(myVector<T>&& v)
+    {
+        cout << "here";
+        
+        _data = v._data;
+        _size = v._size;
+        _capacity = v._capacity;
+        _a = move(v._a);
+        
+        v._data = nullptr;
+        v._size = 0;
+        v._capacity = 0;
+    }
+    
+    ~myVector()
+    {
+        for (std::size_t i = 0; i < _size; ++i)
+            allocator_traits<allocator<T>>::destroy(_a, _data + i);
+        allocator_traits<allocator<T>>::deallocate(_a, _data, _capacity);
+        _size = _capacity = 0;
+        _data = nullptr;
+    }
+    
+    T& operator[] (size_t i)
+    {
+        return _data[i];
+    }
+    
+    template<typename U>
+    void push_back(U&& e)
+    {
+        if(_size < _capacity)
+        {
+            allocator_traits<allocator<T>>::construct(_a, _data+_size, forward<U>(e));
+            _size ++;
+        }
+        else
+        {
+            T* temp = allocator_traits<allocator<T>>::allocate(_a, _capacity*2);
+            for(size_t i=0; i<_size; i++)
+                allocator_traits<allocator<T>>::construct(_a, temp+i, forward<T>(_data[i]));                        
+            allocator_traits<allocator<T>>::construct(_a, temp+_size, forward<U>(e));
+                        
+            for (std::size_t i = 0; i < _size; ++i)
+                allocator_traits<allocator<T>>::destroy(_a, _data + i);
+            allocator_traits<allocator<T>>::deallocate(_a, _data, _capacity);
+            
+            _data = temp;
+            _size ++;
+            _capacity *= 2;
+        }           
+    }
+    
+    inline size_t size() { return _size; }
+    
+private:
+    size_t _size = 0;
+    size_t _capacity = 2;
+    T* _data = nullptr;
+    allocator<T> _a;
+};
+
+int main()
+{
+    /*
+    myVector<string> v;
+    v.push_back(move("h1"));
+    string s = "h2";
+    v.push_back(s);
+    v.push_back("h3");
+    v.push_back("h4");
+    */
+    
+    
+    myVector<int> v;
+    v.push_back(1);
+    v.push_back(2);
+    v.push_back(3);
+    v.push_back(4);    
+    
+     for(size_t i=0; i<v.size(); i++)
+        cout << i << v[i] << endl;
+    
+    return 0;
+}
+
 *****************************************************************************************************************************************************************************    
     std::ref, std::reference_wrapper
 creates an object that behaves similarly to a reference
