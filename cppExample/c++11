@@ -793,15 +793,8 @@ Creates a T object initialized with arguments args... at given address p.
     S* ptr = std::construct_at(reinterpret_cast<S*>(storage), 42, 2.71828f, 3.1415);
     ptr->print(); 
     std::destroy_at(ptr);
-    
-    /******************************************************************************
 
-                              Online C++ Compiler.
-               Code, Compile, Run and Debug C++ program online.
-Write your code in this editor and press "Run" button to compile and execute it.
-
-*******************************************************************************/
-
+https://codereview.stackexchange.com/questions/255149/stdvector-allocator-aware-implementation
 #include <iostream>
 
 using namespace std;
