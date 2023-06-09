@@ -43,3 +43,26 @@ public:
         return ret;
     }
 };
+
+class Solution {
+public:
+    int minBitFlips(int start, int goal) {
+        int ret = 0;
+        int i = start ^ goal; // XOR
+        while(i)
+        {
+            if(i & 1)
+                ret++;
+            i >>= 1;
+        }
+        return ret;
+    }
+};
+
+class Solution {
+public:
+  int minBitFlips(int start, int goal) {
+    return bitset<32>(start ^ goal).count(); // __builtin_popcount(start ^ goal);
+  }
+};
+        
