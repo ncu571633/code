@@ -1,0 +1,32 @@
+
+Alignment
+CPU can only memory at alignment of its word size
+Speed: CPU reads memory, shift 1 byte. 
+atmoic: read aligned memory atmoically
+
+allocate aligned memory
+    uintptr_t mask = ~(uintptr_t)(align - 1);
+    void *mem = malloc(1024+align-1);
+    void *ptr = ((uintptr_t)mem+align-1) & mask;
+    ptr[-1] = mem;
+    return ptr;
+
+Padding:
+Many processors expect memory for variables to be aligned based on the size of the variable. 
+the structure padding is automatically done by the compiler to make sure all its members are byte aligned.
+A ‘char’ of 1 byte can be allocated anywhere in memory like 0x5000 or 0x5001. 
+An ‘int’ of 4 bytes, must start at a 4-byte boundary like 0x5004 or 0x5008. T
+
+******************************************************************************************************************************************
+Big-endian is an order in which the "big end" (most significant value in the sequence) is stored first, at the lowest storage address. 
+Little-endian is an order in which the "little end" (least significant value in the sequence) is stored first.
+
+******************************************************************************************************************************************
+size of
+    cout<<sizeof(char) << endl; // 1
+    cout<<sizeof(int) << endl;   // 4
+    cout<<sizeof(double) << endl; // 8
+    cout<<sizeof(float) << endl;  // 4
+    cout<<sizeof(int*) << endl;   // 8
+    cout<<sizeof(double*) << endl; // 8
+******************************************************************************************************************************************
