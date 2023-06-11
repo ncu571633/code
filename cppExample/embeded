@@ -44,3 +44,5 @@ int myround(int x)
     int numberOfSteps(int num) {
         return num == 0 ? 0 : log2(num) + bitset<32>(num).count();
     }
+    
+    n & (n-1): only 0 and the powers of two (1, 2, 4 and 8) result in a 0000/false bit pattern, all others are non-zero or true.
