@@ -46,3 +46,10 @@ int myround(int x)
     }
     
     n & (n-1): only 0 and the powers of two (1, 2, 4 and 8) result in a 0000/false bit pattern, all others are non-zero or true.
+    
+    
+    // get each bit
+     for (int i = 0; i < 32; ++i)
+         (n & ( 1 << i )) >> k
+         (n >> i) & 1
+     
