@@ -3,6 +3,14 @@ cache friendly code
   modern CPUs spend around 85% of die on caches and up to 99% for storing/moving data!
 
 ************************************************************************************************************
+    Use smaller data types
+    Organize data to avoid alignment holes (sorting your struct members by decreasing size is one way)
+    avoid algorithms and datastructures that exhibit irregular access patterns, and favor linear datastructures.
+    Beware of the standard dynamic memory allocator, which may introduce holes and spread your data around in memory as it warms up.
+    Make sure all adjacent data is actually used in the hot loops. Otherwise, consider breaking up data structures into hot and cold components, 
+so that the hot loops use hot data.
+
+************************************************************************************************************
 clock cycles
   Data from your memory gets brought over to the CPU in little chunks (called 'cache lines'), typically 64 bytes.
   If you have 4-byte integers, that means you're geting 16 consecutive integers in a neat little bundle
