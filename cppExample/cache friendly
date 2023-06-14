@@ -1,0 +1,52 @@
+cache friendly code
+  Data is always retrieved through the memory hierarchy: CPU register, L1/L2/L3 cache, memory
+  modern CPUs spend around 85% of die on caches and up to 99% for storing/moving data!
+
+************************************************************************************************************
+clock cycles
+  Data from your memory gets brought over to the CPU in little chunks (called 'cache lines'), typically 64 bytes.
+  If you have 4-byte integers, that means you're geting 16 consecutive integers in a neat little bundle
+
+************************************************************************************************************
+Temporal locality: it is likely that the same location is accessed again in the near future
+Spatial locality: placing related data close to each other
+
+************************************************************************************************************
+Use appropriate c++ containers
+  Elements of a std::vector are stored in contiguous memory: more cache-friendly than std::list
+
+************************************************************************************************************
+Know and exploit the implicit structure of data
+  matrix:
+    column major: fortran, matlab
+    row major: c/c++    static int x[4000][4000];
+    When fetching a certain element of a matrix from memory, elements near it will be fetched as well and stored in a cache line. 
+    If the ordering is exploited, this will result in fewer memory accesses (because the next few values which are needed for subsequent computations are already in a cache line).
+
+************************************************************************************************************
+
+Avoid unpredictable branches
+            for (int c = 0; c < arraySize; ++c)
+            {   // Primary loop.
+                if (data[c] >= 128)
+                    sum += data[c];
+            }
+            
+            Branch Prediction.
+            if the array is sorted, it is faster. 
+            eliminates the branch
+
+************************************************************************************************************
+Avoid virtual functions
+  cache misses
+  Virtual functions can induce cache misses during look up, but this only happens if the specific function is not called often
+  This can cause a large pipeline bubble as the processor cannot fetch any instructions until the indirect jump 
+  (the call through the function pointer) has retired and a new instruction pointer computed.
+
+************************************************************************************************************
+Line Sharing - False sharing
+  cache line shared by two threads.
+  One elements in this cache line got modified by one thread and mark this line as invalid. 
+  Other processors accessing a different element in the same line see the line marked as invalid. 
+  They are forced to fetch a more recent copy of the line from memory or elsewhere, even though the element accessed has not been modified. 
+  This is because cache coherency is maintained on a cache-line basis, and not for individual elements
