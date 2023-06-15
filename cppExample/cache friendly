@@ -3,6 +3,24 @@ cache friendly code
   modern CPUs spend around 85% of die on caches and up to 99% for storing/moving data!
 
 ************************************************************************************************************
+
+instruction cache would include cache lines fetched from memory for execution. 
+The data cache would include cache lines fetched from memory for loading into a register as data.
+
+************************************************************************************************************
+
+memory:
+
+high address
+
+       | stack ->     <- heap | bbs(uninitialized data) | data segment(initialized data) | text
+
+data segment: initialized static variables: global variables and static local variables
+    size is determined by the size of the values in the program's source code, and does not change at run time. 
+bss: block starting symbol: read-only data segment: static const
+code segment(text segment, or text): executable instructions
+
+************************************************************************************************************
     Use smaller data types
     Organize data to avoid alignment holes (sorting your struct members by decreasing size is one way)
     avoid algorithms and datastructures that exhibit irregular access patterns, and favor linear datastructures.
