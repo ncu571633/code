@@ -17,3 +17,12 @@ int main()
     
     return 0;
 }
+
+
+    string a("1, 16, 23");
+    istringstream ss(a);
+    
+    std::string token;
+    while(std::getline(ss, token, ',')) {
+        std::cout << atoi(token.c_str()) << '\n';
+    }
