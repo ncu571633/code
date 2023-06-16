@@ -76,13 +76,45 @@ Take that address of that first base class object, do roughly the equivalent of 
     }
 
 ***************************************************************************************************************
+stack unwinding:
+  When a scope is exited everything within that scope is destroyed: destroying local objects and calling destructors
+    
+RAII(Resource acquisition is initialization): Scope-Bound Resource Management
+    encapsulate a resource into a class (whose constructor usually - but not necessarily** - acquires the resource, and its destructor always releases it)
+    use the resource via a local instance of the class*
+    the resource is automatically freed when the object gets out of scope
 
+Benefit:
+encapsulation: resource management logic is defined in the class, not at each call site
+exception safety: if an exception is thrown, destructors will be called 
+
+Limitation:
+RAII only works for resources acquired and released (directly or indirectly) by stack-allocated objects
+
+RawResourceHandle* handle=createNewResource();
+handle->performInvalidOperation();  // Oops, throws exception
+...
+deleteResource(handle); // oh dear, never gets called so the resource leaks
+
+
+
+class ManagedResourceHandle {
+public:
+   ManagedResourceHandle(RawResourceHandle* rawHandle_) : rawHandle(rawHandle_) {};
+   ~ManagedResourceHandle() {delete rawHandle; }
+   ... // omitted operator*, etc
+private:
+   RawResourceHandle* rawHandle;
+};
+
+ManagedResourceHandle handle(createNewResource());
+handle->performInvalidOperation();
+***************************************************************************************************************
 volatile: ask the compiler not to optimization for this variable
 optimization (of some parts of your program) may be undesirable, because it may be that someone else is changing the value of some_int from outside the program which compiler is not aware of
 
     
 
-stack unwinding:
 
 
 vector initialization
