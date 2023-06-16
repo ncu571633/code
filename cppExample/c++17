@@ -27,13 +27,21 @@ struct MyClass
 std::optional: return int value, may not be valid. set this value as -1. or have two variable, one for value, another to  identify whether it is valid. 
     “value-or-not-value”, or “possibly an answer”, or “object with delayed initialization”
 
-    std::optional<std::string> str{};
-    std::cout << str.has_value()
-              << str.value_or("empty") << '\n';
- 
-    std::optional<std::string> str1{"abc"};
-    std::cout << str1.has_value()
-              << str1.value_or("empty") << '\n';
+    #include <optional>
+    std::optional<int> process(int v)
+    {
+        if(v == 0)
+            return std::nullopt;
+        return 1;
+    }
+    
+    int main() {
+        // Write C++ code here
+        if (process(0) == std::nullopt)
+            std::cout<< "value not set" << std::endl;
+        std::cout << process(1).value() << std::endl;
+        return 0;
+    }
 
 *****************************************************************************************************************************
 std::any: replace void*, std::shared_ptr<void> 
