@@ -34,7 +34,47 @@ When the compiler generates the code for the destructor, it adds extra code both
     modify vptr to refer to the vtable of derived
     user code
     calls to the member destructors and base destructor(s) this->~mybase()
+
+`delete`ing base classes with non-virtual destructors
+    undefined 
+
+https://stackoverflow.com/questions/32132058/what-do-clang-and-gcc-do-when-deleteing-base-classes-with-non-virtual-destruct/37738132#37738132
+
+Take that address of that first base class object, do roughly the equivalent of a reinterpret_cast on it, and try to use that memory as if it were an object of the base class specified by the pointer (e.g., base2). For example, let's assume base2 has a pointer at offset 14, and base2's destructor attempts to delete a block of memory it points at. With a non-virtual destructor, it'll probably receive a pointer to the base1 subject--but it'll still look at offset 14 from there, and try to treat that as a pointer, and pass it to delete. It could be that base1 contains a pointer at that offset, and it's actually pointing at some dynamically allocated memory, in which case this might actually appear to succeed. Then again, it could also be that it's something entirely different, and the program dies with an error message about (for example) attempting to free an invalid pointer.
+
+    #include <iostream>
+    #include <string>
+    #include <vector>
     
+    class base{ 
+        char *data;
+        std::string s;
+        std::vector<int> v;
+    public:
+        base() { data = new char;  v.push_back(1); s.push_back('a'); }
+        ~base() { std::cout << "~base\n"; delete data; }
+    };
+    
+    class base2 {
+        char *data2;
+    public:
+        base2() : data2(new char) {}
+        ~base2() { std::cout << "~base2\n"; delete data2; }
+    };
+    
+    class derived : public base, public base2 { 
+        char *more_data;
+    
+    public:
+        derived() : more_data(new char) {}
+        ~derived() { std::cout << "~derived\n"; delete more_data; }
+    };
+    
+    int main() {
+        base2 *b = new derived;
+        delete b;
+    }
+
 ***************************************************************************************************************
 
 volatile: ask the compiler not to optimization for this variable
