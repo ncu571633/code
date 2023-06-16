@@ -1,6 +1,46 @@
+
+***************************************************************************************************************
+virtual table: contains an entry for each virtual function
+entries in the vtable can point to most derived functions
+vtables exist at the class level, meaning one vtable per class, and is shared by all instances.
+
+steps:
+    vpointer find vtable
+    vtable[function name] find correct function address
+      
+    Get the vtable pointer, which points to an array of function pointers (function addresses), one for each virtual function, from the object.
+    Get the right function address from the vtable into a register (the index where the correct function address is stored is decided at compile-time).
+    Jump to the address in that register, rather than jumping to a hardcoded address.
+
+slow:
+    compiler can't know which function to call, can't inline it or perform optimization (preparing registers, calling, restoring state afterwards).
+    cache and branch predictor can't help. no perfectly predictable branch. 
+
+function call steps:
+    Copy some registers on the stack, to allow the called function to use those registers.
+    Copy the arguments into predefined locations, so that the called function can find them regardless from where it is called.
+    Push the return address.
+    Branch/jump to the function's code, which is a compile-time address and hence hardcoded in the binary by the compiler/linker.
+    Get the return value from a predefined location and restore registers we want to use.
+
+Virtual Destructor: used to free the memory of the derived class object, by using the base class's pointer object
+
+No virtual destructor for base class: 
+    Deleting an object of a derived class using a pointer of the parent class shows an undefined behavior
+
+Implementation
+When the compiler generates the code for the destructor, it adds extra code both before and after the user defined code. 
+
+    modify vptr to refer to the vtable of derived
+    user code
+    calls to the member destructors and base destructor(s) this->~mybase()
+    
+***************************************************************************************************************
+
 volatile: ask the compiler not to optimization for this variable
 optimization (of some parts of your program) may be undesirable, because it may be that someone else is changing the value of some_int from outside the program which compiler is not aware of
 
+    
 
 stack unwinding:
 
@@ -166,7 +206,48 @@ typedef struct PodTag
 int main()
 {
    printf("%d", OFFSETOF(PodType, c) );
+    virtual table: contains an entry for each virtual function
+entries in the vtable can point to most derived functions
+vtables exist at the class level, meaning one vtable per class, and is shared by all instances.
+
+steps:
+    vpointer find vtable
+    vtable[function name] find correct function address
+      
+    Get the vtable pointer, which points to an array of function pointers (function addresses), one for each virtual function, from the object.
+    Get the right function address from the vtable into a register (the index where the correct function address is stored is decided at compile-time).
+    Jump to the address in that register, rather than jumping to a hardcoded address.
+
+
+slow:
+    compiler can't know which function to call, can't inline it or perform optimization (preparing registers, calling, restoring state afterwards).
+    cache and branch predictor can't help. no perfectly predictable branch. 
+
+
+function call steps:
+    Copy some registers on the stack, to allow the called function to use those registers.
+    Copy the arguments into predefined locations, so that the called function can find them regardless from where it is called.
+    Push the return address.
+    Branch/jump to the function's code, which is a compile-time address and hence hardcoded in the binary by the compiler/linker.
+    Get the return value from a predefined location and restore registers we want to use.
+
+
+
+
+Virtual Destructor: used to free the memory of the derived class object, by using the base class's pointer object
+
+No virtual destructor for base class: 
+    Deleting an object of a derived class using a pointer of the parent class shows an undefined behavior
+
+Implementation
+When the compiler generates the code for the destructor, it adds extra code both before and after the user defined code. 
+
+    modify vptr to refer to the vtable of derived
+    user code
+    calls to the member destructors and base destructor(s) this->~mybase()
     
+
+
    getchar();
    return 0;
 }
