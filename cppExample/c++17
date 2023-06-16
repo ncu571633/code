@@ -36,7 +36,6 @@ std::optional: return int value, may not be valid. set this value as -1. or have
     }
     
     int main() {
-        // Write C++ code here
         if (process(0) == std::nullopt)
             std::cout<< "value not set" << std::endl;
         std::cout << process(1).value() << std::endl;
