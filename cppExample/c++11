@@ -236,8 +236,44 @@ MemoryBlock& operator=(MemoryBlock&& other) noexcept
     Literals are the Constant values that are assigned to the constant variables.
     A constexpr function is one whose return value is computable at compile time when consuming code requires it.
     If you need guaranteed compile-time evaluation, use consteval instead. For constexpr compiler constants propagation is not guaranteed. 
-    
+
+*****************************************************************************************************************************************************************************   
 delegating and inherited constructors
+delegating constructors
+    Many classes have multiple constructors that do similar things:  To add delegating constructors, use the constructor (. . .) : constructor (. . .) syntax:
+	class class_c {
+	public:
+	    int max;
+	    int min;
+	    int middle;
+	
+	    class_c(int my_max) {
+	        max = my_max > 0 ? my_max : 10;
+	    }
+	    class_c(int my_max, int my_min) : class_c(my_max) {
+	        min = my_min > 0 && my_min < max ? my_min : 1;
+	    }
+	    class_c(int my_max, int my_min, int my_middle) : class_c (my_max, my_min){
+	        middle = my_middle < max && my_middle > min ? my_middle : 5;
+	}
+	};
+
+inherited constructors
+if you have multiple constructors in Base and you want to support them all in the derived class. 
+A derived class can implicitly inherit constructors from its base class(es).
+
+        struct B
+        {
+            B(int); // normal constructor 1
+            B(string); // normal constructor 2
+        };
+        
+        struct D : B
+        {
+            using B::B; // inherit constructors from B
+        };
+
+
 *****************************************************************************************************************************************************************************
 brace-or-equal initializers, list initialization
     parentheses ()
