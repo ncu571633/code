@@ -898,7 +898,8 @@ public:
     {
         return _data[i];
     }
-    
+
+    // if 
     template<typename U>
     void push_back(U&& e)
     {
@@ -934,7 +935,7 @@ public:
             if(moveNothrow)
             {
                 for(size_t i=0; i<_size; i++)
-                    allocator_traits<allocator<T>>::construct(_a, temp+i, forward<T>(_data[i]));                        
+                    allocator_traits<allocator<T>>::construct(_a, temp+i, forward<T>(_data[i])); // move ctor                    
             }
             else
             {
@@ -943,7 +944,7 @@ public:
                 {
                     for(size_t i=0; i<_size; i++)
                     {
-                        allocator_traits<allocator<T>>::construct(_a, temp+i, forward<T>(_data[i])); 
+                        allocator_traits<allocator<T>>::construct(_a, temp+i, _data[i]); // copy ctor
                         success++;
                     }
                 }
