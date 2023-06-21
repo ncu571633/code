@@ -29,13 +29,13 @@ Enable exception handling(GCC enable by default)
 noexcept:
     Mark a function as noexcept only if all the functions that it calls, either directly or indirectly, are also noexcept or const. 
     The compiler doesn't necessarily check every code path for exceptions that might bubble up to a noexcept function. 
-    If an exception does exit the outer scope of a function marked noexcept, std::terminate is invoked immediately,
+    If an exception does exit the outer scope of a function marked noexcept, std::terminate is invoked immediately
 
 why noexcept:
     1. from try-catch implementation: C++ compiler doesn't add addition code. 
     2. Standard library containers try to be "exception safe". 
     For example, if the std::vector insertion fails for some reason, it is guaranteed that the vector appears to be unchanged. 
-    when move-construction could raise an exception, so if the value type's move-ctor is not exception safe, std::vector needs to use to the copy operation     instead. 
+    when move-construction could raise an exception, so if the value type's move-ctor is not exception safe, std::vector push_back() needs to use to the copy operation instead. (see example below)
     
 ********************************************************************************
 Exception in destructor: no
@@ -180,7 +180,7 @@ main(int argc, char **argv)
   printf("proc_1(%d, %d, %d, %d) = %d\n", i, j, k, l, proc_1(env, i, j, k, l));
 }
 
-
+*******************************************************************************/
 #include<iostream.h>
 int Div(int x,int y);
 void main()
@@ -203,3 +203,55 @@ int Div(int x,int y)
 		throw y;
 	return x/y;
 }
+
+*******************************************************************************/
+
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+class A 
+{
+public:
+    A(int ii)
+    { i = ii;}
+
+    A(const A& a)
+    {
+        i = a.i;
+        cout << "copy" << i << endl;
+    }
+    
+    A(A&& a) noexcept
+    {
+        i = a.i;
+        cout << "move" << i << endl;
+    }
+
+    int i = 1;
+};
+int main()
+{
+    A a1{1};
+    A a2{2};
+    A a3{3};
+    A a4{4};
+    vector<A> as;
+    as.reserve(2);
+    cout << "here" << endl;
+    as.push_back(move(a1));
+        cout << "here1" << endl;
+
+    as.push_back(move(a2));
+        cout << "here2" << endl;
+
+    as.push_back(move(a3));
+        cout << "here3" << endl;
+
+    as.push_back(move(a4));
+        cout << "here4" << endl;
+
+    return 0;
+}
+
