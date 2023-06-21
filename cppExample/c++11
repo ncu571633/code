@@ -902,21 +902,60 @@ public:
     template<typename U>
     void push_back(U&& e)
     {
+        bool moveNothrow = std::is_nothrow_move_constructible<Type>::value;
+        // || (!std::is_nothrow_move_constructible<Type>::value && !std::is_copy_constructible<Type>::value)
+        // or: nothrow move ctor, and no copy ctor
+
         if(_size < _capacity)
         {
-            allocator_traits<allocator<T>>::construct(_a, _data+_size, forward<U>(e));
-            _size ++;
+            if(moveNoThrow)
+            {
+                allocator_traits<allocator<T>>::construct(_a, _data+_size, forward<U>(e));
+                _size ++;
+            }
+            else
+            {
+                try
+                {
+                    allocator_traits<allocator<T>>::construct(_a, _data+_size, forward<U>(e));
+                }
+                catch(...)
+                {
+                    allocator_traits<allocator<T>>::destroy(_a, _data+_size);
+                    throw;
+                }
+                _size ++;
+
+            }
         }
         else
         {
             T* temp = allocator_traits<allocator<T>>::allocate(_a, _capacity*2);
-            for(size_t i=0; i<_size; i++)
-                allocator_traits<allocator<T>>::construct(_a, temp+i, forward<T>(_data[i]));                        
-            allocator_traits<allocator<T>>::construct(_a, temp+_size, forward<U>(e));
-                        
-            for (std::size_t i = 0; i < _size; ++i)
-                allocator_traits<allocator<T>>::destroy(_a, _data + i);
-            allocator_traits<allocator<T>>::deallocate(_a, _data, _capacity);
+            if(moveNothrow)
+            {
+                for(size_t i=0; i<_size; i++)
+                    allocator_traits<allocator<T>>::construct(_a, temp+i, forward<T>(_data[i]));                        
+            }
+            else
+            {
+                size_t success = 0;
+                try
+                {
+                    for(size_t i=0; i<_size; i++)
+                    {
+                        allocator_traits<allocator<T>>::construct(_a, temp+i, forward<T>(_data[i])); 
+                        success++;
+                    }
+                }
+                catch(...)
+                {
+                    for (size_t i=0; i < success; ++i)
+                        allocator_traits<allocator_type>::destroy(_a, temp + i);
+                    std::allocator_traits<allocator_type>::deallocate(m_allocator, temp, capacity);
+
+                    throw;
+                }
+            }
             
             _data = temp;
             _size ++;
