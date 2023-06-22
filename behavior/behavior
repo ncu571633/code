@@ -37,3 +37,42 @@ forces us to think systemically and grow intentionally.
 
 11. We digitize everywhere possible: digitization, automation and AI.
 
+Customer Focus
+
+Within the team, we have Oncall rotations to handle customer's ticket, and try to handle system exceptions.
+Top priority. 
+
+
+Build trust
+always provide best work. 
+
+Help the parter team and contribute. 
+commit something, don't miss the deadline. 
+Find and report a hidden bug for them, the parter team knew this issue for a long time, but it was 
+hard to reproduce. I found the bug addicently. 
+
+
+Always be Growing
+Try new things. Be a balanced and accurate evaluator of your actions.
+Use new technology to develop: slow. 
+Trade off. 
+
+Be Bold
+Have an opinion and be visionary. Constantly reimagine how to drive the future forward. We innovate, look around corners, and knock down blockers. We explore unfamiliar territory.
+
+Doc tree, the root is the doc. page, shapes. 
+Design patterns.
+Refactor the code may take some time. 
+
+
+Be Curious
+Always ask why. Curiosity pushes each of us to dive deep, innovate, improve, and discover. Never stop learning.
+
+For example:
+there is a bug, don't just make a patch. Need to understand why. 
+A function failed with invalid input string. Say it is null. So I can do a null check. 
+Or I need to ask myself, why the input is null. Maybe the error is from where the input is generated. 
+
+Others asked me to do something, ask is it reasonable. 
+don't do the work without thinking. 
+
