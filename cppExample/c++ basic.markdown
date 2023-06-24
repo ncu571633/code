@@ -39,9 +39,9 @@ a class is a construct that is used to create instances of itself
 a constructor that is automatically generated in the absence of explicit constructors, this automatically provided constructor takes no arguments.
 A default constructor is a constructor that either has no parameters, or if it has parameters, all the parameters have default values
 
-private constructor 
-1. A utility class, that only contains static methods. no object instance must ever be created in the program. 
-2. Your class is a singleton. This means, not more than one instance of your class exists in the program.
+# private constructor 
+	* A utility class, that only contains static methods. no object instance must ever be created in the program. 
+    * Your class is a singleton. This means, not more than one instance of your class exists in the program.
 class MyClass
 {
 private:
