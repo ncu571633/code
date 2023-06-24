@@ -56,12 +56,12 @@ A default constructor is a constructor that either has no parameters, or if it h
 	  }
 	};
 
-5) Copy constructor: creating a new object as a copy of an existing object.
-The first argument of such a constructor is a reference to an object of the same type as is being constructed
-This is the reason of passing a reference to copy constructor. If its not passed by reference then it would pass by value. 
-If the argument is passed by value, its copy constructor would call itself to copy the actual parameter to formal parameter. This process would go on until the system runs out of memory
+# Copy constructor: creating a new object as a copy of an existing object.
+	The first argument of such a constructor is a reference to an object of the same type as is being constructed
+	This is the reason of passing a reference to copy constructor. If its not passed by reference then it would pass by value. 
+	If the argument is passed by value, its copy constructor would call itself to copy the actual parameter to formal parameter. This process would go on until the system runs out of memory
 
-6) 写 operator assignment的时候要注意
+# Operator assignment
 Copy constructor copies an existing object to a non existing object, which you are going to create. Assignment operation can happen between two existing objects.
 The assignment operator for a class is what allows you to use = to assign one instance to another
 
@@ -71,34 +71,32 @@ Another difference that affects the implementation is that assignment operators 
 
 It is one of the special member functions, which means that a default version of it is generated automatically by the compiler if the programmer does not declare one. The default version performs a memberwise copy, where each member is copied by its own copy assignment operator (which may also be programmer-declared or compiler-generated).
 
-7）Can constructor be virtual? why it can or can not? how about destructor.
-A virtual call is a mechanism to get work done given partial information. In particular, "virtual" allows us to call a function knowing only any interfaces and not the exact type of the object. To create an object you need complete information. In particular, you need to know the exact type of what you want to create. Consequently, a "call to a constructor" cannot be virtual.
+# Can constructor be virtual? why it can or can not? how about destructor.
+	A virtual call is a mechanism to get work done given partial information. In particular, "virtual" allows us to call a function knowing only any interfaces and not the exact type of the object. To create an object you need complete information. In particular, you need to know the exact type of what you want to create. Consequently, a "call to a constructor" cannot be virtual.
+	
+	In C++, the constructor cannot be virtual, because when a constructor of a class is executed there is no virtual table in the memory, means no virtual pointer defined yet. So, the constructor should always be non-virtual.
 
-In C++, the constructor cannot be virtual, because when a constructor of a class is executed there is no virtual table in the memory, means no virtual pointer defined yet. So, the constructor should always be non-virtual.
 
-
-Virtual destructor are useful when you can delete an instance of a derived class through a pointer to base class:
+    Virtual destructor are useful when you can delete an instance of a derived class through a pointer to base class:
 If your derived class destructor is virtual then objects will be destrcuted in a order(firstly derived object then base ). If your derived class destructor is NOT virtual then only base class object will get deleted(because pointer is of base class "Base *myObj"). So there will be memory leak for derived object
 
-Virtual base classes (C++ only)
+# Virtual base classes/ Virtual Inheritance
 Suppose you have two derived classes B and C that have a common base class A, and you also have another class D that inherits from B and C. You can declare the base class A as virtual to ensure that B and C share the same subobject of A.
 
-基类构造函数与destructor can't be inheritanced.
-
-构造函数调用顺序：
-1. 基类构造函数，调用顺序按照被继承时声明从左到右。
+# 构造函数调用顺序 Calling sequence of Ctor
+1. 基类构造函数，调用顺序按照被继承时声明从左到右。base ctor
 2. 内嵌对象构造函数
 3. 派生类构造函数
 
-8) what's the default functions of class
-Default constructor: Declared only if no user-defined constructor is declared. Defined when used
-Copy constructor - declared only if the user hasn't declared one. Defined if used
-The implicit copy constructor does a member-wise copy of the source object.
-because the object contains raw pointers and you need to take a "deep" copy of the pointer.
-Copy-assignment operator same as above
-Destructor same as above
-由于类中定义了构造函数，编译系统不会为其生成默认构造函数。由于自定义构造函数带有形参，所以调用时必须给出初始值 。
-Constructor and destructor are public. 
+# what's the default functions of class
+    Default constructor: Declared only if no user-defined constructor is declared. Defined when used
+    Copy constructor - declared only if the user hasn't declared one. Defined if used
+    The implicit copy constructor does a member-wise copy of the source object.
+    because the object contains raw pointers and you need to take a "deep" copy of the pointer.
+    Copy-assignment operator same as above
+    Destructor same as above
+    由于类中定义了构造函数，编译系统不会为其生成默认构造函数。由于自定义构造函数带有形参，所以调用时必须给出初始值 。
+    Constructor and destructor are public. 
 
 9) describe virtual table
 The virtual table is a lookup table of functions used to resolve function calls in a dynamic/late binding manner.
@@ -110,12 +108,12 @@ The compiler also adds a hidden pointer to the most base class that uses virtual
 
 vtables are structures created at compile time (because they can be determined at compile time). When objects of a particular type are created at runtime they will have a vptr which will be initialized to point at a static vtable at construction time.
 
-10) what's the size of empty class
+# class size: what's the size of empty class
 The C++ standard guarantees that the size of any class is at least one. The C++ standard states that no object shall have the same memory address as another object. There are several good reasons for this.
 To guarantee that new will always return a pointer to a distinct memory address.
 To avoid some divisions by zero. For instance, pointer arithmetics (many of which done automatically by the compiler) involve dividing by sizeof(T).
 
-13) what's the difference of passing by reference  & passing by value
+# what's the difference of passing by reference  & passing by value
 Passing by reference means the called functions' parameter will be the same as the callers' passed argument 
 Pass by value means the called functions' parameter will be a copy of the callers' passed argument. 
 Thus changes to a parameter done by the called function in one case changes the argument passed and in the other case just changes the value of the parameter in the called function (which is only a copy)
@@ -144,22 +142,6 @@ Class templates are commonly used to implement containers
 You can use class templates to create a family of classes that operate on a type. Class templates are parameterized types. They imply that a separate class could be created for each conceivable value of the parameters (known as template arguments) passed in.
 Template arguments can be types or constant values of a specified type. For example:
 
-// class_templates.cpp
-template <class T, int i> 
-class TempClass 
-{
-public:
-    TempClass( void );
-    ~TempClass( void );
-    int MemberSet( T a, int b );
-private:
-    T Tarray[i];
-    int arraysize;
-};
-
-int main()
-{
-}
 
 
 
@@ -168,10 +150,10 @@ int main()
 
 
 
-
-17) deep copy & shallow copy
-The default copy constructor creates only shallow copies.
-A deep copy copies all fields, and makes copies of dynamically allocated memory pointed to by the fields. A deep copy occurs when an object is copied along with the objects to which it refers. Shallow copy is a bit-wise copy of an object.
+# deep copy & shallow copy
+    The default copy constructor creates only shallow copies.
+    A deep copy copies all fields, and makes copies of dynamically allocated memory pointed to by the fields. A deep copy occurs when an object is copied along with the objects to which it refers. 
+    Shallow copy is a bit-wise copy of an object.
 
 18) auto pointer
 The auto_ptr template class describes an object that stores a pointer to a single allocated object of type Type* that ensures that the object to which it points gets destroyed automatically when control leaves a scope
@@ -181,17 +163,17 @@ The direct replacement for auto_ptr (or the closest thing to one anyway) is uniq
 When using unique_ptr, there can be at most one unique_ptr pointing at any one resource. 
 shared_ptr, on the other hand, allows for multiple pointers to point at a given resource
 
-19) what's the difference of new & malloc
+# what's the difference of new & malloc
 Should be used because it calls the constructor/destructor
 
-20) what happens when new/malloc fails
+# what happens when new/malloc fails
 std::bad_alloc
 
-21) what's the abstract class
-An abstract class is a class that is designed to be specifically used as a base class; 
-An abstract class contains at least one pure virtual function.
+# what's the abstract class
+    An abstract class is a class that is designed to be specifically used as a base class; 
+    An abstract class contains at least one pure virtual function.
 
-22) what's the pure virtual function?
+# what's the pure virtual function?
 virtual functions we have written have a body (a definition)
 pure virtual function (or abstract function) that has no body at all, only the declaration
 to be redefined by derived classes.
