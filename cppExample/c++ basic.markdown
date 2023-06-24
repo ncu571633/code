@@ -2,12 +2,12 @@
 
 # Memory:
 
-## Malloc: allocated on the heap \
-All threads share a common heap. \
+## Malloc: allocated on the heap 
+All threads share a common heap. 
 Each thread has a private stack, which it can quickly add and remove items from. This makes stack based memory fast, but if you use too much stack memory, as occurs in infinite recursion,  \
 you will get a stack overflow. 
 
-## Dangling pointers \
+## Dangling pointers
 arise when an object is deleted or deallocated, without modifying the value of the pointer, so that the pointer still points to the memory location of the deallocated memory.
 
 ***************************************************************************************************
@@ -71,7 +71,7 @@ Another difference that affects the implementation is that assignment operators 
 
 It is one of the special member functions, which means that a default version of it is generated automatically by the compiler if the programmer does not declare one. The default version performs a memberwise copy, where each member is copied by its own copy assignment operator (which may also be programmer-declared or compiler-generated).
 
-7）can constructor be virtual? why it can or can not? how about destructor.
+7）Can constructor be virtual? why it can or can not? how about destructor.
 A virtual call is a mechanism to get work done given partial information. In particular, "virtual" allows us to call a function knowing only any interfaces and not the exact type of the object. To create an object you need complete information. In particular, you need to know the exact type of what you want to create. Consequently, a "call to a constructor" cannot be virtual.
 
 In C++, the constructor cannot be virtual, because when a constructor of a class is executed there is no virtual table in the memory, means no virtual pointer defined yet. So, the constructor should always be non-virtual.
