@@ -483,47 +483,129 @@ cast:
 
 *****************************************************************************************************************************************************************************
 Smart pointer:
-    (1). auto_ptr: cannot be used in STL containers because it has a copy constructor that does not meet requirements of container CopyConstructible. 
+    1. auto_ptr: cannot be used in STL containers because it has a copy constructor that does not meet requirements of container CopyConstructible. 
 unique_ptr does not implement a copy constructor, so containers use alternate methods. 
-    (2). unique_ptr: at most one unique_ptr pointing at any one resource.
-    (3). shared_ptr: wraps a reference counting mechanism around a raw pointer. 
-    So for each instance of the shared_ptr the reference count is increased by one. 
-    If two share_ptr objects refer the each other they will never get deleted because they will never end up with a reference count of zero.
-    (4). weak_ptr: points to a shared_ptr but does not increase its reference count, it is not considered an owner. 
-    This means that the underying object can still be deleted even though there is a weak_ptr reference to it.
+    2. unique_ptr: smart pointer for exclusive ownership: at most one unique_ptr pointing at any one resource.
+        (1). same size as raw pointer. 
+        (2). move: transfer ownership, and seource pointer is set to null.
+        (3). copy: not allowed
+        (4). customer deleter: second template parameter, its deleter that has a default type std::default_delete<T> .
+            auto log = [](int *p)
+            {
+              cout << "delete" << endl;
+              delete p;
+            };
+            std::unique_ptr<int, decltype(log)> uniqueP(new int(5), log);
+            std::shared_ptr<int> sharedP(new int(5), log);
+        
+        (5). two forms: unique_ptr<T>, unique_ptr<T[]>
+        (6). can be converted to shared_ptr
 
-        class A { shared_ptr<B> b; ... };
-        class B { shared_ptr<A> a; ... };
-        shared_ptr<A> x(new A);  // +1
-        x->b = new B;            // +1
-        x->b->a = x;             // +1
-        // Ref count of 'x' is 2.
-        // Ref count of 'x->b' is 1.
-        // When 'x' leaves the scope, there will be a memory leak:
-        // 2 is decremented to 1, and so both ref counts will be 1.
-        // (Memory is deallocated only when ref count drops to 0)
+    3. shared_ptr: smart pointer for shared ownership: more than one shared_ptr can pointing at the resource
+        So for each instance of the shared_ptr the reference count is increased by one. 
+        If two share_ptr objects refer the each other they will never get deleted because they will never end up with a reference count of zero. (cycle)
+        (1). twice the size of raw pointer: wraps a reference counting mechanism around a raw pointer. 
+            std::shared_ptr<T>
+              ptr to T    ->    T object
+              Ptr to control block    -> control block (reference count, weak count, custom deleter)
+        (2). memory for the reference count should be dynamically allocated.
+        (3). increments and decrements of the reference count must be atomic.
+        (4). copying increment reference count, moving doesn't. 
+        (5). 
+            auto log = [](int *p)
+            {
+              cout << "delete" << endl;
+              delete p;
+            };
+            std::unique_ptr<int, decltype(log)> uniqueP(new int(5), log);
+            std::shared_ptr<int> sharedP(new int(5), log);
+        (6). When to create a control block: 
+            make_shared<T>()
+            when shared_ptr is constructed from unique_ptr.
+            shared_ptr is called with raw pointer: more than one: destroyed multiple times, undifined program behavior
+            avoid passing raw pointers to shared_ptr constructor, to use make_shared.
+            if shared_ptr constructor should be used, try to use sharedptr rather than raw pointer
+        (7). std::enable_shared_from_this: 
+            base class template
+            defines a member function crates a shared_ptr to the current obj, without duplicating coltrol block.
+            looks up the control block for the current obj, and create shared_ptr based on it.
 
-Can weak_ptr be used in case the programmer cannot tell the ownership relationship and cannot establish any static ownership 
-because of lack of privilege or lack of information? The answer is: If ownership among objects is unclear, weak_ptr cannot help. 
-If there is a cycle, the programmer has to find it and break it. 
-An alternative remedy is to use a programming language with full garbage collection (such as: Java, C#, Go, Haskell), 
-or to use a conservative (=imperfect) garbage collector which works with C/C++ (such as: Boehm GC).
+    4. weak_ptr: is a smart pointer that holds a non-owning ("weak") reference to an object that is managed by std::shared_ptr. temporary ownership
+        It must be converted to std::shared_ptr in order to access the referenced object.
+        points to a shared_ptr but does not increase its reference count, it is not considered an owner (This means that the underying object can still be deleted even though there is a weak_ptr reference to it)
 
-unique_ptr: exclusive ownership 
-2. same size as raw pointer. 
-3. move: transfer ownership, and seource pointer is set to null.
-4. copy: not allowed
-5. customer deleter: second template parameter, its deleter that has a default type std::default_delete<T> .
-    auto log = [](int *p)
-    {
-      cout << "delete" << endl;
-      delete p;
-    };
-    std::unique_ptr<int, decltype(log)> uniqueP(new int(5), log);
-    std::shared_ptr<int> sharedP(new int(5), log);
-    
-6. two forms: unique_ptr<T>, unique_ptr<T[]>
-7. can be converted to shared_ptr
+        Usage:
+            std::weak_ptr models temporary ownership: when an object needs to be accessed only if it exists, and it may be deleted at any time by someone else, 
+            Solve the dangling pointer problem. By just using raw pointers it is impossible to know if the referenced data has been deallocated or not. 
+        Instead, by letting a std::shared_ptr manage the data, and supplying std::weak_ptr to users of the data, can check whether the data is valid by calling expired() or lock().
+
+
+
+
+        Can weak_ptr be used in case the programmer cannot tell the ownership relationship and cannot establish any static ownership 
+        because of lack of privilege or lack of information? The answer is: If ownership among objects is unclear, weak_ptr cannot help. 
+        If there is a cycle, the programmer has to find it and break it. 
+        An alternative remedy is to use a programming language with full garbage collection (such as: Java, C#, Go, Haskell), 
+        or to use a conservative (=imperfect) garbage collector which works with C/C++ (such as: Boehm GC).
+
+
+
+
+
+std::weak_ptr is used to track the object, and it is converted to std::shared_ptr to assume temporary ownership. 
+If the original std::shared_ptr is destroyed at this time, the object's lifetime is extended until the temporary std::shared_ptr is destroyed as well.
+
+Another use for std::weak_ptr is to break reference cycles formed by objects managed by std::shared_ptr. If such cycle is orphaned (i.e., there are no outside shared pointers into the cycle), the shared_ptr reference counts cannot reach zero and the memory is leaked. To prevent this, one of the pointers in the cycle can be made weak.
+
+weak_ptr: can't be dereferenced, can't be test for nullness. not standalone smart pointer, augmentation of shared_ptr. can be used to check dangle pointer(wild pointer): cache, cycle. 
+created from shared_ptr, points to the same place, but don't affect the reference count. 
+test: weak_ptr.expired()
+check expired, and return access to the obj:
+    shared_ptr<Widget> sp = weakptr.lock(); // null if expired
+    shared_ptr<Widget> sp(weakptr);  // throw exception
+How to use:
+  std::shared_ptr<int> sp (new int);
+  std::weak_ptr<int> wp1;
+  std::weak_ptr<int> wp2 (wp1);
+  std::weak_ptr<int> wp3 (sp);
+
+
+            class A { shared_ptr<B> b; ... };
+            class B { shared_ptr<A> a; ... };
+            shared_ptr<A> x(new A);  // +1
+            x->b = new B;            // +1
+            x->b->a = x;             // +1
+            // Ref count of 'x' is 2.
+            // Ref count of 'x->b' is 1.
+            // When 'x' leaves the scope, there will be a memory leak:
+            // 2 is decremented to 1, and so both ref counts will be 1.
+            // (Memory is deallocated only when ref count drops to 0)
+
+
+
+
+  
+make_unique<T>(), make_shared<T>() is better than shared_ptr<T> sp(new T)
+1. only one allocation: single chunk of memory to hold both the object and control block. 
+2. type T once
+3. memory leak due to exception: two statement: new, run shared_ptr constructore.
+Compiler may insert another statement or function call in between
+process(shared_ptr<widget>, int priority)
+  no process(shared_ptr<T>(new T), computePriority())
+  no shared_ptr<T> sp(new T, customDel)
+     process(sp, computePriority())   performance: copy
+  yes process(move(sp), computePriority())
+
+Not to use make_unique, make_shared:
+1. custom delete. not supported
+2. make function use perfect forwarding, parentheses, not braces. 
+using braced initialized, need to use new directly. 
+Or auto initList = {10, 20}
+auto spv = make_shared<vector<int>>(initList);
+3. As long as weak_ptr refere to a control block, control block needs to exist. 
+The memory containing it should remain allocated. 
+If the obj is large and the time between destructio nof the last shared_ptr/week_ptr is significant, 
+a lag can occur between when an obj is freed and when memory occupied is freed.
 
 
 template <class T>
@@ -581,34 +663,6 @@ private:
 	}
 };
 
-shared_ptr: shared ownership
-1. twice the size of raw pointer
-2. memory for the reference count should be dynamically allocated.
-3. increments and decrements of the reference count must be atomic.
-4. copying increment reference count, moving doesn't. 
-5. 
-    auto log = [](int *p)
-    {
-      cout << "delete" << endl;
-      delete p;
-    };
-    std::unique_ptr<int, decltype(log)> uniqueP(new int(5), log);
-    std::shared_ptr<int> sharedP(new int(5), log);
-6. std::shared_ptr<T>
-  ptr to T    ->    T object
-  Ptr to control block    -> control block (reference count, weak count, custom deleter)
-7. When to create a control block: 
-    make_shared<T>()
-    when shared_ptr is constructed from unique_ptr.
-    shared_ptr is called with raw pointer: more than one: destroyed multiple times, undifined program behavior
-    avoid passing raw pointers to shared_ptr constructor, to use make_shared.
-    if shared_ptr constructor should be used, try to use sharedptr rather than raw pointer
-8. std::enable_shared_from_this: 
-    base class template
-    defines a member function crates a shared_ptr to the current obj, without duplicating coltrol block.
-    looks up the control block for the current obj, and create shared_ptr based on it.
-    
-    
 template<class T>
 class my_shared_ptr
 {
@@ -696,40 +750,6 @@ private:
 		}
 	}
 };
-
-weak_ptr: can't be dereferenced, can't be test for nullness. not standalone smart pointer, augmentation of shared_ptr. can be used to check dangle pointer(wild pointer): cache, cycle. 
-created from shared_ptr, points to the same place, but don't affect the reference count. 
-test: weak_ptr.expired()
-check expired, and return access to the obj:
-    shared_ptr<Widget> sp = weakptr.lock(); // null if expired
-    shared_ptr<Widget> sp(weakptr);  // throw exception
-How to use:
-  std::shared_ptr<int> sp (new int);
-  std::weak_ptr<int> wp1;
-  std::weak_ptr<int> wp2 (wp1);
-  std::weak_ptr<int> wp3 (sp);
-  
-make_unique<T>(), make_shared<T>() is better than shared_ptr<T> sp(new T)
-1. only one allocation: single chunk of memory to hold both the object and control block. 
-2. type T once
-3. memory leak due to exception: two statement: new, run shared_ptr constructore.
-Compiler may insert another statement or function call in between
-process(shared_ptr<widget>, int priority)
-  no process(shared_ptr<T>(new T), computePriority())
-  no shared_ptr<T> sp(new T, customDel)
-     process(sp, computePriority())   performance: copy
-  yes process(move(sp), computePriority())
-
-Not to use make_unique, make_shared:
-1. custom delete. not supported
-2. make function use perfect forwarding, parentheses, not braces. 
-using braced initialized, need to use new directly. 
-Or auto initList = {10, 20}
-auto spv = make_shared<vector<int>>(initList);
-3. As long as weak_ptr refere to a control block, control block needs to exist. 
-The memory containing it should remain allocated. 
-If the obj is large and the time between destructio nof the last shared_ptr/week_ptr is significant, 
-a lag can occur between when an obj is freed and when memory occupied is freed.
 
 *****************************************************************************************************************************************************************************
 
