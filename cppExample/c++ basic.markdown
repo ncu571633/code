@@ -40,21 +40,21 @@ a constructor that is automatically generated in the absence of explicit constru
 A default constructor is a constructor that either has no parameters, or if it has parameters, all the parameters have default values
 
 # private constructor 
-	* A utility class, that only contains static methods. no object instance must ever be created in the program. 
+    * A utility class, that only contains static methods. no object instance must ever be created in the program. 
     * Your class is a singleton. This means, not more than one instance of your class exists in the program.
-class MyClass
-{
-private:
-  MyClass() { }
-  static MyClass* instance;
-public:
-  MyClass & Instance()
-  {
-    if(!instance)
-        instance = new MyClass();
-    return *instance;
-  }
-};
+	class MyClass
+	{
+	private:
+	  MyClass() { }
+	  static MyClass* instance;
+	public:
+	  MyClass & Instance()
+	  {
+	    if(!instance)
+	        instance = new MyClass();
+	    return *instance;
+	  }
+	};
 
 5) Copy constructor: creating a new object as a copy of an existing object.
 The first argument of such a constructor is a reference to an object of the same type as is being constructed
