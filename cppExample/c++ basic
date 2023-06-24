@@ -1,85 +1,13 @@
-math:
-1. for(int i=0; i<32; i++)
-2. remove last bit 1
-n & (n-1)
-check n is power of 2: n & (n-1)==0
+Memory:
+	Malloc: allocated on the heap
+        All threads share a common heap.
+        Each thread has a private stack, which it can quickly add and remove items from. This makes stack based memory fast, but if you use too much stack memory, as occurs in infinite recursion, 
+you will get a stack overflow. 
 
-LinkList Questions
-1. recursive 
-return head
-recursive function return p
+    Dangling pointers 
+	    arise when an object is deleted or deallocated, without modifying the value of the pointer, so that the pointer still points to the memory location of the deallocated memory.
 
-	ListNode* reverseList(ListNode* head) {
-    		if(!head || head->next == nullptr)
-        			return head;
-    		ListNode* p = head->next;
-    		ListNode* n = reverseList(head->next);
-    		p->next = head;
-    		head->next = nullptr;
-    		return n;
-	}
-2. loop:
-   new node n
-   n->next = head;
-
-
-class Solution {
-public:
-	ListNode* reverseList(ListNode* head) {
-    	if(!head || head->next==nullptr)
-        	return head;
-    	ListNode* p = head->next;
-    	ListNode* n = reverseList(head->next);
-    	head->next = nullptr;  
-    	p->next = head;  
-    	return n;   	 
-	}
-};
-
-class Solution {
-public:
-	ListNode* reverseList(ListNode* head) {
-    	if(!head)
-        	return head;
-
-    	ListNode* t = head->next;
-    	head->next = nullptr;
-    	while(t) {
-        	ListNode* n = t->next;
-        	t->next = head;
-        	head = t;
-        	t = n;
-    	}
-    	return head;
-	}
-};
-
-Find Middle
-       ListNode *fast = head;
-        ListNode *slow = head;
-        while (fast->next && fast->next->next) {
-            slow = slow->next;
-            fast = fast->next->next;
-        }
-        mid = slow->next;
-[1, 2, 3, 4, 5] -> 3
-[1, 2, 3, 4] -> 3
-
-string functions
-string.find(substr) return substr index, or -1 is not found
-string.substr(size_t pos = 0, size_t len = npos), from pos, len; if len is -1 then to the end
-
-// separate substring
-istringstream in(str);
-for(string word; in >> word; ) {
-}
-
-
-Dangling pointers arise when an object is deleted or deallocated, without modifying the value of the pointer, so that the pointer still points to the memory location of the deallocated memory.
-
-Malloc: allocated on the heap
-All threads share a common heap.
-Each thread has a private stack, which it can quickly add and remove items from. This makes stack based memory fast, but if you use too much stack memory, as occurs in infinite recursion, you will get a stack overflow. 
+***************************************************************************************************
 
 composition/aggregation
 Aggregation differs from ordinary composition in that it does not imply ownership.
@@ -93,17 +21,18 @@ A Company is an aggregation of People. A Company is a composition of Accounts. W
 Example 2: (very simplified)
 A Text Editor owns a Buffer (composition). A Text Editor uses a File (aggregation). When the Text Editor is closed, the Buffer is destroyed but the File itself is not destroyed.
 
-
-2) encapsulation, polymorphism,inheritance的概念；
-encapsulation: A language mechanism for restricting access to some of the object's components
+***************************************************************************************************
+2) encapsulation, polymorphism,inheritance
+Encapsulation: A language mechanism for restricting access to some of the object's components
 
 In classical inheritance where objects are defined by classes, classes can inherit attributes and behavior from pre-existing classes called base classes. The resulting classes are known as derived classes.
 
-3）class的概念
+3）class
 a class is a construct that is used to create instances of itself
 
-4）default constructor是啥样的；
+4）default constructor
 a constructor that is automatically generated in the absence of explicit constructors, this automatically provided constructor takes no arguments.
+A default constructor is a constructor that either has no parameters, or if it has parameters, all the parameters have default values
 
 private constructor 
 1. A utility class, that only contains static methods. no object instance must ever be created in the program. 
