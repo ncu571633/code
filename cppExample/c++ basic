@@ -30,6 +30,7 @@ In classical inheritance where objects are defined by classes, classes can inher
 3）class
 a class is a construct that is used to create instances of itself
 
+***************************************************************************************************
 4）default constructor
 a constructor that is automatically generated in the absence of explicit constructors, this automatically provided constructor takes no arguments.
 A default constructor is a constructor that either has no parameters, or if it has parameters, all the parameters have default values
@@ -37,7 +38,7 @@ A default constructor is a constructor that either has no parameters, or if it h
 private constructor 
 1. A utility class, that only contains static methods. no object instance must ever be created in the program. 
 2. Your class is a singleton. This means, not more than one instance of your class exists in the program.
-class MyClass()
+class MyClass
 {
 private:
   MyClass() { }
@@ -47,14 +48,14 @@ public:
   {
     if(!instance)
         instance = new MyClass();
-    return instance;
+    return *instance;
   }
 };
 
-5) 写copy constructor要注意
-creating a new object as a copy of an existing object.
+5) Copy constructor: creating a new object as a copy of an existing object.
 The first argument of such a constructor is a reference to an object of the same type as is being constructed
-This is the reason of passing a reference to copy constructor. If its not passed by reference then it would pass by value. If the argument is passed by value, its copy constructor would call itself to copy the actual parameter to formal parameter. This process would go on until the system runs out of memory
+This is the reason of passing a reference to copy constructor. If its not passed by reference then it would pass by value. 
+If the argument is passed by value, its copy constructor would call itself to copy the actual parameter to formal parameter. This process would go on until the system runs out of memory
 
 6) 写 operator assignment的时候要注意
 Copy constructor copies an existing object to a non existing object, which you are going to create. Assignment operation can happen between two existing objects.
