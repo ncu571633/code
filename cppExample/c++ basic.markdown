@@ -1,4 +1,6 @@
-Memory:
+***************************************************************************************************
+
+# Memory:
 	Malloc: allocated on the heap
         All threads share a common heap.
         Each thread has a private stack, which it can quickly add and remove items from. This makes stack based memory fast, but if you use too much stack memory, as occurs in infinite recursion, 
@@ -9,7 +11,7 @@ you will get a stack overflow.
 
 ***************************************************************************************************
 
-composition/aggregation
+# composition/aggregation
 Aggregation differs from ordinary composition in that it does not imply ownership.
 In composition, when the owning object is destroyed, so are the contained objects. 
 In aggregation, this is not necessarily true. The object may only contain a reference or pointer to the object
