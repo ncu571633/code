@@ -189,8 +189,28 @@ int main()
     return 0;
 }
 
-B1
+******************************************************************
+Virtual inheritance
+ensures only one copy of a base class's member variables are inherited by grandchild derived classes.
+most useful for multiple inheritance
+struct Animal {
+    virtual ~Animal() = default;
+    virtual void Eat() {}
+};
 
+// Two classes virtually inheriting Animal:
+struct Mammal: virtual public Animal {
+    virtual void Breathe() {}
+};
+
+struct WingedAnimal: virtual public Animal {
+    virtual void Flap() {}
+};
+
+// A bat is still a winged mammal
+struct Bat: Mammal, WingedAnimal {};
+
+******************************************************************
 
 What are pointer and reference? 
 1. A pointer can be re-assigned any number of times while a reference can not be reassigned after initialization. 
