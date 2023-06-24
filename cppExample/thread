@@ -1,1 +1,99 @@
+A process is an instance of a computer program that is being executed
+Thread: A thread is a light-weight process.
+1. processes are typically independent, while threads exist as subsets of a process
+processes carry considerably more state information than threads, whereas multiple threads within a process share process state as well as memory and other resources
+processes have separate address spaces, whereas threads share their address space
+2. processes interact only through system-provided inter-process communication mechanisms files, pipes, or sockets
+two threads in a task can communicate through memory. 
+3. context switching between threads in the same process is typically faster than context switching between processes.
+When one thread stops executing and another starts, we call that a thread context switch
+
+Starvation
+The reason that thread 1 never runs is that thread 0 never voluntarily gives up the CPU
+
+Preemption This means that if one user-level thread is running, then at some point the operating system will interrupt it and run another user-level thread
+pthread_attr_setscope(attr+i, PTHREAD_SCOPE_SYSTEM)
+
+A race condition occurs when 2 or more threads are able to access shared data and they try to change it at the same time. 
+
+In our race program, we can fix the race condition by enforcing that no thread can be interrupted by another thread when it is modifying and printing s. This can be done with a mutex, sometimes called a ``lock'' or sometimes a ``binary semaphore.'' 
+
+If you are performing a very time consuming operation (such as writing to a socket or file) while holding the mutex, then you should consider the use of buffering so that you can move the time consuming operation out of the code that holds the mutex. 
+
+A monitor is a data structure which a thread can "enter" and "exit". Only one thread may be in the monitor at a time. This is just like a mutex, and in pthreads, there is no entity called a "monitor". You just use a mutex. 
+
+Condition variables allow you to do more sophisticated things with monitors. A condition variable must be associated with a specific monitor. 
+
+Flynn's classification
+Single instruction single data: sequential
+Single instruction multiple data: array processor: data parallelism 
+Multiple instruction single data: pipe line
+Thread Models Description
+Delegation model     Thread pool
+A central thread (boss) creates the threads (workers), assigning each worker a task. Each worker is assigned a task by the boss thread. The boss thread may wait until each thread completes that task.
+Peer-to-peer model
+All the threads have an equal working status. Threads are called peer threads. A peer thread creates all the threads needed to perform the tasks but performs no delegation responsibilities. The peer threads can process requests from a single input stream shared by all the threads or each thread may have its own input stream.
+Pipeline
+An assembly-line approach to processing a stream of input in stages. Each stage is a thread that performs work on a unit of input. When the unit of input has been through all the stages, then the processing of the input has been completed.
+Producer–consumer model
+A producer thread produces data to be consumed by the consumer thread. The data is stored in a block of memory shared by the producer and consumer threads.
+
+A deadlock occurs when there is a circular chain of threads or processes which each hold a locked resource and are trying to lock a resource held by the next element in the chain. For example, two threads that hold respectively lock A and lock B, and are both trying to acquire the other lock.
+
+we can prevent deadlock if we assign an order to our locks and require that locks always be acquired in order. 
+
+Mutual exclusion condition: a resource that cannot be used by more than one process at a time
+Hold and wait condition: processes already holding resources may request new resources
+No preemption condition: No resource can be forcibly removed from a process holding it, resources can be released only by the explicit action of the process
+Circular wait condition: two or more processes form a circular chain where each process waits for a resource that the next process in the chain holds
+
+Here, the important point is that when one process is executing shared modifiable data in its critical section, no other process is to be allowed to execute in its critical section
+
+mutual exclusion (short for Mutex) refers to the requirement of ensuring that no two processes or threads (henceforth referred to only as processes) are in their critical section at the same time. 
+
+
+mutex, semaphore
+
+Monitor
+a monitor is an object or module intended to be used safely by more than one thread
+When locks and condition variables are used together like this, the result is called a monitor : 
+A collection of procedures manipulating a shared data structure. 
+One lock that must be held whenever accessing the shared data (typically each procedure acquires the lock at the very beginning and releases the lock before returning). 
+One or more condition variables used for waiting. 
+
+
+condition variable
+used to wait for a particular condition to become true 
+
+
+synchronization
+Thread synchronization is the application of particular mechanisms to ensure that two concurrently-executing threads or processes do not execute specific portions of a program at the same time. If one thread has begun to execute a serialized portion of the program, any other thread trying to execute this portion must wait until the first thread finishes. 
+
+Thread-safe
+A piece of code is thread-safe if it only manipulates shared data structures in a manner that guarantees safe execution by multiple threads at the same time
+avoiding race condition
+
+
+
+
+
+In computing, a computer program or subroutine is called reentrant if it can be interrupted in the middle of its execution and then safely called again ("re-entered") before its previous invocations complete execution. The interruption could be caused by an internal action such as a jump or call, or by an external action such as a hardware interrupt or signal.
+
+
+The pthread_join() function waits for the thread specified by thread to terminate.
+Preemptive scheduling: The preemptive scheduling is prioritized. The highest priority process should always be the process that is currently utilized.
+
+Non-Preemptive scheduling: When a process enters the state of running, the state of that process is not deleted from the scheduler until it finishes its service time.
+
+Why do you need a while loop while waiting for a condition variable
+
+Consider:
+You put a job on a queue.
+You signal the condition variable, waking thread A.
+You put a job on a queue.
+You signal the condition variable, waking thread B.
+Thread A gets scheduled, does the first job.
+Thread A finds the queue non-empty and does the second job.
+Thread B gets scheduled, having been woken, but finds the queue still empty.
+
 
