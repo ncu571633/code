@@ -2,12 +2,12 @@
 
 # Memory:
 
-Malloc: allocated on the heap
-All threads share a common heap.
-Each thread has a private stack, which it can quickly add and remove items from. This makes stack based memory fast, but if you use too much stack memory, as occurs in infinite recursion, 
+Malloc: allocated on the heap \
+All threads share a common heap. \
+Each thread has a private stack, which it can quickly add and remove items from. This makes stack based memory fast, but if you use too much stack memory, as occurs in infinite recursion,  \
 you will get a stack overflow. 
 
-Dangling pointers
+Dangling pointers \
 arise when an object is deleted or deallocated, without modifying the value of the pointer, so that the pointer still points to the memory location of the deallocated memory.
 
 ***************************************************************************************************
