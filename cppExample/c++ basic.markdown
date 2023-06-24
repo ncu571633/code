@@ -2,12 +2,12 @@
 
 # Memory:
 
-Malloc: allocated on the heap \
+## Malloc: allocated on the heap \
 All threads share a common heap. \
 Each thread has a private stack, which it can quickly add and remove items from. This makes stack based memory fast, but if you use too much stack memory, as occurs in infinite recursion,  \
 you will get a stack overflow. 
 
-Dangling pointers \
+## Dangling pointers \
 arise when an object is deleted or deallocated, without modifying the value of the pointer, so that the pointer still points to the memory location of the deallocated memory.
 
 ***************************************************************************************************
@@ -34,7 +34,8 @@ In classical inheritance where objects are defined by classes, classes can inher
 a class is a construct that is used to create instances of itself
 
 ***************************************************************************************************
-4）default constructor
+# Constructor
+## default constructor
 a constructor that is automatically generated in the absence of explicit constructors, this automatically provided constructor takes no arguments.
 A default constructor is a constructor that either has no parameters, or if it has parameters, all the parameters have default values
 
