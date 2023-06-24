@@ -1,0 +1,106 @@
+math:
+1. for(int i=0; i<32; i++) // sizeof(int) -== 32
+2. remove last bit 1
+n & (n-1)
+check n is power of 2: n & (n-1)==0
+
+LinkList Questions
+1. recursive 
+return head
+recursive function return p
+
+	ListNode* reverseList(ListNode* head) {
+    		if(!head || head->next == nullptr)
+        			return head;
+    		ListNode* p = head->next;
+    		ListNode* n = reverseList(head->next);
+    		p->next = head;
+    		head->next = nullptr;
+    		return n;
+	}
+2. loop:
+   new node n
+   n->next = head;
+
+
+class Solution {
+public:
+	ListNode* reverseList(ListNode* head) {
+    	if(!head || head->next==nullptr)
+        	return head;
+    	ListNode* p = head->next;
+    	ListNode* n = reverseList(head->next);
+    	head->next = nullptr;  
+    	p->next = head;  
+    	return n;   	 
+	}
+};
+
+class Solution {
+public:
+	ListNode* reverseList(ListNode* head) {
+    	if(!head)
+        	return head;
+
+    	ListNode* t = head->next;
+    	head->next = nullptr;
+    	while(t) {
+        	ListNode* n = t->next;
+        	t->next = head;
+        	head = t;
+        	t = n;
+    	}
+    	return head;
+	}
+};
+
+Find Middle
+       ListNode *fast = head;
+        ListNode *slow = head;
+        while (fast->next && fast->next->next) {
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+        mid = slow->next;
+[1, 2, 3, 4, 5] -> 3
+[1, 2, 3, 4] -> 3
+
+string functions
+string.find(substr) return substr index, or -1 is not found
+string.substr(size_t pos = 0, size_t len = npos), from pos, len; if len is -1 then to the end
+
+// separate substring
+istringstream in(str);
+for(string word; in >> word; ) {
+}
+
+**********************************************************************************
+Backtracking
+
+boolean solve(Node n) {
+    if n is a leaf node {
+        if the leaf is a goal node, return true
+        else return false
+    } else {
+        for each child c of n {
+            if solve(c) succeeds, return true
+        }
+        return false
+    }
+}
+
+boolean solve(Node n) {
+    put node n on the stack;
+    while the stack is not empty {
+        if the node at the top of the stack is a leaf {
+            if it is a goal node, return true
+            else pop it off the stack
+        }
+        else {
+            if the node at the top of the stack has untried children
+                push the next untried child onto the stack
+            else pop the node off the stack
+
+    }
+    return false
+}
