@@ -607,6 +607,17 @@ Smart pointer:
     If the obj is large and the time between destructio nof the last shared_ptr/week_ptr is significant, 
     a lag can occur between when an obj is freed and when memory occupied is freed.
 
+***********************************************************************************************************
+# Return value optimization: is a common form of copy elision. 
+	It refers to the situation where an object returned by value from a method has its copy elided. 
+	The example set forth in the standard illustrates named return value optimization, since the object is named.
+	
+	object is constructed from a temporary:  return T()
+
+***********************************************************************************************************
+std::ref, std::reference_wrapper
+creates an object that behaves similarly to a reference
+***********************************************************************************************************
 
 template <class T>
 class my_unique_ptr
@@ -1082,6 +1093,5 @@ public:
 	    return 0;
 	}
 
-*****************************************************************************************************************************************************************************    
-std::ref, std::reference_wrapper
-creates an object that behaves similarly to a reference
+***************************************************************************************************************************************************************************** 
+
