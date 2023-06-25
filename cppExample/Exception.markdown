@@ -28,9 +28,9 @@ vector
 
 ********************************************************************************
 # noexcept:
-    Mark a function as noexcept only if all the functions that it calls, either directly or indirectly, are also noexcept or const. 
-    The compiler doesn't necessarily check every code path for exceptions that might bubble up to a noexcept function. 
-    If an exception does exit the outer scope of a function marked noexcept, std::terminate is invoked immediately
+    * Mark a function as noexcept only if all the functions that it calls, either directly or indirectly, are also noexcept or const. 
+    * The compiler doesn't necessarily check every code path for exceptions that might bubble up to a noexcept function. 
+    * If an exception does exit the outer scope of a function marked noexcept, std::terminate is invoked immediately
 
 ## why noexcept:
     1. from try-catch implementation: C++ compiler doesn't add additional code. 
