@@ -1,38 +1,39 @@
+********************************************************************************
 Exception is not handled, C++ run time calls std::terminate(). 
     
 ********************************************************************************
 
-Exception safety is the state of code working correctly when exceptions are thrown
+# Exception safety is the state of code working correctly when exceptions are thrown
 
 vector
 
-No-throw guarantee: 
+* No-throw guarantee: 
     No-throw guarantee, also known as failure transparency: Operations are guaranteed to succeed and satisfy all requirements even in exceptional situations. If an exception occurs, it will be handled internally and not observed by clients.
     Implemented by ensuring that memory allocation never fails, or by defining the insert function's behavior on allocation failure (for example, by having the function return a boolean result indicating whether the insertion took place).
     
-Strong guarantee(commit or rollback semantics) either it completely succeeds or it has no effect.
+* Strong guarantee(commit or rollback semantics) either it completely succeeds or it has no effect.
     doing any necessary allocation first, and then swapping buffers if no errors are encountered (the copy-and-swap idiom). In this case, either the insertion of x into v succeeds, or v remains unchanged despite the allocation failure.
     
-Basic exception safety:
+* Basic exception safety:
     no memory is leaked and the object is still in a usable state even though the data might have been modified.
     Implemented by ensuring that the count field is guaranteed to reflect the final size of v. For example, if an error is encountered, the insert function might completely deallocate v and reset its count field to zero. On failure, no resources are leaked, but v's old value is not preserved.
 
-No exception safety: An insertion failure -> corrupted content in v, an incorrect value in the count field, or a resource leak.
+* No exception safety: An insertion failure -> corrupted content in v, an incorrect value in the count field, or a resource leak.
     
 ********************************************************************************
 
-Enable exception handling(GCC enable by default)
+# Enable exception handling(GCC enable by default)
     Generates extra code needed to propagate exceptions. 
     to generate frame unwind information for all functions, which can produce significant data size overhead, although it does not affect execution. 
 
 ********************************************************************************
-noexcept:
+# noexcept:
     Mark a function as noexcept only if all the functions that it calls, either directly or indirectly, are also noexcept or const. 
     The compiler doesn't necessarily check every code path for exceptions that might bubble up to a noexcept function. 
     If an exception does exit the outer scope of a function marked noexcept, std::terminate is invoked immediately
 
-why noexcept:
-    1. from try-catch implementation: C++ compiler doesn't add addition code. 
+## why noexcept:
+    1. from try-catch implementation: C++ compiler doesn't add additional code. 
     2. Standard library containers try to be "exception safe". 
     For example, if the std::vector insertion fails for some reason, it is guaranteed that the vector appears to be unchanged. 
     when move-construction could raise an exception, so if the value type's move-ctor is not exception safe, std::vector push_back() needs to use to the copy operation instead. (see example below)
