@@ -904,7 +904,71 @@ public:
         v._size = 0;
         v._capacity = 0;
     }
-    
+
+        myVector& operator=(const vector& other) 
+        {
+            if (this == &other) 
+                return *this;
+            
+            for (size_t i=0; i < _size; ++i)
+                allocator_traits<allocator<T>>::destroy(_a, _data + i);
+                
+            if (other._data)
+            {
+                if (other.size() > _capacity) 
+                {
+                    allocator_traits<allocator<T>>::deallocate(_a, _data, _capacity);
+                                
+                    _capacity = other;
+                    _data = allocator_traits<allocator<T>>::allocate(_a, _capacity);
+                }
+                
+                _size = other._size;
+                for (size_t i=0; i < _size; ++i) {
+                    allocator_traits<allocator<T>>::construct(_a, _data + i, *(other._data + i));
+
+            }
+            else 
+            {
+                _data = nullptr;
+                _size = 0;
+            }
+            return *this;
+        }
+        
+        
+        constexpr vector& operator=(vector&& other) noexcept 
+        {
+            if (this == &other) { return *this; }
+
+            if constexpr (std::allocator_traits<allocator_type>::propagate_on_container_move_assignment::value) {
+                deallocate_and_destruct(capacity(), size());
+                m_allocator = other.get_allocator();
+                m_vector = other.m_vector;
+                reset(other);
+            }
+            else if (m_allocator == other.m_allocator) {
+                deallocate_and_destruct(capacity(), size());
+                m_vector = other.m_vector;
+                reset(other);
+            }
+            else {
+                destruct(size());
+                reallocate(capacity(), other.capacity());
+                            m_size = other.m_size;
+            m_capacity = other.m_capacity;
+            for (size_type index{ 0 }; index < m_size; ++index)
+                allocator_traits<allocator_type>::construct(m_allocator, m_vector + index, std::move(*(other.m_vector + index)));
+                
+                uninitialized_alloc_move(std::move(other));
+            }
+            
+            _size = other._size;
+            _capacity = other._capacity;
+
+            return *this;
+        }
+	
     ~myVector()
     {
         for (std::size_t i = 0; i < _size; ++i)
