@@ -986,38 +986,38 @@ public:
     
     inline size_t size() { return _size; }
     
-private:
-    size_t _size = 0;
-    size_t _capacity = 2;
-    T* _data = nullptr;
-    allocator<T> _a;
-};
-
-int main()
-{
-    
-    myVector<string> v;
-    v.push_back(move("h1"));
-    string s = "h2";
-    v.push_back(s);
-    v.push_back("h3");
-    v.push_back("h4");
-    
-    
-    /*
-    myVector<int> v;
-    v.push_back(1);
-    v.push_back(2);
-    v.push_back(3);
-    v.push_back(4);    */
-    myVector<string> v2(v);
-     for(size_t i=0; i<v2.size(); i++)
-        cout << i << v2[i] << endl;
-        
-    
-    return 0;
-}
+	private:
+	    size_t _size = 0;
+	    size_t _capacity = 2;
+	    T* _data = nullptr;
+	    allocator<T> _a;
+	};
+	
+	int main()
+	{
+	    
+	    myVector<string> v;
+	    v.push_back(move("h1"));
+	    string s = "h2";
+	    v.push_back(s);
+	    v.push_back("h3");
+	    v.push_back("h4");
+	    
+	    
+	    /*
+	    myVector<int> v;
+	    v.push_back(1);
+	    v.push_back(2);
+	    v.push_back(3);
+	    v.push_back(4);    */
+	    myVector<string> v2(v);
+	     for(size_t i=0; i<v2.size(); i++)
+	        cout << i << v2[i] << endl;
+	        
+	    
+	    return 0;
+	}
 
 *****************************************************************************************************************************************************************************    
-    std::ref, std::reference_wrapper
+std::ref, std::reference_wrapper
 creates an object that behaves similarly to a reference
