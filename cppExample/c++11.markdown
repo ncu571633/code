@@ -4,37 +4,37 @@ the structure padding is automatically done by the compiler to make sure all its
 A ‘char’ of 1 byte can be allocated anywhere in memory like 0x5000 or 0x5001. 
 An ‘int’ of 4 bytes, must start at a 4-byte boundary like 0x5004 or 0x5008. T
 
-Overload
-#include <iostream>
-using namespace std;
+Operator << Overloading, Operator >> Overloading
+	#include <iostream>
+	using namespace std;
 
-class Date
-{
-    int mo, da, yr;
-public:
-    friend ostream& operator<<(ostream& os, const Date& dt);
-    friend istream& operator>> (istream& is, Date& dt);
-};
+	class Date
+	{
+	    int mo, da, yr;
+	public:
+	    friend ostream& operator<<(ostream& os, const Date& dt);
+	    friend istream& operator>> (istream& is, Date& dt);
+	};
 
-ostream& operator<<(ostream& os, const Date& dt)
-{
-    os << dt.mo << '/' << dt.da << '/' << dt.yr;
-    return os;
-}
+	ostream& operator<<(ostream& os, const Date& dt)
+	{
+	    os << dt.mo << '/' << dt.da << '/' << dt.yr;
+	    return os;
+	}
+	
+	istream& operator>> (istream& is, Date& dt)
+	{
+	    is>> dt.mo>> dt.da>> dt.yr;
+	    return is;
+	}
 
-istream& operator>> (istream& is, Date& dt)
-{
-    is>> dt.mo>> dt.da>> dt.yr;
-    return is;
-}
 
-
-int main()
-{
-    Date dt;
-    cin >> dt;
-    cout << dt;
-}
+    int main()
+    {
+        Date dt;
+        cin >> dt;
+        cout << dt;
+    }
 
     Complex operator+(Complex const& obj)
     {
@@ -44,7 +44,7 @@ int main()
         return res;
     }
 
-
+*****************************************************************************************************************************************************************************
 
 Bitfields: save space. They also allow an easier way to set values that aren't byte-aligned. 
 1. A special unnamed bit field of size 0 is used to force alignment on the next boundary
@@ -87,7 +87,9 @@ cout<< sizeof(test3) << endl;
 https://www.stroustrup.com/C++11FAQ.html
 https://en.wikipedia.org/wiki/C++11
 
-Core language features
+*****************************************************************************************************************************************************************************
+
+# Core language features
 
 *****************************************************************************************************************************************************************************
 # auto and decltype
