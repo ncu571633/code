@@ -1,11 +1,11 @@
-Padding:
-Many processors expect memory for variables to be aligned based on the size of the variable. 
-the structure padding is automatically done by the compiler to make sure all its members are byte aligned.
-A ‘char’ of 1 byte can be allocated anywhere in memory like 0x5000 or 0x5001. 
-An ‘int’ of 4 bytes, must start at a 4-byte boundary like 0x5004 or 0x5008. T
+# Padding
+    Many processors expect memory for variables to be aligned based on the size of the variable. 
+    the structure padding is automatically done by the compiler to make sure all its members are byte aligned.
+    A ‘char’ of 1 byte can be allocated anywhere in memory like 0x5000 or 0x5001. 
+    An ‘int’ of 4 bytes, must start at a 4-byte boundary like 0x5004 or 0x5008. 
 
 *****************************************************************************************************************************************************************************
-Operator << Overloading, Operator >> Overloading
+# Operator << Overloading, Operator >> Overloading
 
  	class Date
 	{
@@ -45,42 +45,42 @@ Operator << Overloading, Operator >> Overloading
 
 *****************************************************************************************************************************************************************************
 
-Bitfields: save space. They also allow an easier way to set values that aren't byte-aligned. 
-1. A special unnamed bit field of size 0 is used to force alignment on the next boundary
-2. We cannot have pointers to bit field members as they may not start at a byte boundary. 
-3. It is implementation-defined to assign an out-of-range value to a bit field member. 
-4. In C++, we can have static members in a structure/class, but bit fields cannot be static. 
-5. Array of bit fields is not allowed. For example, the below program fails in the compilation. 
+# Bitfields: save space. They also allow an easier way to set values that aren't byte-aligned. 
+    1. A special unnamed bit field of size 0 is used to force alignment on the next boundary
+    2. We cannot have pointers to bit field members as they may not start at a byte boundary. 
+    3. It is implementation-defined to assign an out-of-range value to a bit field member. 
+    4. In C++, we can have static members in a structure/class, but bit fields cannot be static. 
+    5. Array of bit fields is not allowed. For example, the below program fails in the compilation. 
 
-https://www.geeksforgeeks.org/bit-fields-c/
+    https://www.geeksforgeeks.org/bit-fields-c/
 
 
-struct
-{
-    unsigned short icon : 8;
-    unsigned short color : 4;
-    unsigned short underline : 1;
-    unsigned short blink : 1;
-} test1;
-
-struct mybitfields
-{
-    unsigned short a : 4;
-    unsigned short b : 5;
-    unsigned short c : 7;
-} test2;
-
-struct
-{
-    unsigned int first : 9;
-    unsigned int second : 7;
-    unsigned int may_straddle : 5;
-    unsigned int last : 5;
-} test3;
-
-cout<< sizeof(test1) << sizeof(unsigned short) << endl;
-cout<< sizeof(test2) << endl;
-cout<< sizeof(test3) << endl;
+    struct
+    {
+        unsigned short icon : 8;
+        unsigned short color : 4;
+        unsigned short underline : 1;
+        unsigned short blink : 1;
+    } test1;
+    
+    struct mybitfields
+    {
+        unsigned short a : 4;
+        unsigned short b : 5;
+        unsigned short c : 7;
+    } test2;
+    
+    struct
+    {
+        unsigned int first : 9;
+        unsigned int second : 7;
+        unsigned int may_straddle : 5;
+        unsigned int last : 5;
+    } test3;
+    
+    cout<< sizeof(test1) << sizeof(unsigned short) << endl;
+    cout<< sizeof(test2) << endl;
+    cout<< sizeof(test3) << endl;
 
 
 
@@ -98,19 +98,19 @@ decltype:
     If e is the name of a variable, i.e. an "id-expression", then the resulting type is the type of the variable.
     Otherwise, if e evaluates to an lvalue of type T, then the resulting type is T &, and if e evaluates to an rvalue of type T, then the resulting type is T.
 
-int var;
-const int&& fx();
-struct A { double x; }
-const A* a = new A();
-
-decltype(fx()); 	const int&& 	An rvalue reference to a const int.
-decltype(var); 		int 	The type of variable var.
-decltype(a->x); 	double 	The type of the member access.
-decltype((a->x)); 	const double& 	The inner parentheses cause the statement to be evaluated as an expression instead of a member access. 
-And because a is declared as a const pointer, the type is a reference to const double.
+	int var;
+	const int&& fx();
+	struct A { double x; }
+	const A* a = new A();
+	
+	decltype(fx()); 	const int&& 	An rvalue reference to a const int.
+	decltype(var); 		int 	The type of variable var.
+	decltype(a->x); 	double 	The type of the member access.
+	decltype((a->x)); 	const double& 	The inner parentheses cause the statement to be evaluated as an expression instead of a member access. 
+	And because a is declared as a const pointer, the type is a reference to const double.
 
 *****************************************************************************************************************************************************************************
-# defaulted and deleted functions
+# default function and delete functions
   = default: use the compiler-generated version of that function, so you don't need to specify a body.
   move constructor isn't always generated by default. 
   default constructor does memberwise copy. it recursively copies/assigns based on what the members do. I.e. 
