@@ -6,10 +6,8 @@ An ‘int’ of 4 bytes, must start at a 4-byte boundary like 0x5004 or 0x5008. 
 
 *****************************************************************************************************************************************************************************
 Operator << Overloading, Operator >> Overloading
-	#include <iostream>
-	using namespace std;
 
-	class Date
+ 	class Date
 	{
 	    int mo, da, yr;
 	public:
