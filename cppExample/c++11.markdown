@@ -4,6 +4,7 @@ the structure padding is automatically done by the compiler to make sure all its
 A ‘char’ of 1 byte can be allocated anywhere in memory like 0x5000 or 0x5001. 
 An ‘int’ of 4 bytes, must start at a 4-byte boundary like 0x5004 or 0x5008. T
 
+*****************************************************************************************************************************************************************************
 Operator << Overloading, Operator >> Overloading
 	#include <iostream>
 	using namespace std;
@@ -84,12 +85,13 @@ cout<< sizeof(test2) << endl;
 cout<< sizeof(test3) << endl;
 
 
-https://www.stroustrup.com/C++11FAQ.html
-https://en.wikipedia.org/wiki/C++11
+
 
 *****************************************************************************************************************************************************************************
 
 # Core language features
+	https://www.stroustrup.com/C++11FAQ.html
+	https://en.wikipedia.org/wiki/C++11
 
 *****************************************************************************************************************************************************************************
 # auto and decltype
