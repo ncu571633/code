@@ -997,6 +997,15 @@ public:
     }
 
     // when move-construction could raise an exception, so if the value type's move-ctor is not exception safe, std::vector push_back() needs to use to the copy operation instead during size*2. 
+    // 
+    	template<class T>
+	void Fwd(T &&v) { Call(std::forward<T>(v)); }
+
+    // perfect forwarding
+    // reference collapsing rules (save for A& & -> A&, which is C++98/03) exist for one reason: to allow  to work.
+	// "Perfect" forwarding means to effectively forward parameters as if the user had called the function directly (minus elision, which is broken by forwarding). 
+	// by value, by (possibly const) lvalue reference, and by (possibly const) rvalue reference.
+
     template<typename U>
     void push_back(U&& e)
     {
