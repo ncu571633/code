@@ -3,32 +3,41 @@
 # Memory:
 
 ## Malloc: allocated on the heap 
-All threads share a common heap. 
-Each thread has a private stack, which it can quickly add and remove items from. This makes stack based memory fast, but if you use too much stack memory, as occurs in infinite recursion,  \
-you will get a stack overflow. 
+	All threads share a common heap. 
+	Each thread has a private stack, which it can quickly add and remove items from. This makes stack based memory fast, but if you use too much stack memory, as occurs in infinite recursion, you will get a stack overflow. 
 
 ## Dangling pointers
-arise when an object is deleted or deallocated, without modifying the value of the pointer, so that the pointer still points to the memory location of the deallocated memory.
+    arise when an object is deleted or deallocated, without modifying the value of the pointer, so that the pointer still points to the memory location of the deallocated memory.
 
 ***************************************************************************************************
 
 # composition/aggregation
-Aggregation differs from ordinary composition in that it does not imply ownership.
-In composition, when the owning object is destroyed, so are the contained objects. 
-In aggregation, this is not necessarily true. The object may only contain a reference or pointer to the object
-Simple rules:
-A "owns" B = Composition : B has no meaning or purpose in the system without A
-A "uses" B = Aggregation : B exists independently (conceptually) from A
-Example 1:
-A Company is an aggregation of People. A Company is a composition of Accounts. When a Company ceases to do business its Accounts cease to exist but its People continue to exist.
-Example 2: (very simplified)
-A Text Editor owns a Buffer (composition). A Text Editor uses a File (aggregation). When the Text Editor is closed, the Buffer is destroyed but the File itself is not destroyed.
+    Aggregation differs from ordinary composition in that it does not imply ownership.
+    In composition, when the owning object is destroyed, so are the contained objects. 
+    In aggregation, this is not necessarily true. The object may only contain a reference or pointer to the object
+    Simple rules:
+    A "owns" B = Composition : B has no meaning or purpose in the system without A
+    A "uses" B = Aggregation : B exists independently (conceptually) from A
+    Example 1:
+    A Company is an aggregation of People. A Company is a composition of Accounts. When a Company ceases to do business its Accounts cease to exist but its People continue to exist.
+    Example 2: (very simplified)
+    A Text Editor owns a Buffer (composition). A Text Editor uses a File (aggregation). When the Text Editor is closed, the Buffer is destroyed but the File itself is not destroyed.
+    
+    In software engineering, coupling or dependency is the degree to which each program module relies on each one of the other modules.
+    Disadvantage
+    1. A change in one module usually forces a ripple effect of changes in other modules. 
+    2. Assembly of modules might require more effort and/or time due to the increased inter-module dependency. 
+    3. A particular module might be harder to reuse and/or test because dependent modules must be included.
+
 
 ***************************************************************************************************
-2) encapsulation, polymorphism,inheritance
-Encapsulation: A language mechanism for restricting access to some of the object's components
-
-In classical inheritance where objects are defined by classes, classes can inherit attributes and behavior from pre-existing classes called base classes. The resulting classes are known as derived classes.
+# encapsulation, polymorphism,inheritance
+    Encapsulation: A language mechanism for restricting access to some of the object's components
+    
+    polymorphism: polymorphism means that some code or operations or objects behave differently in different contexts.
+    Method overloading refers to methods that have the same name but different signatures inside the same class. Method overriding is where a subclass replaces the implementation of one or more of its parent's methods.
+    
+    In classical inheritance where objects are defined by classes, classes can inherit attributes and behavior from pre-existing classes called base classes. The resulting classes are known as derived classes.
 
 3）class
 a class is a construct that is used to create instances of itself
@@ -61,15 +70,17 @@ A default constructor is a constructor that either has no parameters, or if it h
 	This is the reason of passing a reference to copy constructor. If its not passed by reference then it would pass by value. 
 	If the argument is passed by value, its copy constructor would call itself to copy the actual parameter to formal parameter. This process would go on until the system runs out of memory
 
-# Operator assignment
-Copy constructor copies an existing object to a non existing object, which you are going to create. Assignment operation can happen between two existing objects.
-The assignment operator for a class is what allows you to use = to assign one instance to another
+# Copy assignment operator
+    Copy constructor copies an existing object to a non existing object, which you are going to create. 
+    Assignment operation can happen between two existing objects.
+    The assignment operator for a class is what allows you to use = to assign one instance to another
+    Default version of it is generated automatically by the compiler if the programmer does not declare one, which performs a memberwise copy, where each member is copied by its own copy assignment operator (which may also be programmer-declared or compiler-generated).
 
-The copy assignment operator differs from the copy constructor in that it must clean up the data members of the assignment's target (and correctly handle self-assignment) whereas the copy constructor assigns values to uninitialized data members
 
-Another difference that affects the implementation is that assignment operators have a return value. Returning a reference to the object.
+# diff: copy assignment operator vs copy ctor
+    it must clean up the data members of the assignment's target (and correctly handle self-assignment) whereas the copy constructor assigns values to uninitialized data members
+    the implementation is that assignment operators have a return value. Returning a reference to the object.
 
-It is one of the special member functions, which means that a default version of it is generated automatically by the compiler if the programmer does not declare one. The default version performs a memberwise copy, where each member is copied by its own copy assignment operator (which may also be programmer-declared or compiler-generated).
 
 # Can constructor be virtual? why it can or can not? how about destructor.
 	A virtual call is a mechanism to get work done given partial information. In particular, "virtual" allows us to call a function knowing only any interfaces and not the exact type of the object. To create an object you need complete information. In particular, you need to know the exact type of what you want to create. Consequently, a "call to a constructor" cannot be virtual.
@@ -81,12 +92,20 @@ It is one of the special member functions, which means that a default version of
 If your derived class destructor is virtual then objects will be destrcuted in a order(firstly derived object then base ). If your derived class destructor is NOT virtual then only base class object will get deleted(because pointer is of base class "Base *myObj"). So there will be memory leak for derived object
 
 # Virtual base classes/ Virtual Inheritance
-Suppose you have two derived classes B and C that have a common base class A, and you also have another class D that inherits from B and C. You can declare the base class A as virtual to ensure that B and C share the same subobject of A.
+    Suppose you have two derived classes B and C that have a common base class A, and you also have another class D that inherits from B and C. You can declare the base class A as virtual to ensure that B and C share the same subobject of A.
+    
+    Is a way of preventing multiple "instances" of a given class appearing in an inheritance hierarchy when using multiple inheritance.
+    Avoid diamond inheritance
+    
+    Class Base{
+    };
+    Class A: public virtual Base{
+    };
 
 # 构造函数调用顺序 Calling sequence of Ctor
-1. 基类构造函数，调用顺序按照被继承时声明从左到右。base ctor
-2. 内嵌对象构造函数
-3. 派生类构造函数
+    1. 基类构造函数，调用顺序按照被继承时声明从左到右。base ctor
+    2. 内嵌对象构造函数
+    3. 派生类构造函数
 
 # what's the default functions of class
     Default constructor: Declared only if no user-defined constructor is declared. Defined when used
@@ -98,313 +117,220 @@ Suppose you have two derived classes B and C that have a common base class A, an
     由于类中定义了构造函数，编译系统不会为其生成默认构造函数。由于自定义构造函数带有形参，所以调用时必须给出初始值 。
     Constructor and destructor are public. 
 
-9) describe virtual table
-The virtual table is a lookup table of functions used to resolve function calls in a dynamic/late binding manner.
-every class that uses virtual functions (or is derived from a class that uses virtual functions) is given it’s own virtual table.
-A virtual table contains one entry for each virtual function that can be called by objects of the class. Each entry in this table is simply a function pointer that points to the most-derived function accessible by that class.
+# Virtual table
+    Lookup table of functions used to resolve function calls in a dynamic/late binding manner, created at compile time. 
+    Every class that uses virtual functions (or is derived from a class that uses virtual functions) is given it’s own virtual table.
+    Contains one entry for each virtual function that can be called by objects of the class. 
+    Each entry in this table is simply a function pointer that points to the most-derived function accessible by that class.
 
-the compiler also adds a hidden pointer to the base class, which we will call *__vptr
-The compiler also adds a hidden pointer to the most base class that uses virtual functions
-
-vtables are structures created at compile time (because they can be determined at compile time). When objects of a particular type are created at runtime they will have a vptr which will be initialized to point at a static vtable at construction time.
+    The compiler also adds a hidden pointer to the base class, which we will call *__vptr
 
 # class size: what's the size of empty class
-The C++ standard guarantees that the size of any class is at least one. The C++ standard states that no object shall have the same memory address as another object. There are several good reasons for this.
-To guarantee that new will always return a pointer to a distinct memory address.
-To avoid some divisions by zero. For instance, pointer arithmetics (many of which done automatically by the compiler) involve dividing by sizeof(T).
+    The C++ standard guarantees that the size of any class is at least one. The C++ standard states that no object shall have the same memory address as another object. There are several good reasons for this.
+    To guarantee that new will always return a pointer to a distinct memory address.
+    To avoid some divisions by zero. For instance, pointer arithmetics (many of which done automatically by the compiler) involve dividing by sizeof(T).
 
-# what's the difference of passing by reference  & passing by value
-Passing by reference means the called functions' parameter will be the same as the callers' passed argument 
-Pass by value means the called functions' parameter will be a copy of the callers' passed argument. 
+# what's the difference of passing by reference & passing by value
+    Passing by reference means the called functions' parameter will be the same as the callers' passed argument 
+    Pass by value means the called functions' parameter will be a copy of the callers' passed argument. 
 Thus changes to a parameter done by the called function in one case changes the argument passed and in the other case just changes the value of the parameter in the called function (which is only a copy)
 
-difference address reference 
-you can't pass NULL when passing by reference
+# Difference address reference 
+    you can't pass NULL when passing by reference
 
 
-14) when is the copy constructor called type cast 调用
-explicit keyword
-This forces the code to either use a parameter of the correct type, or cast the parameter to the correct type.
+# when is the copy constructor called type cast 调用
+    Explicit Keyword in C++ is used to mark constructors to not implicitly convert types in C++.
+    This forces the code to either use a parameter of the correct type, or cast the parameter to the correct type.
 
-Suppose you have a class String:
-class String { public: String(int n); // allocate n bytes to the String object String(const char *p); // initializes object with char *p };
-Now if you try
-String mystring = 'x';
-the char 'x' will be implicitly converted to int and then will call the String(int) constructor. But this is not what the user might have intended. So to prevent such conditions, we shall define the constructor as explicit:
-class String { public: explicit String (int n); //allocate n bytes String(const char *p); // initialize sobject with string p };
+    Suppose you have a class String:
+    class String { public: String(int n); // allocate n bytes to the String object String(const char *p); // initializes object with char *p };
+    Now if you try
+    String mystring = 'x';
+    the char 'x' will be implicitly converted to int and then will call the String(int) constructor. But this is not what the user might have intended. So to prevent such conditions, we shall define the constructor as explicit:
+    class String { public: explicit String (int n); //allocate n bytes String(const char *p); // initialize sobject with string p };
 
 
-template
+# Template
 Function templates are special functions that can operate with generic types. 
 can be adapted to more than one type or class without repeating the entire code for each type.
 
 Class templates are commonly used to implement containers
 You can use class templates to create a family of classes that operate on a type. Class templates are parameterized types. They imply that a separate class could be created for each conceivable value of the parameters (known as template arguments) passed in.
-Template arguments can be types or constant values of a specified type. For example:
+Template arguments can be types or constant values of a specified type.
 
 
-
-
-
-
-
-
-
-# deep copy & shallow copy
+# Deep copy & shallow copy
     The default copy constructor creates only shallow copies.
     A deep copy copies all fields, and makes copies of dynamically allocated memory pointed to by the fields. A deep copy occurs when an object is copied along with the objects to which it refers. 
     Shallow copy is a bit-wise copy of an object.
 
-18) auto pointer
-The auto_ptr template class describes an object that stores a pointer to a single allocated object of type Type* that ensures that the object to which it points gets destroyed automatically when control leaves a scope
-
-The direct replacement for auto_ptr (or the closest thing to one anyway) is unique_ptr. As far as the "problem" goes, it's pretty simple: auto_ptr transfers ownership when it's assigned. unique_ptr also transfers ownership, but thanks to codification of move semantics and the magic of rvalue references, it can do so considerably more naturally. 
-
-When using unique_ptr, there can be at most one unique_ptr pointing at any one resource. 
-shared_ptr, on the other hand, allows for multiple pointers to point at a given resource
-
 # what's the difference of new & malloc
-Should be used because it calls the constructor/destructor
+    new should be used because it calls the constructor/destructor
 
 # what happens when new/malloc fails
-std::bad_alloc
+    std::bad_alloc
 
 # what's the abstract class
     An abstract class is a class that is designed to be specifically used as a base class; 
     An abstract class contains at least one pure virtual function.
 
 # what's the pure virtual function?
-virtual functions we have written have a body (a definition)
-pure virtual function (or abstract function) that has no body at all, only the declaration
-to be redefined by derived classes.
-simply assign the function the value 0.
+    virtual functions we have written have a body (a definition)
+    pure virtual function (or abstract function) that has no body at all, only the declaration to be redefined by derived classes. simply assign the function the value 0.
 
-First, any class with one or more pure virtual functions becomes an abstract base class, which means that it can not be instantiated
-Second, any derived class must define a body for this function, or that derived class will be considered an abstract base class as well.
-An interface class is a class that has no members variables, and where all of the functions are pure virtual
+* Any class with one or more pure virtual functions becomes an abstract base class, which means that it can not be instantiated
+* Any derived class must define a body for this function, or that derived class will be considered an abstract base class as well.
+* An interface class is a class that has no members variables, and where all of the functions are pure virtual
 the class is purely a definition, and has no actual implementation.
-Interfaces are useful when you want to define the functionality that derived classes must implement, but leave the details of how the derived class implements that functionality entirely up to the derived class.
+* Interfaces are useful when you want to define the functionality that derived classes must implement, but leave the details of how the derived class implements that functionality entirely up to the derived class.
 
-23) how to print "hello world" before main()
+# how to print "hello world" before main()
 global object, print hello in the constructor 
 
-24) inheritance 哪些能继承，哪些不能
 
-25）class a array[50],怎么给这50个元素置初值，不能循环赋值，就是这个意思，你可以动态分配
-
-26）static
-C:
-A static variable inside a function keeps its value between invocations.
-A static global variable or a function is "seen" only in the file it's declared in
-C++:
-静态数据成员是私有类型，可以直接初始化，之后就不允许直接访问。
-A static member function differs from a regular member function in that it can be called without an instance of a class, and since it has no instance, it cannot access non-static members of the class. 
+# static
+    C:
+    A static variable inside a function keeps its value between invocations.
+    A static global variable or a function is "seen" only in the file it's declared in
+    C++:
+    静态数据成员是私有类型，可以直接初始化，之后就不允许直接访问。
+    A static member function differs from a regular member function in that it can be called without an instance of a class, and since it has no instance, it cannot access non-static members of the class. 
 
 
-
-In software engineering, coupling or dependency is the degree to which each program module relies on each one of the other modules.
-Disadvantage
-1. A change in one module usually forces a ripple effect of changes in other modules. 
-2. Assembly of modules might require more effort and/or time due to the increased inter-module dependency. 
-3. A particular module might be harder to reuse and/or test because dependent modules must be included. 
-
-
-What is Object?
-Software objects are conceptually similar to real-world objects: they too consist of state and related behavior. An object stores its state in fields (variables in some programming languages) and exposes its behavior through methods (functions in some programming languages). Methods operate on an object's internal state and serve as the primary mechanism for object-to-object communication. Hiding internal state and requiring all interaction to be performed through an object's methods is known as data encapsulation — a fundamental principle of object-oriented programming.
-
-Bundling code into individual software objects provides a number of benefits, including:
-
-Modularity: The source code for an object can be written and maintained independently of the source code for other objects. Once created, an object can be easily passed around inside the system.
-Information-hiding: By interacting only with an object's methods, the details of its internal implementation remain hidden from the outside world.
-Code re-use: If an object already exists (perhaps written by another software developer), you can use that object in your program. This allows specialists to implement/test/debug complex, task-specific objects, which you can then trust to run in your own code.
-Pluggability and debugging ease: If a particular object turns out to be problematic, you can simply remove it from your application and plug in a different object as its replacement. This is analogous to fixing mechanical problems in the real world. If a bolt breaks, you replace it, not the entire machine.
-
-
-
-2.    What is Polymorphism? How to implement polymorphism?
-The name "polymorphism" means that something has many (poly), forms (morph).
-In programming languages, polymorphism means that some code or operations or objects behave differently in different contexts.
-Method overloading refers to methods that have the same name but different signatures inside the same class. Method overriding is where a subclass replaces the implementation of one or more of its parent's methods.
-
-3.    What is Dynamic Binding and Static Binding?
+# What is Dynamic Binding and Static Binding?
 Dynamic Binding refers to the case where compiler is not able to resolve the call and the binding is done at runtime only.
 If the compiler can resolve the binding at the compile time only then such a binding is called Static Binding or Early Binding.
 
-4.    What is OOP?
-Object-oriented programming (OOP) is a programming paradigm using "objects" – data structures consisting of data fields and methods together with their interactions – to design applications and computer programs.
 
-
-
-5.    What are important features of OOP? Why OOP are better?
+# What are important features of OOP? Why OOP are better?
 Inheritance, polymorphism, encapsulation, data abstraction, messaging, modularity
 
-6.    What is Class?
-
-7.    Difference between class and object.
+# Difference between class and object.
 A class is a template for objects. 
 An object is a member or an "instance" of a class.  
 
-8.    What is enum? What is enum's limitation?
+# What is enum? What is enum's limitation?
 constant
 
-9.    What are interface and abstract class?
-An interface class is a class that has no members variables, and where all of the functions are pure virtual
-Abstract class is a class that can not be instantiated. 
- abstract classes are incomplete, it may contain only definition of the properties or methods and derived classes that inherit this implements it's properties or methods. 
+# What are interface and abstract class?
+    An interface class is a class that has no members variables, and where all of the functions are pure virtual
+    Abstract class is a class that can not be instantiated. 
+    abstract classes are incomplete, it may contain only definition of the properties or methods and derived classes that inherit this implements it's properties or methods. 
 
-10.    How would you choose between an abstract class and interface?
+# How would you choose between an abstract class and interface?
 Interfaces can't have any concrete implementations. Abstract base classes can. 
 
-11.    What are struct and union?
-A structure contains an ordered group of data objects. Unlike the elements of an array, the data objects within a structure can have varied data types. Each data object in a structure is a member or field.
-A union is an object similar to a structure except that all of its members start at the same location in memory. A union variable can represent the value of only one of its members at a time.
+# What are struct and union?
+    A structure contains an ordered group of data objects. Unlike the elements of an array, the data objects within a structure can have varied data types. Each data object in a structure is a member or field.
+    A union is an object similar to a structure except that all of its members start at the same location in memory. A union variable can represent the value of only one of its members at a time.
 
-12.    What is the difference between a struct and a class in C++?
-that members of a class are private by default, whereas members of a struct are public by default. Inheritance between classes is also private by default, and inheritance between structs is public by default. 
+# What is the difference between a struct and a class in C++?
+    members of a class are private by default, whereas members of a struct are public by default.
+    Inheritance between classes is also private by default, and inheritance between structs is public by default. 
 
-13.    Can struct be derived from Class? Yes;
+# Can struct be derived from Class? Yes;
 
-14.    What is a constructor, destructor, default constructor, copy constructor?
-subroutine called to create an object.
-a method which is automatically invoked when the object is destroyed. Its main purpose is to free the resources
+# What is a constructor, destructor, default constructor, copy constructor?
+    Constructor: subroutine called to create an object.
+    destructor: a method which is automatically invoked when the object is destroyed. Its main purpose is to free the resources
 
+    A default constructor: is a constructor that either has no parameters, or if it has parameters, all the parameters have default values.
+    The compiler will implicitly define A::A() when the compiler uses this constructor to create an object of type A. 
+    The constructor will have no constructor initializer and a null body.
 
-A default constructor is a constructor that either has no parameters, or if it has parameters, all the parameters have default values.
-The compiler will implicitly define A::A() when the compiler uses this constructor to create an object of type A. The constructor will have no constructor initializer and a null body.
-A copy constructor is a special constructor in the C++ programming language for creating a new object as a copy of an existing object.
-The first argument of such a constructor is a reference to an object of the same type as is being constructed 
+    A copy constructor is a special constructor in the C++ programming language for creating a new object as a copy of an existing object.
+    The first argument of such a constructor is a reference to an object of the same type as is being constructed 
 
-Whenever you pass an object by value, you implicitly invoke its copy constructor, because the object passed is a copy of the original argument. The result is an infinite recursion: the copy constructor calls another copy constructor, which in turn calls another copy constructor and so on. To avoid this infinite recursion, C++ requires that a copy constructor's parameter be passed by reference. 
+    Whenever you pass an object by value, you implicitly invoke its copy constructor, because the object passed is a copy of the original argument. 
+    The result is an infinite recursion: the copy constructor calls another copy constructor, which in turn calls another copy constructor and so on. To avoid this infinite     recursion, C++ requires that a copy constructor's parameter be passed by reference. 
 
-15.    What is the purpose of a constructor/destructor?
-
-16.    What is the meaning of the “explicit” keyword for constructors?
+# What is the meaning of the “explicit” keyword for constructors?
 Prevents implicit type conversions, which might cause errors. 
 To tell the compiler that a certain constructor may not be used to implicitly cast an expression to its class type. 
 
-17.    How to disable the default functions (like default constructor, default destructor …) in a class?
+# How to disable the default functions (like default constructor, default destructor …) in a class?
 Overload it
 
 
-18.    What is (default) copy constructor? When should a custom copy constructor be defined for a class and why?
+# What is (default) copy constructor? When should a custom copy constructor be defined for a class and why?
 Outside resource. Shallow copy
 
-19.    What are differences between copy constructor and assignment?
-A a(b);
-A a = b;
-A c;
-c=d;
-A copy constructor is used to initialize a previously uninitialized object from some other object's data. An assignment operator is used to replace the data of a previously initialized object with some other object's data.
+# What are differences between copy constructor and assignment?
+    A a(b);
+    A a = b;
+    A c;
+    c=d;
+    A copy constructor is used to initialize a previously uninitialized object from some other object's data. 
+    An assignment operator is used to replace the data of a previously initialized object with some other object's data.
 
-20.    What is Friend?
-A friend of a class X is a function or class that is not a member of X, but is granted the same access to X as the members of X. 
-友元关系不能传递，单向的，不被继承。
+# What is Friend?
+    A friend of a class X is a function or class that is not a member of X, but is granted the same access to X as the members of X. 
+    友元关系不能传递，单向的，不被继承。
 
-21.    What is inheritance?
-22.    How many inheritance mechanisms?
+# What is inheritance?
+# How many inheritance mechanisms?
 Inheritance is a mechanism of reusing and extending existing classes without modifying them, thus producing hierarchical relationships between them.
 
-23.    What is virtual inheritance?
-Class Base{
-};
-Class A: public virtual Base{
-};
-
-Virtual base classes, used in virtual inheritance, is a way of preventing multiple "instances" of a given class appearing in an inheritance hierarchy when using multiple inheritance.
-Avoid diamond inheritance
-
-24.    What is a virtual memory, why do we use? Advantage? 
-In computing, virtual memory is a memory management technique developed for multitasking kernels. This technique virtualizes the main storage available to a process or task, as a contiguous address space which is unique to each running process, or virtualizes the main storage available to all processes or tasks on the system as a contiguous global address space
+# What is a virtual memory, why do we use? Advantage? 
+In computing, virtual memory is a memory management technique developed for multitasking kernels. 
+This technique virtualizes the main storage available to a process or task, as a contiguous address space which is unique to each running process, or virtualizes the main storage available to all processes or tasks on the system as a contiguous global address space
 
 
-25.    What is virtual function? What are the consequences of using a virtual method?
-class a{
-public:
-	virtual int foo(){}
-};
-A virtual method in a parent allows children to have a different implementation for it. A pure virtual method in a parent forces children to have an implementation for it (interface in Java). A class with a pure virtual method is called virtual. 
+# What is inline function?
+    an inline function is a function upon which the compiler has been requested to perform inline expansion.
+    replaces a function call site with the body of the callee
 
-In OOP when a derived class inherits from a base class, an object of the derived class may be referred to via a pointer or reference of either the base class type or the derived class type. If there are base class methods overridden by the derived class, the method actually called by such a reference or pointer can be bound either 'early' (by the compiler), according to the declared type of the pointer or reference, or 'late' (i.e. by the runtime system of the language), according to the actual type of the object referred to.
-Virtual functions are resolved 'late'. If the function in question is 'virtual' in the base class, the most-derived class's implementation of the function is called according to the actual type of the object referred to, regardless of the declared type of the pointer or reference. If it is not 'virtual', the method is resolved 'early' and the function called is selected according to the declared type of the pointer or reference.
-
-
-26.    What is Virtual Base Class?
-When two or more objects are derived from a common base class, we can prevent multiple copies of the base class being present in an object derived from those objects by declaring the base class as virtual when it is being inherited. Such a base class is known as virtual base class. This can be achieved by preceding the base class’ name with the word virtual. 
-
-27.    What is virtual destructor?
-Class a{
-   virtual ~a(){}
-};
-Class b: public a{
-}
-a *p = new b();
-delete p;
-Virtual destructors are useful when you can delete an instance of a derived class through a pointer to base class:
-
-28.    What is inline function?
-an inline function is a function upon which the compiler has been requested to perform inline expansion.
-replaces a function call site with the body of the callee
-
-29.    What is function object?
-allowing an object to be invoked or called as if it were an ordinary function
-
-
-class Functor
-{
-public:
-    int operator()(int a, int b)
+# What is function object?
+    allowing an object to be invoked or called as if it were an ordinary function
+    class Functor
     {
-        return a < b;
+    public:
+        int operator()(int a, int b)
+        {
+            return a < b;
+        }
+    };
+
+    int main()
+    {
+        Functor f;
+        int a = 5;
+        int b = 7;
+        int ans = f(a, b);
     }
-};
 
-int main()
-{
-    Functor f;
-    int a = 5;
-    int b = 7;
-    int ans = f(a, b);
-}
+# What is Function and Operator overloading?
+    a specific case of polymorphism, 
+    where different operators have different implementations depending on their arguments. 
 
-30.    What is Function Adaptor?
-A function adaptor is an instance of a class that adapts a global or member function so that the function can be used as a function object.
-重载 operator()
-
-
-
-31.    What is Function and Operator overloading?
-a specific case of polymorphism, 
-where different operators have different implementations depending on their arguments. 
-
-32.    What is new and delete?
-
-33.    What's memory leak?
-A memory leak, in computer science (or leakage, in this context), occurs when a computer program consumes memory but is unable to release it back to the operating system.
+# What is new and delete?
+# What's memory leak?
+    A memory leak, in computer science (or leakage, in this context), occurs when a computer program consumes memory but is unable to release it back to the operating system.
 In object-oriented programming, a memory leak happens when an object is stored in memory but cannot be accessed by the running code
 
-34.    What's memory overflow?and stack overflow and heap overflow
-A memory overflow is really just a form of a buffer overflow.  The impact of memory overflow is unexpected behavior or program failure.
+# What's memory overflow?and stack overflow and heap overflow
+    A memory overflow is really just a form of a buffer overflow.  The impact of memory overflow is unexpected behavior or program failure.
+    
+    A program, while writing data to a buffer, overruns the buffer's boundary and overwrites adjacent memory.
+    
+    In software, a stack overflow occurs when too much memory is used on the call stack.
+     两种情况:
+    Very deep or infinite recursion。Very large stack variables。
+    A heap overflow is a type of buffer overflow。
 
-A program, while writing data to a buffer, overruns the buffer's boundary and overwrites adjacent memory.
 
-In software, a stack overflow occurs when too much memory is used on the call stack.
- 两种情况:
-Very deep or infinite recursion。Very large stack variables。
-A heap overflow is a type of buffer overflow。
+# How to detect memory leak and how to resolve it?
+# How to allocate memory in C?
+# Where are function local variables stored at?    
+    stack
+# Where are static variables stored at?
 
-
-35.    How to detect memory leak and how to resolve it?
-
-36.    How to allocate memory in C?
-
-37.    Where are function local variables stored at?    stack
-Where are static variables stored at?
-
-38.    What are call by value and call by reference? What are their differences?
+# What are call by value and call by reference? What are their differences?
 Call by value: In the call by value method, the called function creates a new set of variables and copies the values of the arguments into them.
 Call by reference: In the call by reference method, instead of passing values to the function being called, references/pointers to the original variables are passed.
 
-39.    What is variable scope?
+# What is variable scope?
 a scope is the context within a computer program in which a variable name or other identifier is valid and can be used, or within which a declaration has effect.
 
 40.    What is extern variable? How are these variables resolved (at what stage: Compile /Link/ Run)?
@@ -503,22 +429,25 @@ a virtual function that is required to be implemented by a derived class
 A class that contains at least one pure virtual function is considered an abstract class.
 
 
-64.    What is exception handling?
-To catch exceptions we must place a portion of code under exception inspection. This is done by enclosing that portion of code in a try block. 
-An exception is thrown by using the throw keyword from inside the try block
-When an exceptional circumstance arises within that block, an exception is thrown that transfers the control to the exception handler. 
-If no exception is thrown, the code continues normally and all handlers are ignored.
+# What is exception handling?
+    To catch exceptions we must place a portion of code under exception inspection. This is done by enclosing that portion of code in a try block. 
+    An exception is thrown by using the throw keyword from inside the try block
+    When an exceptional circumstance arises within that block, an exception is thrown that transfers the control to the exception handler. 
+    If no exception is thrown, the code continues normally and all handlers are ignored.
 
-When an exception is raised (using throw), execution of the program immediately jumps to the nearest enclosing try block (propagating up the stack if necessary). If any of the catch handlers attached to the try block handle that type of exception, that handler is executed and the exception is considered handled.
-If no appropriate catch handlers exist, execution of the program propagates to the next enclosing try block. If no appropriate catch handlers can be found before the end of the program, the program will fail with an exception error.
+    When an exception is raised (using throw), execution of the program immediately jumps to the nearest enclosing try block (propagating up the stack if necessary). 
+    If any of the catch handlers attached to the try block handle that type of exception, that handler is executed and the exception is considered handled.
+    If no appropriate catch handlers exist, execution of the program propagates to the next enclosing try block. 
+    If no appropriate catch handlers can be found before the end of the program, the program will fail with an exception error.
 
-Exception thrown from destructor:
-bad because it causes the application to leak memory. 
-When an object is deleted, two things happen: first the destructor is called and second the delete operator is called. It is the delete operator that actually releases the storage. 
-If the destructor throws an exception the delete operator is never called so you will leak memory. 
+    Exception thrown from destructor:
+    bad because it causes the application to leak memory. 
+    When an object is deleted, two things happen: first the destructor is called and second the delete operator is called. 
+    It is the delete operator that actually releases the storage. 
+    If the destructor throws an exception the delete operator is never called so you will leak memory. 
 
-Throwing an exception out of a destructor is dangerous.
-If another exception is already propagating the application will terminate.
+    Throwing an exception out of a destructor is dangerous.
+    If another exception is already propagating the application will terminate.
 
 65.    How to call C function from C++? 
 extern "C" void foo( ); 
@@ -526,8 +455,8 @@ extern "C" void foo( );
 66.    How to use a function in C++ from a C function?
 
 67.    What are differences between method overloading and method overriding?
-Method overloading is defining several methods in the same class, that accept different numbers and types of parameters.
-Overriding means you implement a method in the subclass that has the same signature as one in the parent class.
+    Method overloading is defining several methods in the same class, that accept different numbers and types of parameters.
+    Overriding means you implement a method in the subclass that has the same signature as one in the parent class.
 
 
 68.    What is pthread_mutex?
@@ -595,7 +524,7 @@ A pointer to a const value treats the value as const (even if it is not), and th
 80.    What is Container?
 
 81.    What is Iterator?
-In C++, an iterator is any object that, pointing to some element in a range of elements (such as an array or a container), has the ability to iterate through the elements of that range using a set of operators (at least, the increment (++) and dereference (*) operators).
+    In C++, an iterator is any object that, pointing to some element in a range of elements (such as an array or a container), has the ability to iterate through the elements of that range using a set of operators (at least, the increment (++) and dereference (*) operators).
 
 
 82.    What is string?
