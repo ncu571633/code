@@ -617,6 +617,9 @@ Smart pointer:
 ***********************************************************************************************************
 std::ref, std::reference_wrapper
 creates an object that behaves similarly to a reference
+
+
+small string optimization, templates, if constexpr, SFINAE, hash table, concepts related low latency - how to detect things and how to make them better
 ***********************************************************************************************************
 
 template <class T>
