@@ -76,3 +76,86 @@ Line Sharing - False sharing
   Other processors accessing a different element in the same line see the line marked as invalid. 
   They are forced to fetch a more recent copy of the line from memory or elsewhere, even though the element accessed has not been modified. 
   This is because cache coherency is maintained on a cache-line basis, and not for individual elements
+
+
+ 10. Write Cache-Friendly Code
+
+10.1. Place related data close in memory to allow efficient caching – the principle of locality
+
+10.2. Understand how cache lines work
+
+10.3. Use appropriate data structures
+
+10.4. Avoid unpredictable branches
+
+10.5. Avoid virtual functions
+
+10.6. Avoid false sharing problem
+
+10.7. When a context switch happens the processor involved is likely to lose the data in its caches
+
+10.8. Try to have a regular access pattern that will let the hardware prefetcher work efficiently
+
+10.9. Start addressing what is called temporal locality
+
+10.10. Merge loops that touch the same data (loop fusion), and employ rewriting techniques known as tiling or blocking
+
+** Following those rules will minimize the number of page faults (caused by thrashing) – latency killer.
+
+                                            
+
+                                           C++ Techniques                                                                   
+
+01. Make the common case fast and the rare case correct.
+
+02. Code for correctness first, then optimize!
+
+03. Optimize - People I know who write very efficient code say they spend at least twice as long optimizing code as they spend writing code.
+
+04. Jumps/branches are expensive. Minimize their use whenever possible.
+
+05. Think about the order of array indices.
+
+06. Think about instruction-level-parallelism.
+
+07. Avoid/reduce the number of local variables.
+
+08. Reduce the number of function parameters.
+
+09. Pass structures by reference, not by value.
+
+10. If you do not need a return value from a function, do not define one.
+
+11. Try to avoid casting where possible.
+
+12. Be very careful when declaring C++ object variables.
+
+13. Make default class constructors as lightweight as possible.
+
+14. Use shift operations >> and << instead of integer multiplication and division, where possible.
+
+15. Be careful using table-lookup functions.
+
+16. For most classes, use the operators += , -= , *= , and /= , instead of the operators + , - , * , and / .
+
+17. For basic data types, use the operators + , - , * , and / instead of the operators += , -= , *= , and /= .
+
+18. Delay declaring local variables.
+
+19. For objects, use the prefix operator (++obj) instead of the postfix operator (obj++).
+
+20. Be careful using templates.
+
+21. Avoid dynamic memory allocation during computation.
+
+22. Find and utilize information about your system’s memory cache.
+
+23. Avoid unnecessary data initialization.
+
+24. Try to early loop termination and early function returns.
+
+25. Simplify your equations on paper!
+
+26. The difference between math on integers, fixed points, 32-bit floats, and 64-bit doubles is not as big as you might think.
+
+27. Consider ways of rephrasing your math to eliminate expensive operations. 
