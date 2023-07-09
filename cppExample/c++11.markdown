@@ -370,6 +370,8 @@ lambda expressions: allow inline functions which can be used for short snippets 
     []: capture clause(lambda introducer):  lambda functions cannot access variables of the enclosing function. 
     	In order to access those variables, we use the capture clause.
     () is called the parameter list which is similar to the () operator of a normal function
+    [=] is shorthand for “capture all locals by value”
+    [&] is shorthand for “capture all locals by reference”
 
     auto add = [] (int a, int b) 
     { // The compiler can implicitly deduce the return type of the lambda expression based on the return statement(s).
