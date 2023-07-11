@@ -135,7 +135,11 @@ decltype:
 
     final: This prevents any derived class of Derived to override the member function, or prevent the type to be inherited from.
     	example:
-		    struct B final : A
+   (1) struct B final : A
+   (2) Function
+           struct Base2 {
+                virtual void f() final;
+           };
 *****************************************************************************************************************************************************************************
 
 3. trailing return type: return type specified after the parameter list, following -> symbols:
