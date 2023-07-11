@@ -304,6 +304,26 @@ This technique virtualizes the main storage available to a process or task, as a
     a specific case of polymorphism, 
     where different operators have different implementations depending on their arguments. 
 
+# Function overloading 
+	* different type parameters
+	* a different number of parameters
+	* a different sequence of parameters.
+	Const 
+	* Yes: 
+	void fun() const: called on the const object
+	void fun(): non-const object
+	* No:
+	void fun(const int i)
+	void fun(int i)
+	* Yes:
+	void fun(char *a)
+	void fun(const char *a)
+    
+    C++ allows functions to be overloaded on the basis of the const-ness of parameters only if the const parameter is a reference or a pointer. 
+    In program 1, the parameter ‘i’ is passed by value, so ‘i’ in fun() is a copy of ‘i’ in main(). Hence fun() cannot modify ‘i’ of main(). Therefore, it doesn’t matter whether ‘i’ is received as a const parameter or a normal parameter. 
+    When we pass by reference or pointer, we can modify the value referred or pointed, so we can have two versions of a function, one which can modify the referred or pointed value, other which can not.
+
+
 # What is new and delete?
 # What's memory leak?
     A memory leak, in computer science (or leakage, in this context), occurs when a computer program consumes memory but is unable to release it back to the operating system.
