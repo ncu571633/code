@@ -334,6 +334,7 @@ char16_t and char32_t
     Unicode string literals
     user-defined literals
     attributes
+
 *****************************************************************************************************************************************************************************
 std::enable_if: enable certain types for template specialization via some predicates known at the compile time. 
 Using types that are not enabled by std::enable_if for template specialization will result in compile-time error.
@@ -498,7 +499,13 @@ cast:
         	char c = 65; //1-byte data. ASCII of ‘A’
         	int *ptr = static_cast<int>(&c);
         	This will generate compile time error.
-	
+*****************************************************************************************************************************************************************************
+
+run-time type information(RTTI): exposes information about an object's data type at runtime
+The typeid operator returns an lvalue of type const std::type_info that represents the type of expression expr
+	const std::type_info& r1 = typeid(int);
+	cout << r1.name();
+
 
 *****************************************************************************************************************************************************************************
 Smart pointer:
