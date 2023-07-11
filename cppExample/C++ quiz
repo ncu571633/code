@@ -94,6 +94,30 @@ int main()
     return 0;
 }
 
+6. 
+Predict the output of following C++ program.
+#include<iostream>
+using namespace std;
+ 
+class Test
+{
+private:
+  int x;
+public:
+  Test(int x = 0) { this->x = x; }
+  void change(Test *t) { this = t; }
+  void print() { cout << "x = " << x << endl; }
+};
+ 
+int main()
+{
+  Test obj(5);
+  Test *ptr = new Test (10);
+  obj.change(ptr);
+  obj.print();
+  return 0;
+}
+
 
 1. 
 Since c is passed by value and x is passed by reference, all functions will have same copy of x, but different copies of c. f(5, 5) = f(x, 4)*x = f(x, 3)*x*x = f(x, 2)*x*x*x = f(x, 1)*x*x*x*x = 1*x*x*x*x = x^4 Since x is incremented in every function call, it becomes 9 after f(x, 2) call. So the value of expression x^4 becomes 9^4 which is 6561.
@@ -113,3 +137,6 @@ Also, if we take a closer look at the output, we observe that, ‘const void fun
 C++ allows member methods to be overloaded on the basis of const type. 
 Overloading on the basis of const type can be useful when a function return reference or pointer. 
 We can make one function const, that returns a const reference or const pointer, other non-const function, that returns non-const reference or pointer. 
+
+6. 
+this is a const pointer, so there is an error in line "this = t;"
