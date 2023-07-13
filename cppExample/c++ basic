@@ -1104,36 +1104,14 @@ When the compiler generates the code for the destructor, it adds extra code both
     calls to the member destructors and base destructor(s) this->~mybase()
 
 
-The OFFSETOF() macro
-#define OFFSETOF(TYPE, ELEMENT) ((size_t)&(((TYPE *)0)->ELEMENT))
 
-#include <stdio.h>
- 
-#define OFFSETOF(TYPE, ELEMENT) ((size_t)&(((TYPE *)0)->ELEMENT))
- 
-typedef struct PodTag
-{
-   int     i;
-   double  d;
-   char    c;
-} PodType;
- 
-int main()
-{
-   printf("%d", OFFSETOF(PodType, c) );
-   getchar();
-   return 0;
-}
+Processes are managed by the kernel. The kernel doesn't care how the programmer allocates variables. 
+All it knows is that certain blocks of memory belong to the process. The C runtime matches C memory management features to kernel features: automatic variables go into a memory block called “stack” and dynamic storage (malloc and friends) go into a memory block called “heap”. The process calls system calls such as sbrk and mmap to obtain memory with a granularity of MMU pages. Inside those blocks, the runtime determines where to put automatic varibles and dynamically allocated objects.
 
+When a process dies, the kernel updates its memory management table to record, for each MMU page, 
+that it is no longer in use by the process. This takes place no matter how the process exits, 
+whether of its own violition (by calling a system call) or not (killed by a signal). Pages that are no longer used by any process are marked as reusable.
 
-    
-
-
-
-
-
-Processes are managed by the kernel. The kernel doesn't care how the programmer allocates variables. All it knows is that certain blocks of memory belong to the process. The C runtime matches C memory management features to kernel features: automatic variables go into a memory block called “stack” and dynamic storage (malloc and friends) go into a memory block called “heap”. The process calls system calls such as sbrk and mmap to obtain memory with a granularity of MMU pages. Inside those blocks, the runtime determines where to put automatic varibles and dynamically allocated objects.
-
-When a process dies, the kernel updates its memory management table to record, for each MMU page, that it is no longer in use by the process. This takes place no matter how the process exits, whether of its own violition (by calling a system call) or not (killed by a signal). Pages that are no longer used by any process are marked as reusable.
-
-It's generally good hygiene to free the dynamically allocated storage that you're no longer using, because you never know when a piece of code might be reused in a long-running program. But when a process dies, the operating system will release all of its resources: memory, open file, etc.
+It's generally good hygiene to free the dynamically allocated storage that you're no longer using, 
+because you never know when a piece of code might be reused in a long-running program. But when a process dies, 
+the operating system will release all of its resources: memory, open file, etc.
