@@ -1,3 +1,28 @@
+HashMap(unordered_map)
+
+1. Separate chaining
+2. Open addressing
+
+Array for buckets. 
+
+follow pointers in order to search linked lists. 
+The upside is that chained hash tables only get linearly slower as the load factor (the ratio of elements in the hash table to the length of the bucket array) increases, even if it rises above 1.
+
+Every entry record is stored in the bucket array itself.
+When a new entry has to be inserted, the buckets are examined, starting with the hashed-to slot and proceeding in some probe sequence, until an unoccupied slot is found. 
+When searching for an entry, the buckets are scanned in the same sequence, until either the target record is found, or an unused array slot is found, which indicates an unsuccessful search.
+
+Insert: beginning with the cell at index h(k) 
+until finding either an empty cell or a cell whose stored key is k
+
+Advantage:
+1. Open-addressing is usually faster than chained hashing when the load factor is low because you don't have to follow pointers between list nodes.
+It gets very, very slow if the load factor approaches 1 
+2. Open addressing hash map could be full. 
+When load factor is larger than the threshold, make bucket array larger(allocating a new bucket array, and copying elements from the old one into the new one, then freeing the old one)
+3. Open addressing: cache friendly. array, CPU can load the data in the cache line. 
+Avoid dynamic memory allocation during computation.
+use smaller data types: link list used more memory to store pointer. 
 
 
 #include<iostream>
