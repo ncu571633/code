@@ -224,29 +224,41 @@ foo(T t) {
 
 ********************************************************************************************
 
+Curiously Recurring Template Pattern (CRTP) 
+
+template <class T> 
+struct Base
+{
+    void interface()
+    {
+        // ...
+        static_cast<T*>(this)->implementation();
+        // ...
+    }
+
+    static void static_func()
+    {
+        // ...
+        T::static_sub_func();
+        // ...
+    }
+};
+
+struct Derived : Base<Derived>
+{
+    void implementation();
+    static void static_sub_func();
+};
+
+********************************************************************************************
     cout<<(typeid(int) == typeid(double)) << endl;
     std::cout << "int is: " << typeid(int).name() << endl;
     
     
-    
-    
-    
-
 template<class T = void>
 struct My_op_functor { /* ... */ };
 
 My_op_functor<> f;  or My_op_functor f in C++17
-
-
-
-
-
-
-
-
-
-
-
 
 
 template <typename T1, typename T2, ..., typename Tn>
