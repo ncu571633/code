@@ -94,7 +94,7 @@
 *****************************************************************************************************************************************************************************
 # auto and decltype
 
-decltype:
+decltype (compile time):
     If e is the name of a variable, i.e. an "id-expression", then the resulting type is the type of the variable.
     Otherwise, if e evaluates to an lvalue of type T, then the resulting type is T &, and if e evaluates to an rvalue of type T, then the resulting type is T.
 
@@ -108,6 +108,11 @@ decltype:
 	decltype(a->x); 	double 	The type of the member access.
 	decltype((a->x)); 	const double& 	The inner parentheses cause the statement to be evaluated as an expression instead of a member access. 
 	And because a is declared as a const pointer, the type is a reference to const double.
+
+typeid(x).name(): runtime
+if we have a base class reference (or pointer) referring to (or pointing to) a derived class object, the decltype would give type as base class reference 
+(or pointer, but typeid would give the derived type reference (or pointer).
+
 
 *****************************************************************************************************************************************************************************
 # default function and delete functions
