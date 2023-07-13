@@ -1,0 +1,154 @@
+
+
+#include<iostream>
+#include<list>
+#include<vector>
+#include<functional>
+#include<iterator>
+using namespace std;
+
+template<typename KType, typename VType>
+class hash_map
+{
+public:
+	using allocSpace = allocator_traits<allocator<pair<KType, VType>>>;
+	using bucketType = list<pair<KType, VType>>;
+	hash_map()
+		: _capacity(2)
+	{
+		// buckets = allocSpace::allocate(_a, _capacity);
+		buckets = new bucketType[_capacity];
+	}
+
+	hash_map(int n)
+		: _capacity(n)
+	{
+	}
+
+	hash_map(const hash_map& m)
+	{
+		_size = m._size;
+		_capacity = m._capacity;
+
+		if (m.buckets == nullptr)
+		{
+			buckets = nullptr;
+		}
+		else
+		{
+			buckets = allocSpace::allocate(_a, _capacity);
+			for (int i = 0; i < _capacity; i++)
+			{
+				if (m.buckets[i])
+				{
+					buckets[i] = list<pair<KType, VType>>(m.buckets[i].begin(), m.buckets[i].begin());
+				}
+			}
+		}
+	}
+
+	hash_map(hash_map&& m) noexcept
+	{
+		_size = m._size;
+		_capacity = m._capacity;
+		buckets = m.buckets;
+
+		m._size = 0;
+		m._capacity = 0;
+		m.buckets = nullptr;
+	}
+
+	void insert(KType key, VType val) 
+	{
+		auto it = find(key);
+		int index = getIndex(key);
+		if (it != buckets[index].end()) 
+		{
+			it->second = val;
+			return;
+		}
+		buckets[index].push_back({ key,val });
+		_size++;
+	}
+
+	// typename list<pair<KType, VType>>::iterator find(KType key)
+	auto find(KType key)
+	{
+		int index = getIndex(key);
+		// for (auto& i: buckets[index])
+		for (auto i = buckets[index].begin(); i != buckets[index].end(); ++i)
+		{
+			if (i->first == key) 
+			{
+				return i;
+			}
+		}
+
+		return buckets[index].end();
+	}
+
+	void erase(int key) 
+	{
+		auto it = find(key);
+		int index = getIndex(key);
+		if (it != buckets[index].end())
+		{
+			buckets[index].erase(it);
+			_size--;
+		}
+	}
+
+	VType& operator[] (KType k)
+	{
+		auto it = find(k);
+		int index = getIndex(k);
+		if (it != buckets[index].end()) 
+		{
+			return it->second;
+		}
+	}
+
+#if false
+	void rehashIfNeeded() {
+		if (total_elements / bucket_size <= max_load_factor) {
+			return;
+		}
+		bucket_size *= 2;
+		auto new_buckets = new list<pair<int, int>>[bucket_size];
+		for (int i = 0; i < bucket_size / 2; i++) {
+			for (auto& kv_itr : buckets[i]) {
+				new_buckets[hash(kv_itr->first)].push_back(*kv_itr);
+			}
+		}
+		delete[] buckets;
+		buckets = new_buckets;
+	}
+#endif
+
+private:
+	int getIndex(KType k)
+	{
+		hash<KType> hash_obj;
+		return hash_obj(k) % _capacity;
+	}
+
+	list<pair<KType, VType >>* buckets;
+	int _size = 0;
+	int _capacity = 2;
+	allocator<pair<KType, VType>> _a;
+};
+
+int main()
+{
+	hash_map<int, string> m;
+	m.insert(1, "1");
+	m.insert(2, "2");
+	m.insert(3, "3");
+	m.insert(4, "4");
+
+	cout << m[3] << endl;
+	m[3] = "4";
+	cout << m[3] << endl;
+
+	return 0;
+}
