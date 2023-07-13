@@ -182,6 +182,47 @@ The compiler will choose the one that fits the types provided, and a value defin
        static const bool value = true; 
     };
 
+********************************************************************************************
+SFINAE (Substitution failure is not an error)
+There are some overloading functions with template. 
+The compiler tries to substitute of arguments for one of the template function, and an error happens. 
+Instead of stopping with a compilation error, compilier continues with other functions. 
+
+#include <iostream>
+using namespace std;
+void print( int iNum )
+{
+         cout<<"int print( int )"<< endl;
+}
+template < typename _Ty >
+void print( _Ty tt, typename _Ty::value_type* pvt_dummy = NULL )
+{
+           typename _Ty::value_type vt_someval;
+           cout<<"template < typename _Ty >"<< endl;
+}
+int main()
+{
+         short siNum = 10;
+         print( siNum );
+         return 0;
+}
+
+Use enable_if
+
+template <class T>
+typename std::enable_if_t<std::is_arithmetic_v<T>, T> // << shorter!
+foo(T t) {
+  std::cout << "foo<arithmetic T>\n";
+  return t;
+}
+
+template <class T>
+typename std::enable_if_t<!std::is_arithmetic_v<T>, void>
+foo(T t) {
+  std::cout << "foo fallback\n";
+}
+
+********************************************************************************************
 
     cout<<(typeid(int) == typeid(double)) << endl;
     std::cout << "int is: " << typeid(int).name() << endl;
