@@ -108,4 +108,24 @@ In other words, converting void* to and from other pointer types is allowed, and
 Some implementations of standard malloc() do the same thing: stash bookkeeping information before the returned block. This makes it easy to know how much space to reclaim when free() is called.
 
 
-     
+     The OFFSETOF() macro
+#define OFFSETOF(TYPE, ELEMENT) ((size_t)&(((TYPE *)0)->ELEMENT))
+
+#include <stdio.h>
+ 
+#define OFFSETOF(TYPE, ELEMENT) ((size_t)&(((TYPE *)0)->ELEMENT))
+ 
+typedef struct PodTag
+{
+   int     i;
+   double  d;
+   char    c;
+} PodType;
+ 
+int main()
+{
+   printf("%d", OFFSETOF(PodType, c) );
+   getchar();
+   return 0;
+}
+
