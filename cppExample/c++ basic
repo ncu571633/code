@@ -1066,26 +1066,6 @@ no-leak guarantee
 
 Memory management
 static variable: 
-
-
-
-The OFFSETOF() macro
-#define OFFSETOF(TYPE, ELEMENT) ((size_t)&(((TYPE *)0)->ELEMENT))
-
-#include <stdio.h>
- 
-#define OFFSETOF(TYPE, ELEMENT) ((size_t)&(((TYPE *)0)->ELEMENT))
- 
-typedef struct PodTag
-{
-   int     i;
-   double  d;
-   char    c;
-} PodType;
- 
-int main()
-{
-   printf("%d", OFFSETOF(PodType, c) );
     virtual table: contains an entry for each virtual function
 entries in the vtable can point to most derived functions
 vtables exist at the class level, meaning one vtable per class, and is shared by all instances.
@@ -1111,9 +1091,6 @@ function call steps:
     Branch/jump to the function's code, which is a compile-time address and hence hardcoded in the binary by the compiler/linker.
     Get the return value from a predefined location and restore registers we want to use.
 
-
-
-
 Virtual Destructor: used to free the memory of the derived class object, by using the base class's pointer object
 
 No virtual destructor for base class: 
@@ -1125,54 +1102,34 @@ When the compiler generates the code for the destructor, it adds extra code both
     modify vptr to refer to the vtable of derived
     user code
     calls to the member destructors and base destructor(s) this->~mybase()
-    
 
 
+The OFFSETOF() macro
+#define OFFSETOF(TYPE, ELEMENT) ((size_t)&(((TYPE *)0)->ELEMENT))
+
+#include <stdio.h>
+ 
+#define OFFSETOF(TYPE, ELEMENT) ((size_t)&(((TYPE *)0)->ELEMENT))
+ 
+typedef struct PodTag
+{
+   int     i;
+   double  d;
+   char    c;
+} PodType;
+ 
+int main()
+{
+   printf("%d", OFFSETOF(PodType, c) );
    getchar();
    return 0;
 }
 
-((size_t)&(((PodType *)0)->c))
-Since we are considering 0 as address of the structure variable, c will be placed after 16 bytes of its base address i.e. 0x00 + 0x10. Applying & on the structure element (in this case it is c) returns the address of the element which is 0x10. Casting the address to unsigned int (size_t) results in number of bytes the element is placed in the structure.
+
+    
 
 
-aligned malloc implementation
 
-void* aligned_malloc(size_t required_bytes, size_t alignment)
-{
-    void* p1; // original block
-    void** p2; // aligned block
-    int offset = alignment - 1 + sizeof(void*);
-    if ((p1 = (void*)malloc(required_bytes + offset)) == NULL)
-    {
-       return NULL;
-    }
-    p2 = (void**)(((size_t)(p1) + offset) & ~(alignment - 1));
-    p2[-1] = p1;
-    return p2;
-}
-
-void aligned_free(void *p)
-{
-    free(((void**)p)[-1]);
-}
-
-void main (int argc, char *argv[])
-{
-    char **endptr;
-    int *p = aligned_malloc (100, strtol(argv[1], endptr, 10));
-
-    printf ("%s: %p\n", argv[1], p);
-    aligned_free (p);
-}
-
-    You need an offset if you want to support alignments beyond what your system's malloc() does. For example if your system malloc() aligns to 8 byte boundaries, and you want to align to 16 bytes, you ask for 15 bytes extra so you know for sure you can shift the result around to align it as requested. You also add sizeof(void*) to the size you pass to malloc() to leave room for bookkeeping.
-
-    ~(alignment - 1) is what guarantees the alignment. For example if alignment is 16, then subtract 1 to get 15, aka 0xF, then negating it makes 0xFF..FF0 which is the mask you need to satisfy the alignment for any returned pointer from malloc(). Note that this trick assumes alignment is a power of 2 (which practically it normally would be, but there really should be a check).
-
-    It's a void**. The function returns void*. This is OK because a pointer to void is "A pointer to any type," and in this case that type is void*. In other words, converting void* to and from other pointer types is allowed, and a double-pointer is still a pointer.
-
-    The overall scheme here is to store the original pointer before the one that's returned to the caller. Some implementations of standard malloc() do the same thing: stash bookkeeping information before the returned block. This makes it easy to know how much space to reclaim when free() is called.
 
 
 Processes are managed by the kernel. The kernel doesn't care how the programmer allocates variables. All it knows is that certain blocks of memory belong to the process. The C runtime matches C memory management features to kernel features: automatic variables go into a memory block called “stack” and dynamic storage (malloc and friends) go into a memory block called “heap”. The process calls system calls such as sbrk and mmap to obtain memory with a granularity of MMU pages. Inside those blocks, the runtime determines where to put automatic varibles and dynamically allocated objects.
