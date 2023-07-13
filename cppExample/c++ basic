@@ -92,7 +92,8 @@ A default constructor is a constructor that either has no parameters, or if it h
 If your derived class destructor is virtual then objects will be destrcuted in a order(firstly derived object then base ). If your derived class destructor is NOT virtual then only base class object will get deleted(because pointer is of base class "Base *myObj"). So there will be memory leak for derived object
 
 # Virtual base classes/ Virtual Inheritance
-    Suppose you have two derived classes B and C that have a common base class A, and you also have another class D that inherits from B and C. You can declare the base class A as virtual to ensure that B and C share the same subobject of A.
+    Suppose you have two derived classes B and C that have a common base class A, and you also have another class D that inherits from B and C. 
+You can declare the base class A as virtual to ensure that B and C share the same subobject of A.
     
     Is a way of preventing multiple "instances" of a given class appearing in an inheritance hierarchy when using multiple inheritance.
     Avoid diamond inheritance
