@@ -159,3 +159,35 @@ Line Sharing - False sharing
 26. The difference between math on integers, fixed points, 32-bit floats, and 64-bit doubles is not as big as you might think.
 
 27. Consider ways of rephrasing your math to eliminate expensive operations. 
+
+
+Heap fragmentation is a state in which available memory is broken into small, noncontiguous blocks.
+ When a heap is fragmented, memory allocation can fail even when the total available memory in the heap is enough to satisfy a request, because no single block of memory is large enough.
+
+
+Consequence 
+1: Unreliable program
+We have a lot of free memory, but you can only allocate small blocks. 
+If your program needs a bigger block, it will not get it and will stop working.
+
+2: Degraded performance
+slower because the memory allocator takes more time to find the best hole in the free list, the so-called “best-fit.”
+
+
+Strategy:
+Short string optimization: only use heap for long string
+Heap compacting: not C++, since pointers would become invalid. 
+Memory pool: allocate a large block. 
+fragmentation-free custom allocator, like object pool
+
+Avoid heap (in particular, avoid String)
+In many cases, we can avoid dynamic allocation. Instead of allocating objects in the heap, we place them in the stack or in the globals. By design, these two areas are not fragmented.
+
+For example, we could replace all String objects with plain old char[]. Not only we would reduce the fragmentation, but we would also create a smaller and faster executable.
+
+
+Allocate small, fixed-sized objects on the stack to avoid the cost of an unnecessary heap allocation and free
+repeated allocations of the same size don’t cause fragmentation; so, we could keep our objects in the heap but always use the same size.
+
+For example, if we have a string that can have between 10 and 100 characters, we could always reserve 100 characters:
+myString.reserve(100);
