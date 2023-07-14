@@ -109,6 +109,11 @@ decltype (compile time):
 	decltype((a->x)); 	const double& 	The inner parentheses cause the statement to be evaluated as an expression instead of a member access. 
 	And because a is declared as a const pointer, the type is a reference to const double.
 
+run-time type information(RTTI): exposes information about an object's data type at runtime
+The typeid operator returns an lvalue of type const std::type_info that represents the type of expression expr
+	const std::type_info& r1 = typeid(int);
+	cout << r1.name();
+
 typeid(x).name(): runtime
 if we have a base class reference (or pointer) referring to (or pointing to) a derived class object, the decltype would give type as base class reference 
 (or pointer, but typeid would give the derived type reference (or pointer).
@@ -504,13 +509,6 @@ cast:
         	char c = 65; //1-byte data. ASCII of ‘A’
         	int *ptr = static_cast<int>(&c);
         	This will generate compile time error.
-*****************************************************************************************************************************************************************************
-
-run-time type information(RTTI): exposes information about an object's data type at runtime
-The typeid operator returns an lvalue of type const std::type_info that represents the type of expression expr
-	const std::type_info& r1 = typeid(int);
-	cout << r1.name();
-
 
 *****************************************************************************************************************************************************************************
 Smart pointer:
