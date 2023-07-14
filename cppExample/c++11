@@ -653,7 +653,6 @@ small string optimization
 	  };
 	};
 
-if constexpr, SFINAE, hash table, 
 ***********************************************************************************************************
 
 template <class T>
