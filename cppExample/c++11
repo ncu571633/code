@@ -515,8 +515,10 @@ Smart pointer:
     1. auto_ptr: cannot be used in STL containers because it has a copy constructor that does not meet requirements of container CopyConstructible. 
 
     2. unique_ptr: smart pointer for exclusive ownership: at most one unique_ptr pointing at any one resource.
-        (1). same size as raw pointer. 
-        (2). move: transfer ownership, and seource pointer is set to null.
+        advantage:
+	(1). same size as raw pointer. 
+        How to use:
+	(2). move: transfer ownership, and source pointer is set to null.
         (3). copy: not allowed. unique_ptr does not implement a copy constructor, so containers use alternate methods. 
         (4). customer deleter: second template parameter, its deleter that has a default type std::default_delete<T> .
             auto log = [](int *p)
@@ -537,10 +539,10 @@ Smart pointer:
             std::shared_ptr<T>
               ptr to T    ->    T object
               Ptr to control block    -> control block (reference count, weak count, custom deleter)
-        (2). memory for the reference count should be dynamically allocated.
+        (2). Control block: memory for the reference count should be dynamically allocated.
         (3). increments and decrements of the reference count must be atomic.
         (4). copying increment reference count, moving doesn't. 
-        (5). 
+        (5). self defined delete function
             auto log = [](int *p)
             {
               cout << "delete" << endl;
@@ -601,11 +603,11 @@ Smart pointer:
             // 2 is decremented to 1, and so both ref counts will be 1.
             // (Memory is deallocated only when ref count drops to 0)
  
-    make_unique<T>(), make_shared<T>() is better than shared_ptr<T> sp(new T)
-    1. only one allocation: single chunk of memory to hold both the object and control block. 
-    2. type T once
-    3. memory leak due to exception: two statement: new, run shared_ptr constructore.
-    Compiler may insert another statement or function call in between
+   5. make_unique<T>(), make_shared<T>() is better than shared_ptr<T> sp(new T)
+    (1). only one allocation: single chunk of memory to hold both the object and control block. 
+    (2). type T once
+    (3). memory leak due to exception: two statement: new, run shared_ptr constructore.
+    (4). Compiler may insert another statement or function call in between
     process(shared_ptr<widget>, int priority)
       no process(shared_ptr<T>(new T), computePriority())
       no shared_ptr<T> sp(new T, customDel)
@@ -613,12 +615,12 @@ Smart pointer:
       yes process(move(sp), computePriority())
 
     Not to use make_unique, make_shared:
-    1. custom delete. not supported
-    2. make function use perfect forwarding, parentheses, not braces. 
+    (1). custom delete. not supported
+    (2). make function use perfect forwarding, parentheses, not braces. 
     using braced initialized, need to use new directly. 
     Or auto initList = {10, 20}
     auto spv = make_shared<vector<int>>(initList);
-    3. As long as weak_ptr refere to a control block, control block needs to exist. 
+    (3). As long as weak_ptr refere to a control block, control block needs to exist. 
     The memory containing it should remain allocated. 
     If the obj is large and the time between destructio nof the last shared_ptr/week_ptr is significant, 
     a lag can occur between when an obj is freed and when memory occupied is freed.
