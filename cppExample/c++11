@@ -1,3 +1,11 @@
+Copy and swap: used for copy-assignment operator. 
+avoiding code duplication, and providing a strong exception guarantee.
+
+1. the copy-constructor's functionality to create a local copy of the data (might fail)
+2. destructor (should not fail)
+3. swapping the old data with the new data (non-throwing function)
+
+*****************************************************************************************************************************************************************************
 # Padding
     Many processors expect memory for variables to be aligned based on the size of the variable. 
     the structure padding is automatically done by the compiler to make sure all its members are byte aligned.
