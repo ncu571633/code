@@ -1,0 +1,61 @@
+We are given a binary tree (with root node `root`), a `target` node, and an integer value `K`.
+
+Return a list of the values of all nodes that have a distance K from the target node.  The answer can be returned in any order.
+
+Example 1:
+
+Input: root = [3,5,1,6,2,0,8,null,null,7,4], target = 5, K = 2
+
+Output: [7,4,1]
+
+Explanation:
+The nodes that are a distance 2 from the target node (with value 5)
+have values 7, 4, and 1.
+
+void findParent(TreeNode* n, unordered_map<TreeNode*, TreeNode*>& parent)
+{
+  if (!n)
+    return ;
+  if (n->left)
+    parent[n->left] = n;
+  if (n->right)
+    parent[n->right] = n;
+
+  findParent(n->left, parent);
+  findParent(n->right, parent);
+}
+
+vector<int> find_at_distance(TreeNode* root, TreeNode* t, int distance)
+{
+  vector<int> ret;
+  if (!root || !t || distance<0)
+    return ret;
+
+  unordered_map<TreeNode*, TreeNode*> parent;
+  findParent(root, parent);
+
+  unordered_map<TreeNode*, int> visited;
+  find_at_distance(t, distance, parent, ret);
+  return ret;
+}
+
+void find_at_distance(TreeNode* node, int distance, 
+const unordered_map<TreeNode*, TreeNode*>& parent, unordered_set<TreeNode*>& visited, vector<int>& ret)
+{
+  if (visited[node] == true)
+    return ;
+   visited[node] = true;
+
+   if(distance == 0)
+   {
+     ret.push_back(n->val);
+     return ;
+   }
+  
+   if(node->left)
+    find_at_distance(node->left, distance-1, parent, visited, ret);
+   if(node->right)
+    find_at_distance(node->right, distance-1, parent, visited, ret);  
+   if(parent[node])
+    find_at_distance(parent[node], distance-1, parent, visited, ret);
+}
