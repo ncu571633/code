@@ -256,3 +256,56 @@ int main()
     return 0;
 }
 
+// Online C++ compiler to run C++ program online
+#include <iostream>
+using namespace std;
+
+enum class status
+{
+    success,
+    fatalError,
+    transientError
+};
+
+string process(string s) 
+{
+    srand (time(NULL));
+    int r = random()%1;
+    if (r==0)
+        throw status::transientError;
+    if (r==1)
+        throw status::fatalError;
+    return s;
+}
+
+string wrapper(string input, int count=10)
+{
+    try
+    {
+        return process(input);
+    }
+    catch(status st)
+    {
+        if(st == status::fatalError)
+        {
+            cout << "exit"; 
+            exit(0);
+        }
+        
+        if(count == 0)
+            return "";
+        if(st == status::transientError)
+        {
+            cout << "retry" << count << endl;
+            return wrapper(input, count-1);
+        }
+    }
+    return "";
+}
+
+int main() {
+    // Write C++ code here
+    std::cout << wrapper("hello");
+
+    return 0;
+}
