@@ -1,0 +1,242 @@
+#include <map>
+#include <set>
+#include <list>
+#include <cmath>
+#include <ctime>
+#include <deque>
+#include <queue>
+#include <stack>
+#include <string>
+#include <bitset>
+#include <cstdio>
+#include <limits>
+#include <vector>
+#include <climits>
+#include <cstring>
+#include <cstdlib>
+#include <fstream>
+#include <numeric>
+#include <sstream>
+#include <iostream>
+#include <algorithm>
+#include <unordered_map>
+
+using namespace std;
+
+class JobScheduler
+{
+public:
+    void Schedule(const string& input)
+    {
+        if(!Parse(input))
+        {
+            // print to STDOUT
+            // cerr << "Malformed Input";
+            cout << "Malformed Input";
+            return ;
+        }
+        
+        if(!Runner())
+        {
+            // cerr << "Malformed Input";
+            cout << "Malformed Input";
+            return ;
+        }
+        
+        // sort the chain based on descending order on the total time
+        SortJobChain();
+        PrintJobChain(); 
+    }                
+
+private:
+    bool Parse(const string& input)
+    {
+        stringstream inputss(input);
+        string line;
+        while(getline(inputss, line))
+        {
+            if(line.empty())
+                continue;
+            
+            // find the first non space char, and 
+            // compare with '#' to see whether this line is a comment
+            auto it = find_if(line.begin(), line.end(), [](const char c) { return !isspace(c);} );
+            if (it != line.end() && *it == '#')
+                continue;
+            
+            int jobId, nextJobId;
+            long jobRuntime;
+            if (ParseLine(line, jobId, jobRuntime, nextJobId))
+            {
+                if(job.count(jobId) != 0) // a job has two following jobs or duplication
+                {
+                    return false;                    
+                }
+                
+                job[jobId] = nextJobId;
+                runtime[jobId] = jobRuntime;
+                inDegree[nextJobId] ++;
+                if (inDegree.count(jobId) == 0)
+                    inDegree[jobId] = 0;                
+            }
+            else 
+            {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+
+    bool ParseLine(const string& line, int& jobId, long& runtime, int& nextJobId)
+    {
+        istringstream ss(line);
+        
+        // parse job id, which should be >= 0
+        string jobIdStr, runtimeStr, nextJobIdStr;
+        getline(ss, jobIdStr, ',');
+        jobId = atoi(jobIdStr.c_str());
+        if(jobId < 0 || !ss || jobIdStr.empty())
+            return false;
+        
+        // parse runtime, which should be >= 0 and <= 24*60*60
+        getline(ss, runtimeStr, ',');
+        runtime = atol(runtimeStr.c_str());
+        if(runtime < 0 || runtime > secondsPerDay || !ss || runtimeStr.empty())
+            return false;
+        
+        // parse nextJobId, which should be >= 0
+        getline(ss, nextJobIdStr, ',');
+        nextJobId = atoi(nextJobIdStr.c_str());
+        if(nextJobId < 0 || nextJobIdStr.empty())
+            return false;        
+        
+        return true;
+    }
+
+    bool Runner()
+    {
+        // whether the job node in the graph is visited or not
+        unordered_map<int, bool> visited;
+        for(auto p: inDegree)
+        {
+            // start from the job whose inDegree is 0, and do DFS
+            if(p.second == 0)
+            {
+                visited[p.first] = true;
+                int number_of_jobs = 1;
+                long job_chain_runtime = runtime[p.first];
+                int nextJobId = job[p.first];
+                int lastJobId = p.first;
+                while(nextJobId != 0)
+                {
+                    // already visited, find a cicle
+                    if (visited[nextJobId])
+                        return false;
+                    
+                    visited[nextJobId] = true;
+                    number_of_jobs ++;
+                    job_chain_runtime += runtime[nextJobId];
+                    lastJobId = nextJobId;
+                    nextJobId = job[nextJobId];
+                }
+                
+                // daily log, runtime should not larger than 24*60*60
+                if(job_chain_runtime > secondsPerDay)
+                {
+                    return false;                    
+                }
+                
+                r.push_back(result(p.first, lastJobId, number_of_jobs, job_chain_runtime));
+            }
+        }
+        
+        // every job should be visited
+        for (auto p: inDegree)
+        {
+            if (visited[p.first] == false && p.first != 0)
+                return false;
+        }
+        
+        return true;
+    }
+    
+    // sort job chain based on the total runtime of the chain
+    void SortJobChain() noexcept
+    {
+        auto compChain = [](const result& r1, const result& r2)
+        {
+            return r1.job_chain_runtime > r2.job_chain_runtime;
+        };
+        
+        sort(r.begin(), r.end(), compChain);
+    }
+    
+    void PrintJobChain() noexcept
+    {
+        // convert runtime from long to string
+        // make sure the string has two digits
+        auto formatTime = [](long runtime)
+        {
+          if (runtime < 10)
+            return '0' + to_string(runtime);
+          return to_string(runtime);  
+        };
+        
+        auto secondsToTime = [&formatTime](long runtime) 
+        {
+            int hour = runtime / 3600;
+            int min = (runtime - hour*3600) / 60;
+            int second = runtime - hour*3600 - min*60;
+            return formatTime(hour) + ":" + formatTime(min) + ":" + formatTime(second);
+        };
+        
+        for(size_t i=0; i<r.size(); i++)
+        {
+            cout << "-" << endl
+                << "start_job: " << r[i].start_job << endl
+                << "last_job: " << r[i].last_job << endl
+                << "number_of_jobs: " << r[i].number_of_jobs << endl
+                << "job_chain_runtime: " << secondsToTime(r[i].job_chain_runtime) << endl
+                << "average_job_time: " << secondsToTime(r[i].job_chain_runtime*1.0/r[i].number_of_jobs) << endl;
+        }
+        cout << "-";
+    }
+       
+private:
+    unordered_map<int, int> job; // job graph: job id -> next job id
+    unordered_map<int, long> runtime; // job id -> runtime
+    unordered_map<int, int> inDegree; // job id -> inDegree
+    static constexpr int secondsPerDay = 24*60*60; // daily log, runtime should be < 24*60*60
+            
+    typedef struct result
+    {
+        result(int s, int l, int n, long j)
+        {
+            start_job = s;
+            last_job = l;
+            number_of_jobs = n;
+            job_chain_runtime = j;
+        }
+        
+        int start_job = 0;
+        int last_job = 0;
+        int number_of_jobs = 0;
+        long job_chain_runtime = 0;
+    }result;
+    vector<result> r;
+};
+
+int main() {
+    /* Enter your code here. Read input from STDIN. Print output to STDOUT */
+
+    string input, line;
+    while(cin >> line)
+    {
+        input += ('\n' + line);
+    }
+    JobScheduler j;
+    j.Schedule(input);
+    
+    return 0;
+}
