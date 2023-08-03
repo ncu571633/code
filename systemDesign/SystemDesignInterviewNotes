@@ -137,3 +137,27 @@ gRPC uses protocol buffer which reduces file size.
     GET requests should be cacheable by default. Usually browsers treat all GET requests cacheable.
     POST requests are not cacheable by default but can be made cacheable by either an Expires header, or a Cache-Control header is added to the response.
     PUT and DELTE are not cacheable at all
+
+
+How to design a REST API
+addBook(), getBook()
+            1. endpoint
+            2. HTTP Method
+            3. RequestBody/PathVariable
+            4. ResponseBody
+Considering book as a resource, the following can be the REST APIs:
+
+    create a book resouce
+    POST /api/books
+    get a particular book
+    GET /api/books/{id}
+    update details of a book
+    PUT /api/books/{ID}
+    get all books
+    GET /api/books
+    search books collection
+    GET /api/books?name=twinke
+    GET /api/books?author=nobody
+    delete a particular book
+    DELETE /api/books/{id}
+
