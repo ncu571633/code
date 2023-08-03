@@ -132,3 +132,8 @@ RESTful API(Representational state transfer)
 human readable JSON
 gRPC uses protocol buffer which reduces file size.
 * gRPC: Best for Internal APIs, IoT, and mobile, but slow implementation
+* Being cacheable is one of architectural constraints of REST.
+
+    GET requests should be cacheable by default. Usually browsers treat all GET requests cacheable.
+    POST requests are not cacheable by default but can be made cacheable by either an Expires header, or a Cache-Control header is added to the response.
+    PUT and DELTE are not cacheable at all
