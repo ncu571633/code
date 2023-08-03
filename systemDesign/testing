@@ -1,0 +1,17 @@
+* Unit test: from developer's point of view: a particular method (or a unit) of a class works well
+
+* Functional Testing: from user's point of view: verifying that an application works well..
+
+A functional test can setup the system with in-memory implementations of your application ports, 
+which would make the test run faster and perhaps allow tests to run in parallel (in some cases). 
+The only thing the test cares about is that a feature works as expected. This can reduce the overhead of setting up certain tests, 
+since preparing 3rd party systems with data can be difficult or time consuming.
+
+* end-to-end test requires the test to setup the system components as they are in production. 
+Real database, services, queues, etc. The reason for this is to see that your system is wired correctly (database connections, configuration and such).
+
+* Smoke testing: build verification testing or confidence testing. subset of test cases that cover the most important functionality of a component or system
+
+* A/B testing is a way to compare multiple versions of a single variable, for example by testing a subject's response to variant A against variant B, and determining which of the variants is more effective
+
+* Integration testing -- is when you test more than one component and how they function together
