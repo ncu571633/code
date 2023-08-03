@@ -125,4 +125,10 @@ A partition is the hash space between adjacent servers.
   virtual nodes: each server is represented by multiple virtual nodes on the ring. 
 	Each server is responsible for multiple partitions. 
 	As the number of virtual nodes increases, the distribution of keys becomes more balanced. 
-   
+
+RESTful API(Representational state transfer)
+* HTTP protocol for data communication.
+* REST server contains resource ←access by HTTP methods←REST client get the data
+human readable JSON
+gRPC uses protocol buffer which reduces file size.
+* gRPC: Best for Internal APIs, IoT, and mobile, but slow implementation
