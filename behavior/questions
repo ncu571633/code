@@ -1,11 +1,12 @@
-Conflict
+1. Conflict
 
 Story
 My manager asked me to work together with one co-worker. However, I had a conflict with him over the choice of design for a project.
 We both had strong opinions and valid arguments, but we could not agree on which one was better. 
 So I decided to have a meeting with him and explain why I preferred my option, but also listen to his reasoning.  (Communicate directly and respectfully with the co-worker)
 First we make sure we have same assumption/goal/requirement, then to see in which part we agree with each other, and also find out the difference of our approach. 
-Then we had a meeting with manager and the team, to vote the best solution. 
+Then we both understood each other's suggestions and presented our ideas to the rest of the team, which allowed everyone to voice their opinions. 
+We were able to come to a mutual decision as a group. 
 
 Identify the source and impact of the conflict
 Listen to their perspective and acknowledge their feelings
@@ -13,6 +14,38 @@ Express your own needs and expectations
 Seek a mutually beneficial solution or compromise
 Involve your manager or a third party if needed
 Follow up and monitor the progress
+
+2. Planning for the deadline
+
+There are many possible reasons why a software engineer might fail to meet a project deadline, such as 
+unclear requirements, 
+unrealistic expectations, 
+team dependencies, 
+scope creep, 
+or unforeseen challenges. 
+
+Storry: 
+One example of such a situation is when an new graduate was asked to finish a complex project in two weeks, 
+and that required more time and skills than he had. He realized he couldn’t finish the project on time and ask for help.
+
+Action:
+The problem is there is no enough communication. We have daily stand up meeting, but he didn't ask for help if he is blocked. 
+
+So I discussed with him for several topics.
+1. Can we change the scope? Doing less while delivering the same results? 
+We decided to make the functionality to work first, then if we have time we can optimize. 
+2. Do we need more people, maybe someone with better context on that feature that could be more productive.
+I spend several hour to help him design the work flow. 
+
+After these actions, we finished the project on time. 
+
+Also after this, we did a postmortem on this. 
+Analyze why are late. 
+Did we provide a bad estimate? Why?
+Did we find some part of the code base that was harder to change?
+Did we introduce breaking changes/ introduced a bug that were not expected?
+
+
 
 
 
