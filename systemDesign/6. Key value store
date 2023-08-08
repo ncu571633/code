@@ -1,1 +1,26 @@
+non-relational database. 
+Key must be unique: text or hashed values.
+Value can be string, list, objects.
+
+Functionality requirement
+  put(key value)
+  get(key)
+
+Non-Functionality requirement
+  high availability: responds quickly, even during failures.
+  high scalability: can be scaled to support large data set
+  consistency.
+  low latency
+
+Single server: 
+  memory: data compression, store frequently used data in memory and the rest on disk.
+
+Distributed key-value store
+
+CAP theorem: Consistency, availability, partition tolerance
+  consistency: all clients see the same data at the same time no matter which node they connect to.
+  availability: any client which requests data gets a response even if some of the nodes are down.
+  partition tolerance: system continues to operate despite network partitions.
+
+
 
