@@ -1,0 +1,92 @@
+Requirement
+1. 1 on 1 chat, group based
+2. scale: daily active users
+1M concurrent users, each user connection needs 10K of memory.  -> 10G of memory.
+3. important features: text message, attach file, chat history
+1 on 1 chat, group chat, online presence, push notification
+
+
+
+Workflow
+sender(web/mobile app)  ->  chat service   -> receiver
+
+1. sender:
+connect the chats service using http protocols.
+  sends the message to chat service, informing the service to send the message to the receiver. 
+  reduce the number of TCP handshakes.
+
+2. chat service: store message and send message
+  polling: client periodically asks the server if there are message available. 
+	depending on polling frequence, polling could be costly. 
+  long polling: a client holds the connection open until there are actually new messages available or timeout.
+	once the client receives new messages, it immediately sends another request to the server, restart the process.
+	drawbacks: (1). sender and receiver may not connect to the same chat server.
+		(2). a server has no good way to tell if a client is disconnected.
+		(3). inefficient. if a user doesn't chat much, long pulling makes periodic connections after timeout.
+  websocket: sending asynchronous updates from server to client.
+	bi-directional and persistent.
+	starts as http connection and could be upgraded via handshake to a web socket connection.
+
+			HTTP				WebSockets
+Technology used		Full duplex			Half duplex
+Data type handled	Static and stagnant data	Real time and continuously updated data
+Latency overheads	High				Low
+Operational overheads	High as you need to generate 	Relatively low as one request can generate
+			fresh request for each 		multiple responses as long as a connection is open
+			unique/next response	 
+Speed			Slow as it takes time to 	Fast as connection remains open as long as
+			establish a new connection 	it’s not terminated by one party
+			for every request	 
+Ability to handle 	Frequent requests will reduce 	Frequent requests will have no impact on the connection they can be 
+frequent request	the performance of the connection	handled easily
+
+3. Other service: sign up, login, user profile, use http.
+
+Stateless service: 
+user ->(http)  load balancer -> service discovery, authentication service, group management, user profile
+stateful: user ->(websocket) -> chat service. (each client maintains a persistent connection to the chat server)
+push notification 
+
+
+DB:
+1. relational batabase. generic data: user profile, setting, user friends list
+2. key-value store: chat history data: large amount data, recent chats are accessed frequentl(users don't ususlly look up for old chats). random access data(search), jump to specific message. read: write: 1:1
+	allow easy horizontal scaling, low latency to access data, 
+
+message schema
+id, from, to, content, time, group id
+
+
+service discovery: recommend the best chat service for a client based on the criteria like geographical location, server capacity. 
+	apache zookeeper. 
+1. login
+2. load balancer: sends login request to API services.
+3. service discovery(zookeeper) finds the best chat server for user A. 
+4. user connects to chat server through websocket.
+
+1 on 1 chat flow:
+1. user a sends a chat message to chat server 1.
+2. chat server 1 obtains a message id from ID generator.
+3. chat server 1 sends the message to the message sync queue.
+4.message is stored in a key value store
+5. if user B is online, the message is forwarded to chat server 2 where user B is connected.
+   if user B is offline, a push notification is sent from push notification servers.
+6. chat server 2 forwards the message to User B. There is a persistent web socket connection between user B and chat server 2.
+
+Message synchronization across multiple devices: a connection between the laptop and chat server.
+  each device maintains a variable called max_message_id. 
+	if recipient id is equal to the currently logged in user id
+	message id in the key value store is larger than max message id.
+
+Small group chat flow:
+	each user has a message sync queue, as an inbox for the recipient.
+	User A sends a message in a group chat, it is copied to each group memorys's message sync queue.
+	when the group number is small, storing a copy in each recipients inbox is not expensive.
+
+Online presence:
+presence servers: 
+User login: after a websocket connection is built between the client and the realtime server, save online status and last active at timestamp in the KV store.
+user log out.: save offline in the KV store.
+user disconnection: heartbeat mechanism: online client sends a heartbeat event to presence servers. If presence servers receive 
+a heartbeat event within certain time, the user is online. 
+
