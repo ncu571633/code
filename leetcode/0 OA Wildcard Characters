@@ -1,0 +1,90 @@
+Wildcard Characters
+Have the function WildcardCharacters(str) read str which will contain two strings separated by a space. The first string will consist of the following sets of characters: +, *, and {N} which is optional. The plus (+) character represents a single alphabetic character, the asterisk (*) represents a sequence of the same character of length 3 unless it is followed by {N} which represents how many characters should appear in the sequence where N will be at least 1. Your goal is to determine if the second string exactly matches the pattern of the first string in the input.
+
+For example: if str is "++*{5} gheeeee" then the second string in this case does match the pattern, so your program should return the string true. If the second string does not match the pattern your program should return the string false.
+Examples
+Input: "+++++* abcdemmmmmm"
+Output: false
+Input: "**+*{2} mmmrrrkbb"
+Output: true 
+
+
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+string WildcardCharacters(string str) {
+  if (str.empty())
+    return "false";
+
+  size_t found = str.find(" ");
+  if (found == std::string::npos)
+    return "false";
+  
+  string regex = str.substr(0, found);
+  string match = str.substr(found+1);
+
+  int index = 0;
+  for (int i=0; i<regex.size(); )
+  {
+    switch (regex[i])
+    {
+      case '+':
+        index ++;
+        i++;
+        if (index >= match.size())
+        {
+          if (i >= regex.size())
+            return "true";
+          else
+            return "false";
+        }
+        break;
+      case '*':
+      {
+        int count = 3;
+        if(i==regex.size()-1
+        || regex[i+1] != '{')
+        {
+          i++;
+        }
+        else // *{4} case
+        {
+          i += 2;
+          int start = i;
+          for(; i<regex.size(); i++)
+          {
+            if (regex[i] == '}')
+              break;
+          }
+          if (i==regex.size())
+            return "false";
+          count = stoi(regex.substr(start, i-start));
+          i++;
+        }
+
+        string temp = match.substr(index, count);
+        if (temp != string(count, match[index]))
+            return "false";
+        index += count;
+        break;
+      }
+      default:
+        return "false";
+    }
+
+  }
+
+  if(index == match.size())
+    return "true";
+  return "false";
+}
+
+int main(void) { 
+   
+  // keep this function call here
+  cout << WildcardCharacters(coderbyteInternalStdinFunction(stdin));
+  return 0;
+    
+}
