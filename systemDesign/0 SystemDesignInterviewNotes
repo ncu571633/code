@@ -24,7 +24,8 @@
      partition tolerance: system continues to operate despite a number of messages being dropped/delayed.                
 
 
-Strong consistency may also suffer from reduced availability (during failures) because data can't replicate and commit in every region. Eventual consistency offers higher availability and better performance, but it's more difficult to program applications because data may not be consistent across all regions.Feb 27, 2023
+Strong consistency may also suffer from reduced availability (during failures) because data can't replicate and commit in every region. 
+Eventual consistency offers higher availability and better performance, but it's more difficult to program applications because data may not be consistent across all regions.Feb 27, 2023
 
 
 2. capacity estimation
@@ -45,8 +46,29 @@ Strong consistency may also suffer from reduced availability (during failures) b
 	likeOrUnlickTweet(userToken, string tweetId, bool like)
 	readHomeTimeLine(userToken, int pageSize, pageToken)
 	readUserTimeLine(userToken, int pageSize, pageToken)
-		
-4. high level system design
+
+4. data storage
+	table: user table, tweet table, follower table
+Structure:
+SQL databases are table based
+NoSQL databases can be document-oriented, key-value pairs, or graph structures.
+
+Scalability:
+	SQL databases scale vertically, usually on a single server
+	NoSQL databases offer horizontal scalability, meaning that more servers simply need to be added to increase their data load. 
+This means that NoSQL databases are better for modern cloud-based infrastructures, which offer distributed resources.
+
+When to use:
+relational database: Build an application, and there is a relationship between data tables.
+
+A non-relational NoSQL database doesn’t use structured tables but instead uses flexible schemas for unstructured data storage
+    high performance, particularly read performance: The way distributed NoSQL systems like Cassandra and Riak work means you can usually get very high read performance by adding more boxes. 
+Some go so far as to automatically replicate data across nodes to ensure you always have plenty of copies of your data to access.
+    high availability (HA): Data replicates across nodes in a NoSQL system, so the failure of a single node does not necessarily result in data loss or downtime for your application. 
+This also means you can easily add or remove nodes from clusters without impacting availability.
+
+
+5. high level system design
 	user -> load balancer  -> tweet writer server  -> DB
 	                       -> timeline service     -> cache   (need low latency, read cache join together on the fly)
 	                       
@@ -63,9 +85,6 @@ Strong consistency may also suffer from reduced availability (during failures) b
 	    not efficient for user with huge amount of followers
 	    hybrid solution: hot user, not hot users
 
-5. data storage
-	table: user table, tweet table, follower table
-	
 6. scalability
 	identify potential bottleneck
 	discussion solutions, tradeoffs:
