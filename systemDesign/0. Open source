@@ -3,3 +3,7 @@ ZooKeeper:
 DynamoDB, memcached, redis
 dynamodb vs mongodb
  Message Queue vs. Apache Kafka 
+
+
+Elastic Search: Elasticsearch is a NoSQL database
+  
