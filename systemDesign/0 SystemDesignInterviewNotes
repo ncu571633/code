@@ -8,9 +8,15 @@
     (5) search tweet
     
      non-functional requirement
-     (consistency): every read receive the most recent write or an error
-                    sacrifice: eventual consistency/strong consistency.
-		    Consistency means that a read request for a specific data made at any of the nodes of the distributed system database should return the same value.
+     (consistency): Consistency means that a read request for a specific data made at any of the nodes of the distributed system database should return the same value.
+		Strong consistency:
+		The reads are guaranteed to return the most recent committed version of an item. 
+		A client never sees an uncommitted or partial write. Users are always guaranteed to read the latest committed write.
+		
+		Eventual consistency:
+		is ideal where the application doesn't require any ordering guarantees. 
+		Examples include count of Retweets, Likes, or non-threaded comments.
+
 
      availability: every request receive a response, without the guarantee that it contains the most recent write
                    scalable: performance: low latency
