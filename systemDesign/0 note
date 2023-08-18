@@ -78,6 +78,12 @@ Some go so far as to automatically replicate data across nodes to ensure you alw
     	high availability (HA): Data replicates across nodes in a NoSQL system, so the failure of a single node does not necessarily result in data loss or downtime for your application. 
 This also means you can easily add or remove nodes from clusters without impacting availability.
 
+How to do db sharding:
+Range-based sharding: based on a range of values.
+	for example, name first alphabet A to I -> shard A, J to S -> shard B, T to Z: shard C...
+Hashed sharding: hash function(key) -> hash value
+Directory sharding: lookup table
+Geo sharding
 
 5. high level system design
 	user -> load balancer  -> tweet writer server  -> DB
