@@ -67,13 +67,15 @@ Scalability:
 	NoSQL databases offer horizontal scalability, meaning that more servers simply need to be added to increase their data load. 
 This means that NoSQL databases are better for modern cloud-based infrastructures, which offer distributed resources.
 
-When to use:
-relational database: Build an application, and there is a relationship between data tables.
+When to use NoSQL:
+	Low latency;
+	unstructureed, have no relation data.
+	only need to serialize and deserialize data.
+	need to store massive amount of data.
 
-A non-relational NoSQL database doesn’t use structured tables but instead uses flexible schemas for unstructured data storage
-    high performance, particularly read performance: The way distributed NoSQL systems like Cassandra and Riak work means you can usually get very high read performance by adding more boxes. 
+	high performance, particularly read performance: The way distributed NoSQL systems like Cassandra and Riak work means you can usually get very high read performance by adding more boxes. 
 Some go so far as to automatically replicate data across nodes to ensure you always have plenty of copies of your data to access.
-    high availability (HA): Data replicates across nodes in a NoSQL system, so the failure of a single node does not necessarily result in data loss or downtime for your application. 
+    	high availability (HA): Data replicates across nodes in a NoSQL system, so the failure of a single node does not necessarily result in data loss or downtime for your application. 
 This also means you can easily add or remove nodes from clusters without impacting availability.
 
 
