@@ -64,3 +64,29 @@ Consistency models:
 Inconsistency resolution:v versioning
   a versioning system that can detect conflicts and reconcile conflicts.
   a vector clock is a common technique to solve this problem: [server, version] pair
+
+Gossip protocol:
+  Each node maintains a node membership list, which contains member IDs and heartbeat counters.
+  each node increase the counter.
+  Each node periodically sends heartbeats to a set of random nodes.
+  Once nodes receive heartbeats, list is updated to the latest info. 
+  if the heartbeat has not increased for more than a period of time, the member is consideered as offline. 
+
+Handling permanent failure(keep replicas in sync)
+  Merkle tree: inconsistency detection, minimizing the amount of data transferred.
+      non-leaf node is labeled with the hash of the labels or values of its child node.
+    compare two merkle tree, start by comparing the root hashes. If root hashes match, both servers have the same data.
+  By using Merkle trees, the amount of data needed to by synchronized its proportional to the differences between the two replicas, and not the amount of data they contain.
+
+Handling data center outage:
+  replicate data across multiple data centers. If one data center is completely offline, users can still access data through other data centers.
+
+Write path:
+Client -> commit log
+       -> memory cache -> flush to disk SSTables
+
+Read Path:
+Client -> memory cache
+      Bloom filter (used to figure out which SSTables might contain the key)
+      SSTable return the result of data set.
+      
