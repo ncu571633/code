@@ -22,5 +22,45 @@ CAP theorem: Consistency, availability, partition tolerance
   availability: any client which requests data gets a response even if some of the nodes are down.
   partition tolerance: system continues to operate despite network partitions.
 
+Data partition:
+  1. distribute data across multiple servers evenly. 
+  2. minimize data movement when nodes are added or removed. 
 
+Consistent hashing:
+  1. servers are placed on a hash ring: s0, s1, s2... s7
+  2. a key is hashed onto the same ring, and it is stored on the first server encountered when moving in the clockwise direction. 
+  Advantage:
+  automatic scaling: servers could be added and removed automatically depending on the loads.
+  Heterogeneity: the number of virtual nodes for a server is proportional to the server capacity (servers with higher capacity are asigned with more virtual nodes)
 
+Data replication:
+  1. data should be replicated asynchronously over N servers, where N is a configurable parameter.
+  2. These N servers are chosen: after a key is mapped to a position on the hash ring, walk clockwise from that position and choose first N servers on the ring to store data copies. 
+  nodes in the same data center often fail at the same time due to power outages. For better reliability, replicas are placed in distinct data centers. 
+
+Consistency:
+  Coordinator: proxy between the client and the nodes.
+  N: the nubmer of replicas
+  W: write quorum of size W: for a write operation to be considered as successful, write operation must be acknowledged from W replicas.
+  (N=3, W=1: the coordinator must receive at least one acknowledgement before the write operation is considered as successful)
+  R: read quorum of size R: read operation must wait for responses from at least R replicas.
+  Configuration of W/R/N is a tradeoff between latency and consistency. 
+  (w=1, r=1) an operation is returned quickly.
+  (W>1, r>1) better consistency. but the query will be slower.
+  Some examples:
+  (W+R > N): strong consistency: at least one overlapping node has the latest data to ensure consistency.
+  (R=1, W=N): fast read
+  (W=1, R=N): fast write.
+  
+  client -> coordinator -> s0 -> s1
+                              -> s2
+
+Consistency models:
+  strong consistency: any read operation returns a value corresponding to the result of the most updated write data.
+    forcing a replica not accepts new reads/writes until every replica has agreed on current write.
+  weak consistency: 
+  eventual consistency: given enough time, all updates are propagated, and all replicas are consistent. 
+
+Inconsistency resolution:v versioning
+  a versioning system that can detect conflicts and reconcile conflicts.
+  a vector clock is a common technique to solve this problem: [server, version] pair
