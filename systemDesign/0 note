@@ -16,16 +16,19 @@
 		Eventual consistency:
 		is ideal where the application doesn't require any ordering guarantees. 
 		Examples include count of Retweets, Likes, or non-threaded comments.
+	        
+		every request receive a response, without the guarantee that it contains the most recent write
+		
+		Strong consistency may also suffer from reduced availability (during failures) because data can't replicate and commit in every region. 
+		Eventual consistency offers higher availability and better performance, but it's more difficult to program applications because data may not be consistent across all regions.Feb 27, 2023
 
 
-     availability: every request receive a response, without the guarantee that it contains the most recent write
-                   scalable: performance: low latency
+     availability: the system responds quickkly, even during failures.
+     scalability: be scaled to support large data set. 
      Low Latency
      partition tolerance: system continues to operate despite a number of messages being dropped/delayed.                
 
 
-Strong consistency may also suffer from reduced availability (during failures) because data can't replicate and commit in every region. 
-Eventual consistency offers higher availability and better performance, but it's more difficult to program applications because data may not be consistent across all regions.Feb 27, 2023
 
 
 2. capacity estimation
