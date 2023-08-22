@@ -106,7 +106,11 @@ CAP theorem
 	a. Catchup recovery: the worker (which got disconnected) can connect to the leader again and request all data changes that occur when the follower was disconnected.
  
 
-	No multi master: complicated
+	(4). Multi-Leader replication
+	one master in each data center.
+	Problem: two different users try to write different masters in different data center, which causes a conflict. 
+    		Conflict Detection(too late)
+ 		Conflict Avoidance: application can ensure that all writes for a particular record go through the same master (data center), then conflicts cannot occur.
 
 5. high level system design
 	user -> load balancer  -> tweet writer server  -> DB
