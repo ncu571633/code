@@ -30,12 +30,12 @@
 
 
 CAP theorem
-(1) consistency: all clients see the same data at the same time no matter which node they connect to.
-(2) availability: any client which requests data gets a response even if some of the nodes are down.
-(3) partition tolerance: a partition indicates a communication break between two nodes. Partition tolerance means the system continues to operate despite network partitions. 
-
-choose consistency over availability: block all write operations to avoid data inconsistency among DB servers, which makes system unavailable. 
-choose availability over consisntency: system keeps accepting reads, even it might return stale data.
+	(1) consistency: all clients see the same data at the same time no matter which node they connect to.
+	(2) availability: any client which requests data gets a response even if some of the nodes are down.
+	(3) partition tolerance: a partition indicates a communication break between two nodes. Partition tolerance means the system continues to operate despite network partitions. 
+	
+	choose consistency over availability: block all write operations to avoid data inconsistency among DB servers, which makes system unavailable. 
+	choose availability over consisntency: system keeps accepting reads, even it might return stale data.
 
 2. capacity estimation
 	how many daily active user, how many tweets
@@ -57,33 +57,52 @@ choose availability over consisntency: system keeps accepting reads, even it mig
 	readUserTimeLine(userToken, int pageSize, pageToken)
 
 4. data storage
-	table: user table, tweet table, follower table
-Structure:
-SQL databases are table based
-NoSQL databases can be document-oriented, key-value pairs, or graph structures.
-
-Scalability:
-	SQL databases scale vertically, usually on a single server
-	NoSQL databases offer horizontal scalability, meaning that more servers simply need to be added to increase their data load. 
-This means that NoSQL databases are better for modern cloud-based infrastructures, which offer distributed resources.
-
-When to use NoSQL:
-	Low latency;
-	unstructureed, have no relation data.
-	only need to serialize and deserialize data.
-	need to store massive amount of data.
-
-	high performance, particularly read performance: The way distributed NoSQL systems like Cassandra and Riak work means you can usually get very high read performance by adding more boxes. 
-Some go so far as to automatically replicate data across nodes to ensure you always have plenty of copies of your data to access.
-    	high availability (HA): Data replicates across nodes in a NoSQL system, so the failure of a single node does not necessarily result in data loss or downtime for your application. 
-This also means you can easily add or remove nodes from clusters without impacting availability.
-
-How to do db sharding:
-Range-based sharding: based on a range of values.
-	for example, name first alphabet A to I -> shard A, J to S -> shard B, T to Z: shard C...
-Hashed sharding: hash function(key) -> hash value
-Directory sharding: lookup table
-Geo sharding
+	(1) SQL or NoSQL
+		table: user table, tweet table, follower table
+	Structure:
+	SQL databases are table based
+	NoSQL databases can be document-oriented, key-value pairs, or graph structures.
+	
+	Scalability:
+		SQL databases scale vertically, usually on a single server
+		NoSQL databases offer horizontal scalability, meaning that more servers simply need to be added to increase their data load. 
+	This means that NoSQL databases are better for modern cloud-based infrastructures, which offer distributed resources.
+	
+	When to use NoSQL:
+		Low latency;
+		unstructureed, have no relation data.
+		only need to serialize and deserialize data.
+		need to store massive amount of data.
+	
+		high performance, particularly read performance: The way distributed NoSQL systems like Cassandra and Riak work means you can usually get very high read performance by adding more boxes. 
+	Some go so far as to automatically replicate data across nodes to ensure you always have plenty of copies of your data to access.
+	    	high availability (HA): Data replicates across nodes in a NoSQL system, so the failure of a single node does not necessarily result in data loss or downtime for your application. 
+	This also means you can easily add or remove nodes from clusters without impacting availability.
+	
+	(2) Sharding:
+	Range-based sharding: based on a range of values.
+		for example, name first alphabet A to I -> shard A, J to S -> shard B, T to Z: shard C...
+	Hashed sharding: hash function(key) -> hash value
+	Directory sharding: lookup table
+	Geo sharding
+	
+	(3) Replication
+	1 Master DB: supports write operations.
+	3 Worker DB: gets copies of the data from the master DB and only supports read operations.
+	All the data-modifying commands like inserts, delete or update must be sent to the master DB.
+	Most applications require a much higher ratio of reads to writes, the number of worker DB is larger than the number of master DB.
+	
+	Better performance: allows more queries to be processed in parallel. 
+	Reliability: 
+	High availability
+	
+	If one DB goes offline：
+	a. if only one worker DB is available and it goes offline, read operation will be directed to the master DB.
+	If multiple worker DB are available, read operations are redirected to other healthy workder DB.
+	b. if master DB goes offline, a worker DB will be promoted to be the new master. All DB operations will be temporarily executed on the new master DB. 
+	Complicated: since the data in a worker DB may not be up to date. The missing data needs to be updated by running data recovery scripts.
+	
+	No multi master: complicated
 
 5. high level system design
 	user -> load balancer  -> tweet writer server  -> DB
@@ -101,6 +120,11 @@ Geo sharding
 	 fanout on write:
 	    not efficient for user with huge amount of followers
 	    hybrid solution: hot user, not hot users
+
+
+	Stateless architecture: HTTP requests from users can be sent to any web servers, which fetch state data from a shared data store. 
+		State data is stored in a shared data store, and kept out of web servers. 
+		Use NoSQL for session data, as it is easy to scale. 
 
 6. scalability
 	identify potential bottleneck
