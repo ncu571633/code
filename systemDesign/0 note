@@ -112,7 +112,16 @@ CAP theorem
     		Conflict Detection(too late)
  		Conflict Avoidance: application can ensure that all writes for a particular record go through the same master (data center), then conflicts cannot occur.
 
-5. high level system design
+5. Message queue
+	supports async communication, servers as a buffer and distributes async requests. 
+	producers/consumers.
+
+	advantage:
+		decoupling makes the message queue a preferred architecture for building a scalable and reliable application, producer and consumer can be scaled independently.
+		server publish processing jobs to the message queue. 
+
+
+6. high level system design
 	user -> load balancer  -> tweet writer server  -> DB
 	                       -> timeline service     -> cache   (need low latency, read cache join together on the fly)
 	                       
