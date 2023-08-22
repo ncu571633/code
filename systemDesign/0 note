@@ -155,7 +155,14 @@ pros: horizontal scaling
     	cons: need to query all shards in order to generate user/home timeline
 	
 	
-
+Elasticsearch: a distributed search engine built on Apache Lucene
+	1. indexing
+	put
+	2. query:
+	get
+	3. "AND", "OR" are supported.
+	4. Ranking: bm25
+	estimate the relevance of documents to a given search query
 
 
 
