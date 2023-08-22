@@ -99,9 +99,13 @@ CAP theorem
 	If one DB goes offline：
 	a. if only one worker DB is available and it goes offline, read operation will be directed to the master DB.
 	If multiple worker DB are available, read operations are redirected to other healthy workder DB.
-	b. if master DB goes offline, a worker DB will be promoted to be the new master. All DB operations will be temporarily executed on the new master DB. 
+	b. if master DB goes offline, a worker DB will be promoted to be the new master(voting algorithm). All DB operations will be temporarily executed on the new master DB. 
 	Complicated: since the data in a worker DB may not be up to date. The missing data needs to be updated by running data recovery scripts.
-	
+
+	If the DB goes back online:
+	a. Catchup recovery: the worker (which got disconnected) can connect to the leader again and request all data changes that occur when the follower was disconnected.
+ 
+
 	No multi master: complicated
 
 5. high level system design
