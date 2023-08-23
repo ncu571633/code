@@ -1,9 +1,5 @@
+Ask ChatGPT format:
 can you give me an example for the interview behavior question: as a software engineer, tell me a time when you didn't meet the expectation
-“In my previous job, I was tasked with developing a new feature for our company’s website. 
-I was given a deadline of two weeks to complete the feature. However, I underestimated the complexity of the task and ended up taking three weeks to complete it. 
-I realized that I had not communicated my progress effectively to my manager and had not asked for help when I needed it. 
-After this experience, I learned the importance of setting realistic expectations and communicating effectively with my team members.”
-
 
 
 Senior Software Engineers are technical leaders and problem solvers who design, implement, test, rollout, and manage software services. 
@@ -11,7 +7,6 @@ They turn business requirements into simple, elegant, and optimal solutions at l
 participate and lead team discussions about architectural design, and ship code to millions of users around the world.
 
 Software Engineers (SWE) work as part of a development team to implement solutions on impactful projects. 
-
 
 
 
@@ -32,17 +27,25 @@ b)        Tell me a time when you made a mistake
 c)        Tell me a time when you received a negative feedback
 d)        Tell me a time when you showed resilience
 e)        Tell me a time when you didn't meet the expectation
-“I was working on a project where I was tasked with creating a new feature for our company’s website. 
-I was given a deadline of two weeks to complete the project. 
-However, I underestimated the amount of time it would take me to complete the project and ended up missing the deadline by a week. 
-I learned that it’s important to set realistic expectations and communicate any issues or delays with my team members. 
-Moving forward, I made sure to communicate any issues or delays with my team members and set realistic expectations for myself.”
+
+Communication: also ask for help if blocked
+  “I was working on a project where I was tasked with creating a new feature for our service. 
+  I was given a deadline of two weeks to complete the project. 
+  However, I underestimated the amount of time it would take me to complete the project and ended up missing the deadline by a week. 
+  I learned that it’s important to set realistic expectations and communicate any issues or delays with my team members. 
+  Moving forward, I made sure to communicate any issues or delays with my team members and set realistic expectations for myself.”
+
+Priority:
+  Finish the task first, improve performance
 
 f)        Tell me a time when you took a risk / without approval then you failed
-I was working on a project where I was tasked to improve the software performance. 
-I had an idea that I thought would be great for the feature and decided to implement it without approval from my manager. 
-However, the feature didn’t work as expected and ended up causing issues. 
-I learned that it’s important to communicate any ideas or changes with my manager and team members before implementing them. 
+
+Communicate any ideas or changes with my manager and team members before implementing them
+Story:
+  I was working on a project where I was tasked to improve the software performance. 
+  I had an idea that I thought would be great for the feature and decided to implement it without approval from my manager. 
+  However, the feature didn’t work as expected and ended up causing issues. 
+  I learned that it’s important to communicate any ideas or changes with my manager and team members before implementing them. 
 
 
 g)        Tell me a goal you didn't achieve
