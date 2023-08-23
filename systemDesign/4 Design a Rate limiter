@@ -49,4 +49,22 @@ High level architecture:
     Redis command: INCR, EXPIRE
 
   client -> rate limiter middleware -> Redis
-                                    -> API servers
+                                    -> (success) API servers
+                                    -> cached rules <- workers -> rules on the disk
+
+Rate limiting Rules
+  a configuration file and saved on disk.
+
+Exceeding the rate limit:
+  return HTTP response code 429 to the client.
+  Depends on the use case, we may enqueue the request to be processed later. 
+
+Race condition:
+  sorted sets data structure in Redis
+
+Synchronization issue:
+  To support millions of users, one rate limiter server is not enough. 
+  Use multiple rate limiter servers, synchronization is required. 
+  Web tier is stateless, clients can send requests to different rate limiter. Client 1 -> rate limiter 1, also client 1 -> rate limiter 2. (Share counter)
+  ONe possible solution is to use sticky sessions that allow a client to send traffic to the same rate limiter (not flexible/scalable)
+  Use redis: centralized data store. 
