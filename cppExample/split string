@@ -21,8 +21,28 @@ int main()
 
     string a("1, 16, 23");
     istringstream ss(a);
-    
     std::string token;
     while(std::getline(ss, token, ',')) {
         std::cout << atoi(token.c_str()) << '\n';
     }
+
+
+#include <iostream>
+#include <cstring>
+#include <string>
+
+using namespace std;
+
+int main ()
+{
+  string str = "- This, a sample string.";
+  string delim = " ,.-";
+  char * pch = strtok (str.data(), delim.data()); // c++ 17
+  // char * pch = strtok (&str[0], &delim[0]);
+  while (pch != NULL)
+  {
+    cout << pch << endl;;
+    pch = strtok (NULL, " ,.-");
+  }
+  return 0;
+}
