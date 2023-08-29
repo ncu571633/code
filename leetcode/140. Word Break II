@@ -10,52 +10,120 @@ A solution is ["cats and dog", "cat sand dog"].
 
 class Solution {
 public:
-    void wordBreak(string s, unordered_set<string> wordDict, int start, string out, vector<string>& ret) {
+    void wordBreak(string s, unordered_set<string> wordDict, int start, string str, vector<string>& ret) {
         if(start >= s.size()) {
-            out.pop_back();
-            ret.push_back(out);
+            str.pop_back();
+            ret.push_back(str);
             return ;
         }
-        for(int i=start; i<s.size(); i++) {
+        
+        for(int i=start; i<s.size(); i++) 
+        {
             string word = s.substr(start, i-start+1);
-            if(wordDict.count(word)) {
-                wordBreak(s, wordDict, i+1, out+word+string(" "), ret);
+            if(wordDict.count(word)) 
+            {
+                wordBreak(s, wordDict, i+1, str+word+string(" "), ret);
             }
         }
     } 
     vector<string> wordBreak(string s, vector<string>& wordDict) {
         vector<string> ret;
-        string out;
-        wordBreak(s, unordered_set<string>(wordDict.begin(), wordDict.end()), 0, out, ret);
+        string str;
+        wordBreak(s, unordered_set<string>(wordDict.begin(), wordDict.end()), 0, str, ret);
         return ret;
     }
 };
 
 
+
+class TrieNode {
+public:
+    map<char, TrieNode*> next;
+    bool isWord = false;
+};
+
+class Trie {
+public:
+    Trie() 
+    {
+        root = new TrieNode();
+    }
+
+    Trie(vector<string>& words)
+    {
+        root = new TrieNode();
+        for(int i=0; i<words.size(); i++)
+        {
+            insert(words[i]);
+        }
+    }
+
+    void insert(string word) 
+    {
+        TrieNode* nextNode = root;
+        for(int i=0; i<word.size(); i++) 
+        {
+            char c = word[i];
+            if(nextNode->next[c] == nullptr)
+                nextNode->next[c] = new TrieNode();
+            nextNode = nextNode->next[word[i]];
+        }
+        nextNode->isWord = true;
+    }
+
+    bool search(string word) 
+    {
+        return startsWith(word, true);
+    }
+
+    // Returns if there is any word in the trie
+    // that starts with the given prefix.
+    bool startsWith(string prefix, bool isWord=false) 
+    {
+        TrieNode* nextNode = root;
+        for(int i=0; i<prefix.size(); i++) 
+        {
+            char c = prefix[i];
+            if(nextNode->next[c] == nullptr)
+                return false;
+            nextNode = nextNode->next[c];
+        }
+        if(isWord)
+            return nextNode->isWord;
+        else
+            return true;        
+    }
+
+private:
+    TrieNode* root;
+};
+
 class Solution {
 public:
-    void wordBreak(string s, unordered_set<string> wordDict, int start, string out, vector<string>& ret, vector<bool>& possible) {
-        if(start >= s.size()) {
-            out.pop_back();
-            ret.push_back(out);
+    void wordBreak(string s, Trie* wordDict, int start, string str, vector<string>& ret) {
+        if(start >= s.size())
+        {
+            str.pop_back();
+            ret.push_back(str);
             return ;
         }
-        for(int i=start; i<s.size(); i++) {
+
+        if(wordDict->startsWith(string(1, s[0]), false) == false)
+            return;
+
+        for(int i=start; i<s.size(); i++) 
+        {
             string word = s.substr(start, i-start+1);
-            if(wordDict.count(word) && possible[i+1]) {
-                out = out+word+string(" ");
-                int oldSize = ret.size();
-                wordBreak(s, wordDict, i+1, out, ret, possible);
-                if(ret.size() == oldSize) possible[i+1] = false;
-                out.resize(out.size()-word.size()-1);
+            if(wordDict->search(word)) 
+            {
+                wordBreak(s, wordDict, i+1, str+word+string(" "), ret);
             }
         }
     } 
     vector<string> wordBreak(string s, vector<string>& wordDict) {
         vector<string> ret;
-        string out;
-        vector<bool> possible(s.size() + 1, true);
-        wordBreak(s, unordered_set<string>(wordDict.begin(), wordDict.end()), 0, out, ret, possible);
+        string str;
+        wordBreak(s, new Trie(wordDict), 0, str, ret);
         return ret;
     }
 };
