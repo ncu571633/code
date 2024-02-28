@@ -100,11 +100,15 @@ avoiding code duplication, and providing a strong exception guarantee.
 	https://en.wikipedia.org/wiki/C++11
 
 *****************************************************************************************************************************************************************************
-# auto and decltype
+# Type deduction: automatic detection of the data type of an expression 
+1. function template
+	template<type T>
+	void f(paramType param)
+A call like this: f(expr).
+Compiler use expr to deduct two types: T and paramType. They are frequently different, as paramType often contains const/reference. void f(const int& param)
 
-Type deduction: automatic detection of the data type of an expression 
-
-decltype (compile time):
+2. auto 
+3. decltype (compile time):
     If e is the name of a variable, i.e. an "id-expression", then the resulting type is the type of the variable.
     Otherwise, if e evaluates to an lvalue of type T, then the resulting type is T &, and if e evaluates to an rvalue of type T, then the resulting type is T.
 
