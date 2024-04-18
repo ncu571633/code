@@ -74,6 +74,31 @@ A piece of code is thread-safe if it only manipulates shared data structures in 
 avoiding race condition
 
 
+std::lock_guard:
+    exclusive ownership of a mutex for a scoped duration
+    The lock is acquired upon construction and automatically released when the std::lock_guard object goes out of scope
+    It does not support manual unlocking or relocking of the mutex.
+
+std::unique_lock
+    supports both exclusive ownership and shared ownership of a mutex
+    Allows manual unlocking, relocking, and transferring of ownership between different scopes or threads.
+    Provides advanced functionalities like Deferred locking, Timeout locks, condition variables, Transfer of ownership (being moveable), and deadlock avoidance.
+
+std::shared_lock
+    designed for shared ownership of a mutex, enabling multiple readers.
+    Allows multiple threads to acquire the lock concurrently for shared access.
+    Similar to std::lock_guard, it does not support manual unlocking or relocking.
+
+std::scoped_lock is for the simple case of wanting to lock some number of mutex objects in a deadlock-free way. 
+    Locking a single mutex is just a special case of locking multiple ones
+
+Difference:
+lock_guard and unique_lock are pretty much the same thing; lock_guard is a restricted version with a limited interface.
+unique_lock calls lock() on the mutex. shared_lock calls shared_lock().
+
+lock_guard if you need to lock exactly 1 mutex for an entire scope.
+scoped_lock if you need to lock a number of mutexes that is not exactly 1.
+unique_lock if you need to unlock within the scope of the block (which includes use with a condition_variable).
 
 
 
@@ -95,5 +120,7 @@ You signal the condition variable, waking thread B.
 Thread A gets scheduled, does the first job.
 Thread A finds the queue non-empty and does the second job.
 Thread B gets scheduled, having been woken, but finds the queue still empty.
+
+
 
 
