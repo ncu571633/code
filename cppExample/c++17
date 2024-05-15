@@ -23,11 +23,17 @@ struct MyClass
 };
 
 *****************************************************************************************************************************
-std::string_view
+std::string_view：  the pointer to the character sequence and their length
 std::string_view is faster than const std::string&
 1. string: a memory allocation
 2. work with substrings without a copy
 3. No ownership. string_view is a pointer to someone else's memory
+*****************************************************************************************************************************
+std::filesystem
+
+filesystem::path
+exists
+filesystem::create_directory
 
 *****************************************************************************************************************************
 std::optional: return int value, may not be valid. set this value as -1. or have two variable, one for value, another to  identify whether it is valid. 
@@ -66,28 +72,34 @@ std::any: replace void*, std::shared_ptr<void>
     assert(a1.type() == typeid(int));
 
     assert(std::any_cast<int&>(a1) == 42);
-    
+
+std::any : a container with an arbitrary type. std::any requires, that its values must be copyable.
+    std::vector<std::any> anyVec(true,2017,std::string("test"),3.14,MyClass());
+
 *****************************************************************************************************************************
 std::variant  replance union: You don’t have a way to know what’s the currently used type and what’s more they won’t call destructors of the underlying types
     std::variant<int, float, std::string> intFloatString;
     static_assert(std::variant_size_v<decltype(intFloatString)> == 3);
     
-    #include <iostream>
-    #include <variant>
 
-    struct Fluid { };
-    struct LightItem { };
-    struct HeavyItem { };
-    struct FragileItem { };
+#include <variant>
+#include <string>
+ 
+int main(){
 
-    struct VisitPackage {
-        void operator()(Fluid& )       { std::cout << "fluid\n"; }
-        void operator()(LightItem& )   { std::cout << "light item\n"; }
-        void operator()(HeavyItem& )   { std::cout << "heavy item\n"; }
-        void operator()(FragileItem& ) { std::cout << "fragile\n"; }
-    };
+  std::variant<int, float> v, w;
+  v = 12;                              // v contains int
+  int i = std::get<int>(v);
+  w = std::get<int>(v);
+  w = std::get<0>(v);                  // same effect as the previous line
+  w = v;                               // same effect as the previous line
+ 
+  //  std::get<double>(v);             // error: no double in [int, float]
+  //  std::get<3>(v);                  // error: valid index values are 0 and 1
+ 
+  try{
+    std::get<float>(w);                // w contains int, not float: will throw
+  }
+  catch (std::bad_variant_access&) {}
 
-    int main() {
-    std::variant<Fluid, LightItem, HeavyItem, FragileItem> package { 
-        FragileItem()
-    };
+}
