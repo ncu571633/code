@@ -531,7 +531,12 @@ cast:
 
 *****************************************************************************************************************************************************************************
 Smart pointer:
-    1. auto_ptr: cannot be used in STL containers because it has a copy constructor that does not meet requirements of container CopyConstructible. 
+    1. auto_ptr: cannot be used in STL containers because it has a copy constructor 
+that does not meet requirements of container CopyConstructible. 
+auto_ptr transfers ownership when it's assigned. 
+unique_ptr also transfers ownership, but thanks to codification of move semantics and the magic of rvalue references, 
+it can do so considerably more naturally. It also "fits" with the rest of the standard library considerably better 
+If you copy a std::auto_ptr, a move operation will occur under the hood
 
     2. unique_ptr: smart pointer for exclusive ownership: at most one unique_ptr pointing at any one resource.
         advantage:
