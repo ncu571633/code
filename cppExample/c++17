@@ -35,7 +35,8 @@ filesystem::path
 exists
 filesystem::create_directory
 *****************************************************************************************************************************
-Fold Expressions: reduce or “fold” a parameter pack over a binary operator
+Fold Expressions: reduce or “fold” a parameter pack over a binary operator 
+“+ – * / % ^ & | = < > << >> += -= *= /= %= ^= &= |= <<= >>= == != <= >= && || , .* ->*”
 #include <iostream> 
 #include <vector> 
 
