@@ -34,6 +34,46 @@ std::filesystem
 filesystem::path
 exists
 filesystem::create_directory
+*****************************************************************************************************************************
+Fold Expressions: reduce or “fold” a parameter pack over a binary operator
+#include <iostream> 
+template <typename... Args> 
+int all1(Args... args) 
+{
+    // Unary Left Fold: (... Operator Parameter)
+    return (... * args); 
+}
+
+template <typename... Args> 
+int all2(Args... args) 
+{
+    // Unary Right Fold: (Parameter Operator ...)
+    return (args * ...); 
+}
+
+template<typename... Args> 
+int all3(Args... args) 
+{
+    // Binary Right Fold: (Parameter Operator ... Operator init)
+    return (args * ... * 2);
+} 
+
+template<typename... Args> 
+int all4(Args... args) 
+{
+    // Binary Left Fold: (init Operator ... Operator Parameter)
+    return (2 * ... * args);
+} 
+
+int main() 
+{ 
+    std::cout << "Result: " << all1(1, 2, 3, 4)  << std::endl; 
+    std::cout << "Result: " << all2(1, 2, 3, 4)  << std::endl; 
+    std::cout << "Result: " << all3(1, 2, 3, 4)  << std::endl; 
+    std::cout << "Result: " << all4(1, 2, 3, 4)  << std::endl; 
+    
+    return 0; 
+}
 
 *****************************************************************************************************************************
 std::optional: return int value, may not be valid. set this value as -1. or have two variable, one for value, another to  identify whether it is valid. 
