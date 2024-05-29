@@ -37,6 +37,8 @@ filesystem::create_directory
 *****************************************************************************************************************************
 Fold Expressions: reduce or “fold” a parameter pack over a binary operator
 #include <iostream> 
+#include <vector> 
+
 template <typename... Args> 
 int all1(Args... args) 
 {
@@ -65,13 +67,32 @@ int all4(Args... args)
     return (2 * ... * args);
 } 
 
+template<typename... Args>
+void printer(Args&&... args)
+{
+    (std::cout << ... << args) << '\n';
+}
+
+template<typename T, typename... Args>
+void push_back_vec(std::vector<T>& v, Args&&... args)
+{
+    (v.push_back(std::forward<Args>(args)), ...);
+    // (..., v.push_back(std::forward<Args>(args)));
+}
+
 int main() 
 { 
     std::cout << "Result: " << all1(1, 2, 3, 4)  << std::endl; 
     std::cout << "Result: " << all2(1, 2, 3, 4)  << std::endl; 
     std::cout << "Result: " << all3(1, 2, 3, 4)  << std::endl; 
     std::cout << "Result: " << all4(1, 2, 3, 4)  << std::endl; 
+    printer(1, 2, 3, "abc");
     
+    std::vector<int> v;
+    push_back_vec(v, 6, 2, 45, 12);
+    for (int i : v)
+        std::cout << i << ' ';
+
     return 0; 
 }
 
