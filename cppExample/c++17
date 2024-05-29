@@ -98,6 +98,63 @@ int main()
 }
 
 *****************************************************************************************************************************
+constexpr if it enables it to compile source code conditionally.
+template <typename T>
+auto get_value(T t) {
+    if constexpr (std::is_pointer_v<T>)
+        return *t; // deduces return type to int for T = int*
+    else
+        return t;  // deduces return type to int for T = int
+}
+*****************************************************************************************************************************
+Initializers in if and switch statements: It limits the scope of length to the if alone
+
+std::map<int,std::string> myMap;
+if (auto result = myMap.insert(value); result.second){
+    useResult(result.first);  
+    // ...
+} 
+else{
+    // ...
+} // result is automatically destroyed
+
+if(std::lock_guard _(mtx); guarded_thing.is_ready()) {
+}
+
+*****************************************************************************************************************************
+Structured binding declarations：bind a std::tuple or a struct directly to variables
+std::map<int,std::string> myMap;
+if (auto [iter, succeeded] = myMap.insert(value); succeeded) {
+    useIter(iter);  
+    // ...
+}
+else{
+    // ...
+} iter and succeded are automatically be destroyed
+
+*****************************************************************************************************************************
+Return Value Optimisation：compiler is allowed to remove unnecessary copy operations
+
+MyType func(){
+  return MyType{};         // no copy with C++17
+}
+MyType myType = func();    // no copy with C++17
+*****************************************************************************************************************************
+Automatic type deduction of non-type template parameters
+template <auto N>
+class MyClass{
+  ...
+};
+
+template <int N> 
+class MyClass<N> {
+  ...
+};
+
+
+MyClass<'x'> myClass2;     // Primary template for char
+MyClass<2017>  myClass1;   // Partial specialisation for int
+*****************************************************************************************************************************
 std::optional: return int value, may not be valid. set this value as -1. or have two variable, one for value, another to  identify whether it is valid. 
     “value-or-not-value”, or “possibly an answer”, or “object with delayed initialization”
 
