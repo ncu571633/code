@@ -40,3 +40,46 @@ public:
         return count;
     }
 };
+
+
+class Solution {
+public:
+    void numIslands(vector<vector<char>>& grid, vector<vector<int>>& visited, int i, int j)
+    {
+        if ( i<0 || i>=visited.size() || j<0 || j>=visited[0].size())
+        {
+            return;
+        }
+
+        if (visited[i][j] == 1 || grid[i][j] == '0')
+        {
+            return ;
+        }
+
+        visited[i][j] = 1;
+        numIslands(grid, visited, i-1, j);
+        numIslands(grid, visited, i, j-1);
+        numIslands(grid, visited, i+1, j);
+        numIslands(grid, visited, i, j+1);
+    }
+
+    int numIslands(vector<vector<char>>& grid) {
+        int m = grid.size(), n = grid[0].size();
+        vector<vector<int>> visited(m, std::vector<int>(n, 0));
+
+        int ret = 0;
+        for(int i=0; i<m; i++)
+        {
+            for(int j=0; j<n; j++)
+            {
+                if (grid[i][j] == '1' && visited[i][j] == 0)
+                {
+                    ret++;
+                    numIslands(grid, visited, i, j);
+                }
+            }
+        }
+
+        return ret;
+    }
+};
