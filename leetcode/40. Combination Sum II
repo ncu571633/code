@@ -26,7 +26,7 @@ public:
             return;
         }
         for(int i=start; i<candidates.size(); i++) {
-            if(target-candidates[i]<0)
+            if(target < candidates[i])
                 continue;
             v.push_back(candidates[i]);
             combinationSum2(candidates, target-candidates[i], s, v, i+1);
