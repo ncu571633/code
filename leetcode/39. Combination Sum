@@ -18,26 +18,36 @@ A solution set is:
 
 class Solution {
 public:
-    void combinationSum(vector<int>& candidates, int target, int start, vector<vector<int>>& m, vector<int>&v) {
-        if(target==0) {
-            m.push_back(v);
+    vector<vector<int>> combinationSum(vector<int>& candidates, int target) 
+    {
+        vector<vector<int>> ret;
+        if (candidates.size() == 0)
+            return ret;
+
+        sort(candidates.begin(), candidates.end());
+        vector<int> v;
+        helper(candidates, target, 0, ret, v, 0);
+        return ret;
+    }
+
+    void helper(vector<int>& candidates, int target, int start, vector<vector<int>>& ret, vector<int>& v, int sum)
+    {
+        if (sum > target)
+        {
+            return ;
+        }
+
+        if (sum == target)
+        {
+            ret.push_back(v);
             return;
         }
-        for(int i=start; i<candidates.size(); i++) {
-            if(target < candidates[i]) 
-                 continue;
-            if(i>start && candidates[i]==candidates[i-1]) continue;
+
+        for(int i=start; i<candidates.size(); i++)
+        {
             v.push_back(candidates[i]);
-            combinationSum(candidates, target-candidates[i], i, m, v);
+            helper(candidates, target, i, ret, v, sum + candidates[i]);
             v.pop_back();
         }
-    }
-    vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
-        vector<vector<int>> m;
-        vector<int>v;
-        if(candidates.empty())  return m;
-        sort(candidates.begin(), candidates.end());
-        combinationSum(candidates, target, 0, m, v);
-        return m;
     }
 };
