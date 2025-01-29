@@ -36,6 +36,7 @@ Constraints:
         int left = max(helper(node->left, res), 0);
         int right = max(helper(node->right, res), 0);
         res = max(res, left + right + node->val);
-        // 返回值的定义是以当前结点为终点的 path 之和，所以只能取 left 和 right 中较大的那个值，而不是两个都要
+
+        // return value: max path sum from nodes, can only pick left or right, but not both
         return max(left, right) + node->val;
     }
