@@ -1,3 +1,15 @@
+min heap:
+template <class T>
+struct greater {
+    bool operator()(const T& lhs, const T& rhs) const {
+        return lhs > rhs;
+    }
+};
+
+priority_queue <int, vector<int>, std::greater<int>> gq;
+
+
+
 class Solution {
 public:
     static bool sortPairs(vector<int> v1, vector<int> v2)
