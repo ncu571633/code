@@ -5,7 +5,7 @@ set(key, value) - Set or insert the value if the key is not already present. Whe
 
 class LRUCache{
 private:
-    map<int, list<pair<int, int>>::iterator> m;
+    map<int, list<pair<int, int>>::iterator> m;   // have to be a pair. line 31
     list<pair<int, int>> l;
     int size;
 public:
