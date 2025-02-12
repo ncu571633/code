@@ -29,26 +29,22 @@ Constraints:
  */
 class Solution {
 public:
-    int helper(TreeNode* root, int& ret, int parent)
-    {
-        if (!root)
-            return 0;
-
-        // longest univalue from parent node
-        int left = helper(root->left, ret, root->val);
-        int right = helper(root->right, ret, root->val);
-        ret = max(ret, left + right);
-        if (root->val == parent)
-            return max(left, right) + 1;
-        return 0;
-    }
-
     int longestUnivaluePath(TreeNode* root) {
-        if (!root)
+        int res = 0;
+        helper(root, res);
+        return res;
+    }
+    int helper(TreeNode* node, int& res) {
+        if (!node) 
             return 0;
-
-        int ret = 0;       
-        helper(root, ret, root->val);
-        return ret;
+        
+        // return value: longest path doesn't inlude root
+        // res: longest path include root
+        int left = helper(node->left, res);
+        int right = helper(node->right, res);
+        left = (node->left && node->val == node->left->val) ? left + 1 : 0;
+        right = (node->right && node->val == node->right->val) ? right + 1 : 0;
+        res = max(res, left + right);
+        return max(left, right);
     }
 };
