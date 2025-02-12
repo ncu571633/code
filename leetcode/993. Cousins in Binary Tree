@@ -72,3 +72,71 @@ public:
         return false;
     }
 };
+
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    void helper(TreeNode* root, int x, int y, 
+        TreeNode*& pX, TreeNode*& pY, 
+        int depth, int& depthX, int& depthY)
+    {
+        if (!root)
+        {
+            return;
+        }
+
+        helper(root->left, x, y, pX, pY, depth+1, depthX, depthY);
+        if (pX && pY)
+        {
+            return;
+        }
+        
+        if (root->left)
+        {
+            if (root->left->val == x)
+                pX = root, depthX = depth;
+            if (root->left->val == y)
+                pY = root, depthY = depth;
+        }
+        
+        if (root->right)
+        {
+            if (root->right->val == x)
+                pX = root, depthX = depth;
+            if (root->right->val == y)
+                pY = root, depthY = depth;
+        }
+
+        if (pX && pY)
+        {
+            return;
+        }
+
+        helper(root->right, x, y, pX, pY, depth+1, depthX, depthY);
+    }
+
+    bool isCousins(TreeNode* root, int x, int y) 
+    {
+        TreeNode* pX = nullptr, *pY = nullptr;
+        int depthX = 0, depthY = 0;
+        helper(root, x, y, pX, pY, 0, depthX, depthY);
+        if (pX && pY)
+        {
+            if (pX != pY && depthX == depthY)
+                return true;
+        }
+
+        return false;
+    }
+};
