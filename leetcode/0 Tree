@@ -1,2 +1,69 @@
-1. BST
+1. BST - Level order traversal 
+    vector<vector<int>> levelOrder(TreeNode* root) 
+    {
+        if (!root)
+          return {};
+        vector<vector<int>> res;
+        queue<TreeNode*> q{{root}};
+        while (!q.empty()) 
+        {
+            vector<int> oneLevel;
+            for (int i = q.size(); i > 0; --i) 
+            {
+                TreeNode *t = q.front(); 
+                q.pop();
+                oneLevel.push_back(t->val);
+                if (t->left)
+                  q.push(t->left);
+                if (t->right)
+                  q.push(t->right);
+            }
+            res.push_back(oneLevel);
+        }
+        return res;
+    }
 
+2. In-order traversal
+minimum absolute difference between the values of any two different nodes in a BST
+class Solution {
+public:
+    void helper(TreeNode* root, int& minVal, TreeNode*& pre)
+    {
+        if (!root)
+            return ;
+        
+        helper(root->left, minVal, pre);
+
+        if(pre)
+        {
+            minVal = min(minVal, abs(pre->val - root->val));
+        }
+        pre = root;
+        
+        helper(root->right, minVal, pre);
+    }
+
+    int getMinimumDifference(TreeNode* root) {
+        int minVal = INT_MAX;
+        TreeNode* pre = nullptr;
+        helper(root, minVal, pre);
+        return minVal;
+    }
+};
+
+3. 求解不需要经过root 的题目
+如124. Binary Tree Maximum Path Sum
+// 递归函数返回值就可以定义为以当前结点为根结点，到叶节点的最大路径之和  max path from root to leaf
+// 全局路径最大值放在参数中，用结果 res 来表示   
+    int helper(TreeNode* node, int& res) 
+    {
+        if (!node) 
+          return 0;
+        int left = max(helper(root->left, ret), 0); 
+        int right = max(helper(root->right, ret), 0); 
+        ret = max(ret, left + right + root->val);
+        ret = max(ret, max(left, right) + root->val);
+
+        // return value: max path sum from nodes, can only pick left or right, but not both
+        return max(left, right) + node->val;
+    }
