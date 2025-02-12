@@ -102,6 +102,7 @@ public:
     }
 
 private:
+    // o(1) complexity
     unordered_map<int, pair<int, int>> m;   // key -> value, frequency
     unordered_map<int, list<int>> freq;     // frequency -> key list
     unordered_map<int, list<int>::iterator> iter; // key -> iterator
