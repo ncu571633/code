@@ -53,8 +53,9 @@ public:
 
 3. 求解不需要经过root 的题目
 如124. Binary Tree Maximum Path Sum
-// 递归函数返回值就可以定义为以当前结点为根结点，到叶节点的最大路径之和  max path from root to leaf
-// 全局路径最大值放在参数中，用结果 res 来表示   
+// 需要两个值：一个经过root，一个没有经过
+// 递归函数返回值：以当前结点为根结点，到叶节点的最大路径之和  max path from root to leaf
+// 全局路径最大值：放在参数中，用结果 res 来表示   
     int helper(TreeNode* node, int& res) 
     {
         if (!node) 
@@ -66,4 +67,20 @@ public:
 
         // return value: max path sum from nodes, can only pick left or right, but not both
         return max(left, right) + node->val;
+    }
+
+
+687. Longest Univalue Path
+    int helper(TreeNode* node, int& res) {
+        if (!node) 
+            return 0;
+        
+        // return value: longest path doesn't inlude root
+        // res: longest path include root
+        int left = helper(node->left, res);
+        int right = helper(node->right, res);
+        left = (node->left && node->val == node->left->val) ? left + 1 : 0;
+        right = (node->right && node->val == node->right->val) ? right + 1 : 0;
+        res = max(res, left + right);
+        return max(left, right);
     }
