@@ -1,14 +1,19 @@
 
 Moving Average
 1. A simple moving average (SMA) is a calculation that takes the arithmetic mean of a given set of prices over a specific number of days in the past.
+calculates the average price during a specified period of time
+50日均线: 过去5天的收盘价是100美元、90美元、95美元、105美元、100美元，那么相加起来除以5就是这5天的均价：98美元。50日均线也是如此计算的
+https://www.investopedia.com/terms/s/sma.asp
+
 2. An exponential moving average (EMA) is a weighted average that gives greater importance to the price of a stock in more recent days, 
-making it an indicator that is more responsive to new information.
+making it an indicator that is more responsive to new information. 加权移动平均线, 最近出现的价格更多的权重
+https://www.investopedia.com/terms/e/ema.asp
 
 Moving average convergence/divergence (MACD) 收敛与发散
 3 parts:
-1. MACD: calculated by subtracting the long-term EMA (26 periods) from the short-term EMA (12 periods). 
+1. MACD: 12日移动平均线(EMA) - 26日移动平均线(EMA)
 2. 信号线，即MACD的9天均线。
-3. MACD 直方图，它是 MACD 线和信号线之间的差异。
+3. MACD 直方图，MACD线-信号线。
 Usage:
 当 MACD 线从信号线的下方向上方交叉时，就会识别出看涨信号。
 当 MACD 线从信号线的上方穿过到下方时，就会识别出看跌信号。
