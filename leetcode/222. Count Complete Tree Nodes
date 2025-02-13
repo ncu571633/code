@@ -17,19 +17,7 @@ public:
     int countNodes(TreeNode* root) {
         if(!root)
             return 0;
-        int height1 = 0, height2 = 0;;
-        TreeNode* t = root;
-        while(t) {
-            height1++;
-            t = t->left;
-        }
-        t = root;
-        while(t) {
-            height2++;
-            t=t->right;
-        }
-        if(height1==height2)
-            return pow(2, height1)-1;
+
         return 1 + countNodes(root->left) + countNodes(root->right);
     }
 };
