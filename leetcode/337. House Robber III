@@ -40,49 +40,17 @@ Constraints:
  */
 class Solution {
 public:
-    int rob(TreeNode* root, bool skip)
+    int helper(TreeNode* root, bool skip)
     {
         if (!root)
             return 0;
-        int ret = rob(root->left, !skip) + rob(root->right, !skip);
-        if (!skip)
-            ret += root->val;
-        return ret;
+        
+        if (skip)
+            return helper(root->left, 0) + helper(root->right, 0);
+        return root->val + helper(root->left, 1) + helper(root->right, 1);
     }
 
     int rob(TreeNode* root) {
-        if (!root)
-            return 0;
-        return max(root->val + rob(root->left, true) + rob(root->right, true), 
-            rob(root->left, false) + rob(root->right, false));
-    }
-};
-
-can't do level by level calculation:
-for example:
-    4
-  1  2
- 1 
-3
-
-
-class Solution {
-public:
-    int rob(TreeNode* root, int& l, int& r)
-    {
-        if (!root)
-            return 0;
-        int ll=0, lr=0, rl=0, rr=0;
-        l = rob(root->left, ll, lr);
-        r = rob(root->right, rl, rr);
-        return max(root->val+ll+lr+rl+rr, 
-            l+r);
-    }
-
-    int rob(TreeNode* root) {
-        if (!root)
-            return 0;
-        int l = 0, r = 0;
-        return rob(root, l, r);
+        return max(helper(root, 0), helper(root, 1));
     }
 };
