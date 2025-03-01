@@ -1,0 +1,36 @@
+You are given the root of a binary tree. We install cameras on the tree nodes where each camera at a node can monitor its parent, itself, and its immediate children.
+Return the minimum number of cameras needed to monitor all nodes of the tree.
+
+Example 1:
+Input: root = [0,0,null,0,0]
+Output:
+Explanation: One camera is enough to monitor all nodes if placed as shown.
+
+Example 2:
+Input: root = [0,0,null,0,null,0,null,null,0]
+Output: 2
+Explanation: At least two cameras are needed to monitor all nodes of the tree. The above image shows one of the valid configurations of camera placement.
+
+Constraints:
+    The number of nodes in the tree is in the range [1, 1000].
+
+贪心法：greedy 
+
+class Solution {
+public:
+    int minCameraCover(TreeNode* root) {
+        int res = 0;
+        return (helper(root, res) < 1 ? 1 : 0) + res;
+    }
+
+    // Return 0 if leaf, 1 if parent of leaf with camera on this node, 2 if covered without camera on this node.
+    int helper(TreeNode* node, int& res) {
+        if (!node) return 2;
+        int left = helper(node->left, res), right = helper(node->right, res);
+        if (left == 0 || right == 0) {
+            ++res;
+            return 1;
+        }
+        return (left == 1 || right == 1) ? 2 : 0;
+    }
+};
