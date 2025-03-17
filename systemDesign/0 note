@@ -111,6 +111,7 @@ CAP theorem
 	Problem: two different users try to write different masters in different data center, which causes a conflict. 
     		Conflict Detection(too late)
  		Conflict Avoidance: application can ensure that all writes for a particular record go through the same master (data center), then conflicts cannot occur.
+	in normal operation, users are geoDNS rounded to the closest data center, with a split traffic of x% in east and 100-x in west.
 
 5. Message queue
 	supports async communication, servers as a buffer and distributes async requests. 
@@ -141,10 +142,10 @@ CAP theorem
 	    hybrid solution: hot user, not hot users
 
 
-	Stateless architecture: HTTP requests from users can be sent to any web servers, which fetch state data from a shared data store. 
+	Stateless architecture: HTTP requests from users can be sent to any web servers, which fetch state data(user session data) from a shared data store. 
 		State data is stored in a shared data store, and kept out of web servers. 
 		Use NoSQL for session data, as it is easy to scale. 
-
+		A stateful server remembers client data(state) from one request to the next. So every request from th same client must be routed to the same server. 
 6. scalability
 	identify potential bottleneck
 	discussion solutions, tradeoffs:
