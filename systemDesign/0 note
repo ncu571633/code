@@ -124,7 +124,9 @@ CAP theorem
 6. high level system design
 	user -> load balancer  -> tweet writer server  -> DB
 	                       -> timeline service     -> cache   (need low latency, read cache join together on the fly)
-	                       
+
+	load balancer: evenly distributs incoming traffic amoung web servers.
+
 	home timeline: 
 	 (1)pull mode: fetch tweets from N followers from DB, merge and return
 	     pros: write is fast: O(1)
