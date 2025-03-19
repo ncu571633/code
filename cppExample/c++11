@@ -5,6 +5,13 @@ avoiding code duplication, and providing a strong exception guarantee.
 2. destructor (should not fail)
 3. swapping the old data with the new data (non-throwing function)
 
+    // Copy assignment operator using copy and swap
+    MyClass& operator=(MyClass other) {
+        std::cout << "Copy assignment operator called" << std::endl;
+        swap(*this, other);
+        return *this;
+    }
+
 *****************************************************************************************************************************************************************************
 # Padding
     Many processors expect memory for variables to be aligned based on the size of the variable. 
