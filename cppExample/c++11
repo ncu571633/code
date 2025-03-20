@@ -370,17 +370,8 @@ char16_t and char32_t
 std::enable_if: enable certain types for template specialization via some predicates known at the compile time. 
 Using types that are not enabled by std::enable_if for template specialization will result in compile-time error.
 
-template< bool B, class T = void >
-struct enable_if;
-If B is true, std::enable_if has a public member typedef type, equal to T; otherwise, there is no member typedef. 
-
-template< bool B, class T = void >
-using enable_if_t = typename enable_if<B,T>::type;
-
-template<int a, int b, typename T = typename std::enable_if<a + b == 10>::type>
-class foo {
-};
-
+#include <iostream>
+#include <cstdint>
 template<typename T, typename std::enable_if_t<(sizeof(T) < sizeof(std::int32_t)), int> = 0>
 constexpr bool less_than_int32()
 {
@@ -393,8 +384,12 @@ constexpr bool less_than_int32()
   return false;
 }
 
-static_assert(less_than_int32<std::int16_t>());  // good: call first true
-static_assert(less_than_int32<std::int64_t>());  // bad: call second one
+int main()
+{
+    static_assert(less_than_int32<std::int16_t>());  // good: call first true
+    static_assert(less_than_int32<std::int64_t>());  // bad: call second one
+    return 0;
+}
 
 *****************************************************************************************************************************************************************************
 lambda expressions: allow inline functions which can be used for short snippets of code that are not going to be reused and therefore do not require a name. 
@@ -477,13 +472,30 @@ lambda expressions: allow inline functions which can be used for short snippets 
     };
 
 *****************************************************************************************************************************************************************************
-
 noexcept specifier and noexcept operator
+
+Behavior: If an exception occurs within a noexcept function and is not caught, the program will terminate immediately by calling std::terminate, which by default calls std::abort.
+Optimization: Compilers can optimize code for noexcept functions, as they do not need to handle exceptions, potentially leading to better performance.
+
+void func() noexcept;
+constexpr bool b = noexcept(5 + 3); // true, because int operations do not throw
+
+#include <iostream>
+void foo() { throw -1; } // Potentially throwing
+void goo() noexcept;     // Non-throwing
+
+int main() {
+    std::cout << std::boolalpha;
+    std::cout << "noexcept(foo()): " << noexcept(foo()) << std::endl; // false
+    std::cout << "noexcept(goo()): " << noexcept(goo()) << std::endl; // true
+    return 0;
+}
 
 *****************************************************************************************************************************************************************************
 
 alignof and alignas
-    Alignment is a restriction on which memory positions a value's first byte can be stored. (It is needed to improve performance on processors and to permit use of certain instructions that works only on data with particular alignment, for example SSE need to be aligned to 16 bytes, while AVX to 32 bytes.)
+    Alignment is a restriction on which memory positions a value's first byte can be stored. (It is needed to improve performance on processors and to permit use of certain instructions that works only on data with particular alignment, 
+for example SSE need to be aligned to 16 bytes, while AVX to 32 bytes.)
     Alignment of 16 means that memory addresses that are a multiple of 16 are the only valid addresses.
     alignas: force alignment to the required number of bytes. You can only align to powers of 2: 1, 2, 4, 8, 16, 32, 64, 128, ...
         alignas(16) int a[4];
@@ -495,9 +507,27 @@ alignof and alignas
         assert(alignof(b) == 1024);
 
 *****************************************************************************************************************************************************************************
-
 multithreaded memory model
-thread-local storage
+
+    Sequential Consistency (SC): Ensures that all memory operations appear to occur in a single total order, consistent with the program order on each thread.
+    Data Races: Occur when multiple threads access the same memory location, and at least one access is a write. Data races lead to undefined behavior.
+    Atomic Operations: Use std::atomic to ensure operations are executed without interruption, providing synchronization and order constraints.
+    Memory Ordering: Specifies how operations are ordered between threads, using constraints like memory_order_relaxed, memory_order_acquire, memory_order_release, etc.
+
+std::atomic<bool> flag(false);
+void thread1() {
+    flag.store(true, std::memory_order_relaxed);
+}
+void thread2() {
+    if (flag.load(std::memory_order_relaxed)) {
+        // Critical section
+    }
+}
+
+*****************************************************************************************************************************************************************************
+Thread-local storage: TLS is a mechanism that allows each thread to have its own instance of a variable, avoiding data races and synchronization issues.
+
+thread_local int counter = 0;
 
 *****************************************************************************************************************************************************************************
 
