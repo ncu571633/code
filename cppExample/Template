@@ -188,6 +188,18 @@ There are some overloading functions with template.
 The compiler tries to substitute of arguments for one of the template function, and an error happens. 
 Instead of stopping with a compilation error, compilier continues with other functions. 
 
+When the compiler tries to compile a function call (simplified):
+    Perform a name lookup.
+    For function templates the template argument values are deduced from the types of the actual arguments passed into the function.
+        All occurrences of the template parameter (in the return type and parameters types) are substituted with those deduced types.
+        When this process leads to invalid type the particular function is removed from the overload resolution set. 
+(SFINAE)
+    At the end, we have a list of viable functions that can be used for the specific call.
+        If this set is empty, then the compilation fails.
+        If more than one function is chosen, we have an ambiguity.
+        In general, the candidate function, whose parameters match the arguments most closely is the one that is called.
+
+
 #include <iostream>
 using namespace std;
 void print( int iNum )
@@ -206,6 +218,10 @@ int main()
          print( siNum );
          return 0;
 }
+
+********************************************************************************************
+enable_if is a set of tools, available in the Standard Library since C++11, that internally use SFINAE. 
+They allow to include or exclude overloads from possible function templates or class template specialization.
 
 Use enable_if
 
