@@ -543,6 +543,8 @@ static_assert (based on a Boost library)
 cast:
     static_cast: no check, ordinary type conversion: like converting float to int, char to int,    
 		int b = static_cast<int>(f)
+		While static_cast itself does not perform runtime checks for type correctness (unlike dynamic_cast), it can lead to undefined behavior if the cast is incorrect at runtime
+		can be compile/runtime (dealing with pointers or references to classes)
 
     dynamic cast: used for handling polymorphism
     	downcast/upcasting: do casting between base and derived class pointer.
@@ -555,7 +557,18 @@ cast:
   	Remove const from objects in order to pass to non-const functions you know won't modify the argument.
 	use to change non-const class members inside a const member function
 	casting won’t happen if the type of cast is not same as original object // compiler error
+
+int main() {
+    const int x = 5; // x is a constant variable
+    int* px = const_cast<int*>(&x); // Remove const using const_cast
+    *px = 10; // Attempt to modify x
     
+    // This will compile but may result in undefined behavior
+    // because x is originally a constant variable.
+    
+    return 0;
+}
+
     reinterpret_cast: dangerous, low level bit operations
     	convert raw data into actual data.
     
