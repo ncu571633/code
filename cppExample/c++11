@@ -701,14 +701,33 @@ If you copy a std::auto_ptr, a move operation will occur under the hood
 
 ***********************************************************************************************************
 # Return value optimization: is a common form of copy elision. 
-	It refers to the situation where an object returned by value from a method has its copy elided. 
-	The example set forth in the standard illustrates named return value optimization, since the object is named.
-	
-	object is constructed from a temporary:  return T()
+	a compiler technique that eliminates unnecessary copies of objects when returning them from functions.
+	Applies to temporary objects created directly in the return statement.
+
+std::vector<int> f() {
+    return std::vector<int>(10, 0);
+}
 
 ***********************************************************************************************************
 std::ref, std::reference_wrapper
 creates an object that behaves similarly to a reference
+
+#include <functional>
+#include <iostream>
+
+void increment(int& n) {
+    n++;
+}
+
+int main() {
+    int x = 0;
+    auto ref = std::ref(x); // Creates a std::reference_wrapper<int>
+    
+    increment(ref); // Passes x by reference to increment
+    std::cout << x << std::endl; // Prints 1
+    
+    return 0;
+}
 
 ***********************************************************************************************************
 small string optimization
