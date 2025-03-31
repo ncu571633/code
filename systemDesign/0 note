@@ -1,3 +1,18 @@
+How Microservices Work:
+
+In a microservices architecture:
+    Each service operates independently but collaborates with others to fulfill user requests.
+    Communication occurs through well-defined APIs.
+    Services can be hosted on different servers or containers and managed separately
+
+Advantages Over Monolithic Architecture:
+    Agility: Faster development and deployment cycles due to smaller, focused units of work.
+    Resilience: Failures in one service do not cascade to the entire system.
+    Scalability: Only the required services are scaled, rather than the entire application
+
+
+
+
 1. clarify the requirement/goal of the system
     traffic size: daily active user
     functionalities, components
