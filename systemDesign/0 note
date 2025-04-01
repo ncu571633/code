@@ -42,8 +42,11 @@ Advantages Over Monolithic Architecture:
      availability: the system responds quickkly, even during failures.
      scalability: be scaled to support large data set. 
      Low Latency: low latency search, < 500ms
-     partition tolerance: system continues to operate despite a number of messages being dropped/delayed.                
-
+     partition tolerance: system continues to operate despite a number of messages being dropped/delayed.
+     Fault Tolerance: How well does the system need to handle failures? Consider redundancy, failover, and recovery mechanisms.
+     Durability: How important is it that the data in your system is not lost? For example, a social network might be able to tolerate some data loss, 
+but a banking system cannot.
+     Security: How secure does the system need to be? Consider data protection, access control, and compliance with regulations.
 
 CAP theorem
 	(1) consistency: all clients see the same data at the same time no matter which node they connect to.
@@ -53,7 +56,7 @@ CAP theorem
 	choose consistency over availability: block all write operations to avoid data inconsistency among DB servers, which makes system unavailable. 
 	choose availability over consisntency: system keeps accepting reads, even it might return stale data.
 
-2. capacity estimation
+2. capacity estimation。 可以不用，perform calculations only if they will directly influence your design
 	how many daily active user, how many tweets
 	each user: visit timeline 5 times
 	every timeline/page: 20 tweets
@@ -66,11 +69,24 @@ CAP theorem
 	      
 
 3. system APIs
+ gRPC and REST are both API design approaches.
+but gRPC prioritizes high-performance, efficient communication, especially for microservices and real-time applications, 
+while REST is simpler, more flexible, and widely used for web applications. 
+
 	postTweet(userToken, string tweet)
 	deleteTweet(userToken, string tweetID)
 	likeOrUnlickTweet(userToken, string tweetId, bool like)
 	readHomeTimeLine(userToken, int pageSize, pageToken)
 	readUserTimeLine(userToken, int pageSize, pageToken)
+
+[Optional] Data Flow 
+the high level sequence of actions or processes that the system performs on the inputs to produce the desired outputs
+  For a web crawler, this might look like:
+    Fetch seed URLs
+    Parse HTML
+    Extract URLs
+    Store data
+    Repeat
 
 4. data storage
 	(1) SQL or NoSQL
