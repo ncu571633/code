@@ -15,14 +15,15 @@ Advantages Over Monolithic Architecture:
 
 1. clarify the requirement/goal of the system
     traffic size: daily active user
-    functionalities, components
+    
+    Functional requirement
     (1) tweet: create, delete
     (2) timeline/feed: home, user
     (3) follow a user
     (4) like a tweet
     (5) search tweet
     
-     non-functional requirement
+     Non-functional requirement
      (consistency): Consistency means that a read request for a specific data made at any of the nodes of the distributed system database should return the same value.
 		Strong consistency:
 		The reads are guaranteed to return the most recent committed version of an item. 
@@ -40,7 +41,7 @@ Advantages Over Monolithic Architecture:
 
      availability: the system responds quickkly, even during failures.
      scalability: be scaled to support large data set. 
-     Low Latency
+     Low Latency: low latency search, < 500ms
      partition tolerance: system continues to operate despite a number of messages being dropped/delayed.                
 
 
