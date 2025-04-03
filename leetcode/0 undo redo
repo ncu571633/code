@@ -1,0 +1,127 @@
+#include <iostream>
+#include <unordered_map>
+#include <stack>
+#include <tuple>
+#include <optional>
+
+using namespace std;
+
+template <typename K, typename V>
+class MyMap {
+private:
+    unordered_map<K, V> m;
+    
+    enum class Operation {
+        SET,
+        ERASE,
+    };
+    
+    stack<tuple<Operation, K, optional<V>>> undoStack;
+    stack<tuple<Operation, K, optional<V>>> redoStack;
+    
+    void applySet(const K& k, const optional<V>& val) {
+        if (val.has_value()) {
+            m[k] = *val;
+        } else {
+            m.erase(k);
+        }
+    }
+
+public:
+    optional<V> get(const K& k) const {
+        auto it = m.find(k);
+        return it != m.end() ? optional<V>(it->second) : nullopt;
+    }
+    
+    void set(const K& k, const V& v) {
+        optional<V> oldValue = m.count(k) ? optional<V>(m[k]) : nullopt;
+        m[k] = v;
+        undoStack.emplace(oldValue.has_value() ? Operation::SET : Operation::ERASE, k, oldValue);
+        redoStack = {};
+    }
+    
+    void erase(const K& k) {
+        auto it = m.find(k);
+        if (it == m.end()) return;
+        
+        V oldValue = it->second;
+        m.erase(k);
+        undoStack.emplace(Operation::SET, k, oldValue);
+        redoStack = {};
+    }
+    
+    bool undo() {
+        if (undoStack.empty()) return false;
+        
+        auto [op, k, val] = undoStack.top();
+        undoStack.pop();
+        
+        optional<V> currentValue = m.count(k) ? optional<V>(m[k]) : nullopt;
+        
+        switch (op) {
+            case Operation::SET:
+                applySet(k, val);
+                redoStack.emplace(Operation::SET, k, currentValue);
+                break;
+            case Operation::ERASE:
+                m.erase(k);
+                redoStack.emplace(Operation::SET, k, currentValue);
+                break;
+        }
+        return true;
+    }
+    
+    bool redo() {
+        if (redoStack.empty()) return false;
+        
+        auto [op, k, val] = redoStack.top();
+        redoStack.pop();
+        
+        optional<V> currentValue = m.count(k) ? optional<V>(m[k]) : nullopt;
+        
+        switch (op) {
+            case Operation::SET:
+                applySet(k, val);
+                undoStack.emplace(val.has_value() ? Operation::SET : Operation::ERASE, k, currentValue);
+                break;
+            case Operation::ERASE:
+                m.erase(k);
+                undoStack.emplace(Operation::SET, k, currentValue);
+                break;
+        }
+        return true;
+    }
+    
+    void print(const string& comment) const {
+        cout << comment << "\nMap contents:\n";
+        for (const auto& [key, value] : m) {
+            cout << "  " << key << ": " << value << "\n";
+        }
+        if (m.empty()) cout << "  (empty)\n";
+        cout << endl;
+    }
+};
+
+int main() {
+    MyMap<int, int> m;
+    
+    m.set(1, 1);
+    m.print("After set(1,1)");
+    
+    m.erase(1);
+    m.print("After erase(1)");
+    
+    m.undo();
+    m.print("After undo (should restore 1)");
+    
+    m.undo();
+    m.print("After second undo (should remove 1)");
+    
+    m.redo();
+    m.print("After first redo (should restore 1)");
+
+    m.redo();
+    m.print("After first redo (should restore 1)");
+    
+    return 0;
+}
