@@ -29,13 +29,13 @@ Advantages Over Monolithic Architecture:
 		The reads are guaranteed to return the most recent committed version of an item. 
 		A client never sees an uncommitted or partial write. Users are always guaranteed to read the latest committed write.
 		
-		Eventual consistency:
+	    Eventual consistency:
 		is ideal where the application doesn't require any ordering guarantees. 
 		Examples include count of Retweets, Likes, or non-threaded comments.
 	        
 		every request receive a response, without the guarantee that it contains the most recent write
 		
-		Strong consistency may also suffer from reduced availability (during failures) because data can't replicate and commit in every region. 
+	    Strong consistency may also suffer from reduced availability (during failures) because data can't replicate and commit in every region. 
 		Eventual consistency offers higher availability and better performance, but it's more difficult to program applications because data may not be consistent across all regions.Feb 27, 2023
 
 
@@ -50,11 +50,34 @@ but a banking system cannot.
 
 CAP theorem
 	(1) consistency: all clients see the same data at the same time no matter which node they connect to.
-	(2) availability: any client which requests data gets a response even if some of the nodes are down.
+	(2) availability: every request will receive a response, even during network partitions. 
+The tradeoff is that different nodes may temporarily have different versions of the data, leading to inconsistency. 
+The system will eventually reconcile these differences, but there's no guarantee about when this will happen
 	(3) partition tolerance: a partition indicates a communication break between two nodes. Partition tolerance means the system continues to operate despite network partitions. 
 	
 	choose consistency over availability: block all write operations to avoid data inconsistency among DB servers, which makes system unavailable. 
 	choose availability over consisntency: system keeps accepting reads, even it might return stale data.
+
+Examples of systems that require strong consistency include:
+    Banking systems where the balance of an account must be consistent across all nodes to prevent fraud
+    Booking systems for limited resources (airline seats, event tickets, hotel rooms) where you need to prevent double-booking
+    Inventory management systems, where stock levels need to be precisely tracked to avoid overselling products
+
+Index: Indexing is about making data faster to query
+1. The most basic method of indexing is simply keeping our data in a hash map by a specific key. 
+When we need to grab data by that key, we can do so in O(1) time. 
+2. data in a sorted list: do binary search to find the data we need in O(log n) time. This is a common way of indexing data in databases.
+3. most relational databases allow you to create indexes on any column or group of columns in a table
+4. Geospatial indexes are used to index location data. 
+This is useful for systems that need to do things like find the nearest restaurant or the nearest gas station
+5. Vector databases are used to index high-dimensional data. 
+This is useful for systems that need to do things like find similar images or similar documents
+
+Communication Protocols
+1. Internally, for a typical microservice application which consistitues 90%+ of system design problems, either HTTP(S) or gRPC will do the job. 
+Don't make things complicated.
+2. Externally, you'll need to consider how your clients will communicate with your system
+
 
 2. capacity estimation。 可以不用，perform calculations only if they will directly influence your design
 	how many daily active user, how many tweets
