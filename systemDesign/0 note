@@ -29,13 +29,20 @@ Advantages Over Monolithic Architecture:
 		The reads are guaranteed to return the most recent committed version of an item. 
 		A client never sees an uncommitted or partial write. Users are always guaranteed to read the latest committed write.
 		
-	    Eventual consistency:
+	    1. Eventual consistency:
 		is ideal where the application doesn't require any ordering guarantees. 
 		Examples include count of Retweets, Likes, or non-threaded comments.
 	        
 		every request receive a response, without the guarantee that it contains the most recent write
-		
-	    Strong consistency may also suffer from reduced availability (during failures) because data can't replicate and commit in every region. 
+		data is written to the primary node, then propagated to the read-only secondary nodes. 
+
+	    2. Consistent prefix: client read the data in the same sequence (D, C, B, A) that has been committed (A, B, C, D) 
+                顺序不乱。
+	    3. Session consistency: committed users will see the data that they just committed.
+                保证该用户 session 
+	    4. Bounded staleness: indicator to define how much staleness period you set. 
+                在 time windows，肯定没有stale data
+	    5. Strong consistency may also suffer from reduced availability (during failures) because data can't replicate and commit in every region. 
 		Eventual consistency offers higher availability and better performance, but it's more difficult to program applications because data may not be consistent across all regions.Feb 27, 2023
 
 
