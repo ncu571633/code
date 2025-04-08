@@ -1,0 +1,76 @@
+File system: 
+user can read/write data into extent. 
+
+User - Rest API, GRPC
+Client 
+
+Discovery: find extent picker via DNS
+
+Extent picker： Select an extent for the write
+
+Server: run on the storage servers that is responsible for ensuring durability and availability of extent data
+
+
+Requirements:
+Availability: customer write path, each cell has multiple extent pickers
+High concurrency
+Scability: scale horizontally as more Extent Picker nodes are added to the service to allow for cell growth; scale vertical Have the ability to handle different host CPU. 32 core, 16 cores. handle more quests. 
+
+low-latency operation
+minimize the probability of choosing an extent with insufficient free space
+attempt to spread writes across existing extents as widely as possible
+
+
+Workflow: 
+1. Read the extent id/ meta data(total space/free space) from DB. 
+2. Generate entry queue. 
+3. Parse the ids in entry queue, if enough space, extent goes to ready queue. Otherwise goes to unusable set. 
+
+Components
+Space Updater periodically polls extent leaders to refresh its view of free space and chunk count in that extent
+Extent detector: periodically polls the ExtentDB to get new extents
+Extent picking logic: servicing requests from the Client during write operations
+
+each picker update a table with heartbeat timestamp, updates its local view of the status of other hosts.
+
+
+Availability:
+over-estimation of free space problem
+3 pickers in one AD. id 0 extent, in picker 1, and picker 2. 
+One request goes to picker 1, ask for 1KB.  
+Another request goes to picker 2, ask for 1KB.  
+id 0 is picked. 
+Avoid: random when insert into the ready queue
+More frequent free space updating
+
+Reserved ready queue, which is guaranteed to have enough space. 
+
+
+Cold start
+1. When extent picker just provisioned, the server has to load all data from database, and generate internal data structure. 
+So we may need to wait a long time to start the service, also may generating too much load on extent DB. 
+
+Async call: don't wait until all info are loaded, just start to serve when we have the minimal data. 
+Also we don't process all data in the entry queue, since the info could be invalid after a certain time (other nodes could modify the data). 
+
+
+sharding:
+One extent id will only be served by one extent picker. 
+If one extent picker has run out of space, ask another one.
+
+
+Failover and reboot.
+write checkpoint files to disk with free space info, extent ids. 
+
+
+
+Rendezvous hashing： if the data is too large, can't store in the memory
+
+
+
+
+
+
+
+
+
