@@ -1,0 +1,21 @@
+Rehashing problem:
+
+1. Common way to balance the load: serverIndex = hash(key) % N. N is the size of server pool.
+The problem is when new server added/existing servers are removed, most keys are redistributed, not just the ones stored in offline server. 
+
+2. Consistent hashing:
+when a hash table is resized, only k/n keys need to be remapped on average. 
+
+Hash space: 0 ~ 2^160 -1 
+Hash ring: connecting both ends. 
+
+virtual nodes:
+each server is represented by multiple vertual nodes on the ring. 
+With virtual nodes, each server is responsible for multiple partitions. 
+
+to find which server a key is stored on, go clockwise from the key location and find the first virtual node encountered on the ring. 
+As the number of virtual nodes increases, the distribution of keys becomes more balanced. 
+
+minimized keys are redistributed when servers are added/removed.
+easy to scale horizontally because the data are more evenly distributed. 
+mitigate hotspot key problem：distributing data more evenly. 
