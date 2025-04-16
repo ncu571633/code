@@ -25,9 +25,10 @@ I hope I could join the team and make a meaningful impact."
 c)        Why this position / this team
 d)        Why leave your last position
 e)        Walk me through your typical day at work.
-I like to start each day by going over my schedule to make sure any calls or meetings I have are top of mind and I get any prep work for those done first thing. 
+I like to start each day by going over my schedule to make sure any calls or meetings I have are top of mind and 
+I get any prep work for those done first thing. 
 Also try to brain storm the software design work and try to answer my emails when I am stil fresh. 
-After that I write code, make code reviews, and Attend meetings with project managers, UI or UX designers, data scientists, and other team members.
+After that I write code, make code reviews, and Attend meetings with other team members.
 
 2.        Failure
 a)        Tell me a time when you failed on something
@@ -40,11 +41,15 @@ Communication: also ask for help if blocked
   “I was working on a project where I was tasked with creating a new feature for our service. 
   I was given a deadline of two weeks to complete the project. 
   However, I underestimated the amount of time it would take me to complete the project and ended up missing the deadline by a week. 
-  I learned that it’s important to set realistic expectations and communicate any issues or delays with my team members. 
-  Moving forward, I made sure to communicate any issues or delays with my team members and set realistic expectations for myself.”
+  I learned that 
+1. it’s important to set realistic expectations. 
+Don't overcommit a task, and learn to push back reasonably. 
+For example, list the sub items one by one, and then we can see how much time could take for each subitem. 
+2. Communicate any issues or delays with my team members. 
 
-Priority:
-  Finish the task first, improve performance
+Moving forward, I made sure to communicate any issues or delays with my team members and set realistic expectations for myself.”
+
+
 
 frustration
 For the technolical side. it is straight forward. 
@@ -72,7 +77,7 @@ Story:
   I had an idea that I thought would be great for the feature and decided to implement it without approval from my manager. 
   However, the feature didn’t work as expected and ended up causing issues. 
   I learned that it’s important to communicate any ideas or changes with my manager and team members before implementing them. 
-
+it can lead to wasted effort or rework, which is discouraging for the team.
 
 g)        Tell me a goal you didn't achieve
 Situation: I was working on a project that required me to learn a new programming language.
@@ -116,6 +121,27 @@ First we make sure we have same assumption/goal/requirement, then to see in whic
 Then we both understood each other's suggestions and presented our ideas to the rest of the team, which allowed everyone to voice their opinions. 
 We were able to come to a mutual decision as a group. 
 
+Situation:
+In a previous role, I was working on a critical feature that was scheduled for release. 
+During final testing, I discovered a significant bug that could have impacted user experience and the product’s reputation. 
+At the time, my manager was out of the office, and I knew that delaying the release was necessary to ensure quality.
+
+Task:
+My responsibility was to ensure the product was stable and reliable before release. 
+Since my manager was unavailable, I needed to decide how to handle the situation to prevent potential issues from reaching our users.
+
+Action:
+I took the initiative to escalate the issue to the senior QA lead and the product owner, 
+explaining the severity of the bug and recommending a delay. I also worked extra hours to help fix the bug and prepare a patch. 
+Once my manager returned, I briefed them on the situation and the steps I took to address it, ensuring transparency and accountability.
+
+Result:
+Because of these actions, we were able to fix the bug before release, avoiding negative user impact. 
+My manager appreciated my proactive approach and commitment to quality. 
+This experience reinforced the importance of taking responsibility and acting in the best interest of the product, 
+even when it means making decisions without direct approval.
+
+
 Identify the source and impact of the conflict
 Listen to their perspective and acknowledge their feelings
 Express your own needs and expectations
@@ -132,6 +158,26 @@ c)        Tell me a time when you worked under pressure / managed numerous respo
 d)        Tell me a time when you overcame an obstacle and delivered the result
 e)        Tell me a time when you overcame a challenge
 f)        Tell me a time when you worked under close supervision or extremely loose supervision
+
+Situation:
+In my previous role as a software engineer, I was assigned to a project that required integrating a new third-party API.
+At that time, I had limited experience with this specific API and the documentation is limited.
+
+Task:
+My task was to implement the integration quickly to meet a tight project deadline, despite i am not familiar with the API.
+
+Action:
+To tackle this challenge, I first spent time to thoroughly review the API documentation and explore sample code. 
+I also reached out to the API provider’s support team for clarifications on specific issues. 
+Additionally, I collaborated with a more experienced colleague who had worked on similar integrations. 
+I broke down the task into smaller, manageable steps and tested each component thoroughly before moving forward.
+
+Result:
+Although I was initially unfamiliar with the API, my proactive approach allowed me to learn quickly and successfully 
+complete the integration on time. The implementation worked seamlessly, 
+and the project was delivered without delays. 
+This experience taught me the importance of resourcefulness, seeking help when needed,
+and embracing new challenges as opportunities to grow.
 
 
 6.        Leadership / Relationship
