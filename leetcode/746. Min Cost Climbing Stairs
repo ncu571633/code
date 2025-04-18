@@ -20,6 +20,7 @@ Note:
     cost will have a length in the range [2, 1000].
     Every cost[i] will be an integer in the range [0, 999].
 
+一个是从第 i-2 层上直接跳上来，一个是从第 i-1 层上跳上来。
 
     class Solution {
 public:
@@ -31,5 +32,22 @@ public:
             dp[i] = min(dp[i-1]+cost[i-1], dp[i-2]+cost[i-2]);
         }
         return dp.back();
+    }
+};
+
+class Solution {
+public:
+    int minCostClimbingStairs(vector<int>& cost) {
+        int a = 0;
+        int b = 0;
+
+        for(int i = 2; i<=cost.size(); i++)
+        {
+            int t = min(cost[i-2]+a, cost[i-1] + b);
+            a = b;
+            b = t;
+        }
+
+        return b;
     }
 };
