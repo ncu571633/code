@@ -1,0 +1,16 @@
+Requirements:
+  ids should be unique;
+  numberical values only.
+  64 bit.
+  ordered by date;
+  ability to generate over 10,000 unique IDs per second.
+
+For each server: 
+64 bit: 
+  41 bits: timestamp;
+  5 bits: data center id;
+  5 bits: machine id;
+  12 bits: sequence number;
+
+clock synchronization:
+  network time protocol: a time-request exchange with the NTP server.
