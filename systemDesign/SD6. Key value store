@@ -61,7 +61,13 @@ Consistency models:
   weak consistency: 
   eventual consistency: given enough time, all updates are propagated, and all replicas are consistent. 
 
-Inconsistency resolution:v versioning
+Inconsistency resolution:
+1. Last-Write-Wins (LWW) with Timestamps
+    Mechanism: Assign timestamps to updates and prioritize the latest one.
+    Limitation: Requires synchronized clocks; clock drift can cause data loss
+2. Version Vectors
+    Track multiple versions of data across nodes using vector clocks.
+   Resolve conflicts by comparing version histories to determine update order
   a versioning system that can detect conflicts and reconcile conflicts.
   a vector clock is a common technique to solve this problem: [server, version] pair
 
