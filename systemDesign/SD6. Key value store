@@ -14,6 +14,10 @@ Non-Functionality requirement
 
 Single server: 
   memory: data compression, store frequently used data in memory and the rest on disk.
+Compress your data
+store reference instead of the actual data
+using different data representations like bit array (integer) or vectors
+
 
 Distributed key-value store
 
@@ -94,6 +98,11 @@ and not the amount of data they contain.
 
 Handling data center outage:
   replicate data across multiple data centers. If one data center is completely offline, users can still access data through other data centers.
+
+commit log
+  resolve conflict in read. Suppose when the requested resource locates in A1, A2 and A3, 
+the coordinator can ask from all three machines. 
+If by any chance the data is different, the system can resolve the conflict on the fly.
 
 Write path:
 Client -> commit log
