@@ -13,6 +13,21 @@ Read Path: URL redirecting
   GET api/v1/shortUrl
     return longURL for HTTP redirection
 
-3. URL shortening
+3. Write Path: URL shortening
 Hash function: maps long URL to short URl
+Characters: 0-9, a-z, A-Z: 62 possible chars.
+max number of URLs: 62^7
+base 62 conversion: 
+
+input: longURL -> longURL in DB? -> return shortURL
+               -> generate a new ID (Unique ID generator)
+               -> convert ID to shortURL
+               -> save id, url in DB
+
+4. Read Path: URL redirecting 
+  a user clicks short URL link
+  load balancer forwards the request to web servers
+  shortURL is alreay in cache, return longURL
+  not in cache, fetch from db.
+  return longURL to user
 
