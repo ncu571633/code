@@ -1,0 +1,18 @@
+1. Requirements
+write operation
+write operation per second
+read operation
+how many record should support
+
+2. API endpoint: RestAPI
+Write Path: URL shortening 
+  POST api/v1/data/shorten
+    request parameter: longUrl
+    return shortUrl
+Read Path: URL redirecting 
+  GET api/v1/shortUrl
+    return longURL for HTTP redirection
+
+3. URL shortening
+Hash function: maps long URL to short URl
+
