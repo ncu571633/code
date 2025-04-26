@@ -170,17 +170,32 @@ Branching:
 A conditional branch can be constructed by writing two alternative specialisations of a template class. 
 The compiler will choose the one that fits the types provided, and a value defined in the instantiated class can then be accessed.
 
-    template<typename T, typename U>
-    struct is_same 
-    {
-        static const bool value = false; 
-    };
+#include <iostream>
+using namespace std;
 
-    template<typename T>
-    struct is_same<T,T>  //specialization
-    { 
-       static const bool value = true; 
-    };
+template <typename T, typename U>
+struct isSameClass
+{
+    static const bool value = false;
+};
+
+template <typename T>
+struct isSameClass<T, T>
+{
+    static const bool value = true;
+};
+
+template <class A, class B>
+bool IsSameClass() {
+    return isSameClass<A, B>::value;
+}
+
+int main() {
+    cout << IsSameClass<int, double>() << endl;
+    cout << IsSameClass<int, int>() << endl;
+    return 0;
+}
+
 
 ********************************************************************************************
 SFINAE (Substitution failure is not an error)
@@ -279,3 +294,26 @@ My_op_functor<> f;  or My_op_functor f in C++17
 
 template <typename T1, typename T2, ..., typename Tn>
 void ignore(T1 t1, T2 t2, ..., Tn tn) {}
+
+********************************************************************************************
+Implement a template function IsDerivedFrom() that takes class C and class P as template parameters. 
+It should return true when class C is derived from class P and false otherwise.
+template<typename D, typename B>
+class IsDerivedFromHelper
+{
+    class No { };
+    class Yes { No no[3]; };
+    
+    static Yes Test( B* );
+    static No Test( ... );
+public:
+    enum { Is = sizeof(Test(static_cast<D*>(0))) == sizeof(Yes) };
+    
+};
+
+
+template <class C, class P> 
+bool IsDerivedFrom() {
+    return IsDerivedFromHelper<C, P>::Is;
+}
+
