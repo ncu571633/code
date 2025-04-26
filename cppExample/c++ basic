@@ -188,6 +188,11 @@ Member functions	No
 Padding/alignment	Yes
 Vtable pointer (if any)	Yes
 
+For derived classes, the object’s memory layout typically includes the base class’s data members first, 
+followed by derived class members. If virtual inheritance or virtual functions are used, 
+additional space is needed for pointers to vtables (virtual tables).
+
+
 # what's the difference of passing by reference & passing by value
     Passing by reference means the called functions' parameter will be the same as the callers' passed argument 
     Pass by value means the called functions' parameter will be a copy of the callers' passed argument. 
