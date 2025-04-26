@@ -176,9 +176,17 @@ int main() {
     The compiler also adds a hidden pointer to the base class, which we will call *__vptr
 
 # class size: what's the size of empty class
-    The C++ standard guarantees that the size of any class is at least one. The C++ standard states that no object shall have the same memory address as another object. There are several good reasons for this.
+    The C++ standard guarantees that the size of any class is at least one. 
+The C++ standard states that no object shall have the same memory address as another object. There are several good reasons for this.
     To guarantee that new will always return a pointer to a distinct memory address.
     To avoid some divisions by zero. For instance, pointer arithmetics (many of which done automatically by the compiler) involve dividing by sizeof(T).
+
+Contributes to size?	Included in object size
+Non-static data members	Yes
+Static data members	No
+Member functions	No
+Padding/alignment	Yes
+Vtable pointer (if any)	Yes
 
 # what's the difference of passing by reference & passing by value
     Passing by reference means the called functions' parameter will be the same as the callers' passed argument 
