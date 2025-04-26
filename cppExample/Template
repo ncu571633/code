@@ -317,3 +317,11 @@ bool IsDerivedFrom() {
     return IsDerivedFromHelper<C, P>::Is;
 }
 
+********************************************************************************************
+How can you make sure a C++ function can be called as e.g. void foo(int, int) but not as any other type like void foo(long, long)?
+
+void foo(int a, int b) {
+// whatever
+}
+template <typename T1, typename T2> 
+void foo(T1 a, T2 b) = delete;
