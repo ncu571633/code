@@ -97,11 +97,60 @@ You can declare the base class A as virtual to ensure that B and C share the sam
     
     Is a way of preventing multiple "instances" of a given class appearing in an inheritance hierarchy when using multiple inheritance.
     Avoid diamond inheritance
-    
-    Class Base{
-    };
-    Class A: public virtual Base{
-    };
+Classic Diamond Problem Example
+#include <iostream>
+using namespace std;
+
+class A {
+public:
+    void foo() {
+        cout << "A::foo()" << endl;
+    }
+};
+
+class B : public A {
+};
+
+class C : public A {
+};
+
+class D : public B, public C {
+};
+
+int main() {
+    D d;
+    // d.foo(); // Error: ambiguous!
+    d.B::foo(); // Calls A::foo() via B
+    d.C::foo(); // Calls A::foo() via C
+    return 0;
+}
+
+Resolving the Diamond Problem with Virtual Inheritance
+#include <iostream>
+using namespace std;
+
+class A {
+public:
+    void foo() {
+        cout << "A::foo()" << endl;
+    }
+};
+
+class B : virtual public A {
+};
+
+class C : virtual public A {
+};
+
+class D : public B, public C {
+};
+
+int main() {
+    D d;
+    d.foo(); // No ambiguity: only one A subobject
+    return 0;
+}
+
 
 # 构造函数调用顺序 Calling sequence of Ctor
     1. 基类构造函数，调用顺序按照被继承时声明从左到右。base ctor
