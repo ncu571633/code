@@ -180,4 +180,15 @@ this is a const pointer, so there is an error in line "this = t;"
 The value of ::x is 1. The scope resolution operator when used with a variable name, always refers to global variable.
 
 8. 
-Like struct and class, union can have methods. Like struct and unlike class, members of union are public by default. Since data members of union share memory, the value of b becomes same as a.
+Like struct and class, union can have methods. Like struct and unlike class, members of union are public by default. 
+Since data members of union share memory, the value of b becomes same as a.
+
+9.
+my_struct_t *bar;
+/* ... do stuff, including setting bar to point to a defined my_struct_t object ... */
+memset(bar, 0, sizeof(bar));
+
+The last argument to memset should be sizeof(*bar), not sizeof(bar). 
+
+
+
