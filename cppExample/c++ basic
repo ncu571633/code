@@ -577,7 +577,9 @@ void foo::p() const{
    member = 1;                       // illegal
    const_cast <int&> (member) = 1;   // a bad practice but legal
 }
-This keyword mutable  can only be applied to non-static and non-const data members of a class. If a data member is declared mutable, then it is legal to assign a value to this data member from a const member function.
+
+This keyword mutable  can only be applied to non-static and non-const data members of a class. 
+If a data member is declared mutable, then it is legal to assign a value to this data member from a const member function.
 
 
 77.    What is const pointer?
@@ -948,7 +950,9 @@ ManagedResourceHandle handle(createNewResource());
 handle->performInvalidOperation();
 ***************************************************************************************************************
 volatile: ask the compiler not to optimization for this variable
-optimization (of some parts of your program) may be undesirable, because it may be that someone else is changing the value of some_int from outside the program which compiler is not aware of
+  Variables that are declared as volatile will not be cached by the compiler, and will thus always be read from memory.
+optimization (of some parts of your program) may be undesirable, 
+because it may be that someone else is changing the value of some_int from outside the program which compiler is not aware of
 
     
 
