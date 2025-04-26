@@ -6,7 +6,11 @@ Client
 
 Discovery: find extent picker via DNS
 
-Extent picker： Select an extent for the write
+Extent picker： 
+extent is an area of disk space reserved for storing data. 
+For a distributed file system, there could be serveral million extents in one cluster. 
+
+The service selects an extent for the write. 
 
 Server: run on the storage servers that is responsible for ensuring durability and availability of extent data
 
