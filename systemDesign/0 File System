@@ -7,8 +7,8 @@ Client
 Discovery: find extent picker via DNS
 
 Extent picker： 
-extent is an area of disk space reserved for storing data. 
-For a distributed file system, there could be serveral million extents in one cluster. 
+in the distributed file system, an extent is an area of disk space reserved for storing data. Each is 512 Kb.
+and there could be serveral million extents in one cluster. 
 
 The service selects an extent for the write. 
 
