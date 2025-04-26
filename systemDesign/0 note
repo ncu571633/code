@@ -189,6 +189,16 @@ the high level sequence of actions or processes that the system performs on the 
 	                       -> timeline service     -> cache   (need low latency, read cache join together on the fly)
 
 	load balancer: evenly distributs incoming traffic amoung web servers.
+            L4 load balancer: Transport Layer (Layer 4) Route traffic based on IP addresses, TCP/UDP ports, and basic network information
+                     Generally faster due to less processing overhead
+                     Simple traffic distribution, basic health checks, routing based on network characteristics
+            L7 load balancer: Application Layer (Layer 7). Inspect application data, including HTTP headers, URLs, cookies, 
+                 and content to make routing decisions
+                 Content-based routing, SSL termination, session persistence, application-aware load balancing
+                 Web applications, APIs, services requiring advanced routing and content manipulation
+
+A service mesh is a dedicated infrastructure layer that manages and controls communication 
+between microservices in a distributed application. 
 
 	home timeline: 
 	 (1)pull mode: fetch tweets from N followers from DB, merge and return
