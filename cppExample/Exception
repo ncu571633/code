@@ -53,6 +53,18 @@ There is one exception handling during stack unwinding, all the local objects in
 If one of those destructors throws another exception. Hard to handle. 
 So the C++ language guarantees that it will call terminate() at this point, and terminate() kills the process
 
+Stack unwinding is the process by which a program cleans up the call stack-destroying local (automatic) objects and releasing resources-as it exits scopes,
+particularly during exception handling in C++.
+
+When an exception is thrown in C++, the runtime searches up the call stack for an appropriate exception handler (a catch block).
+As it moves up the stack, each function that is exited has its local (automatic) objects destroyed in reverse order of construction-that is, 
+destructors are called for each object
+This process is called stack unwinding.
+The unwinding continues until a matching exception handler is found or the program terminates if none exists
+
+ Stack unwinding is the automatic destruction of local objects as the program exits scopes, especially during exception handling,
+ensuring resources are released and program state remains consistent.
+
 ********************************************************************************
 
 https://www.codeproject.com/Articles/2126/How-a-C-compiler-implements-exception-handling
