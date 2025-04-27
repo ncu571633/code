@@ -2,6 +2,7 @@
 Alignment
 CPU can only memory at alignment of its word size
 Speed: CPU reads memory, shift 1 byte. 
+Aligned accesses are more likely to fit within a single cache line or memory bus transaction. 
 atmoic: read aligned memory atmoically
 
 allocate aligned memory
