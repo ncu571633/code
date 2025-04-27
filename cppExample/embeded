@@ -32,6 +32,9 @@ size of
     cout<<sizeof(double*) << endl; // 8
 ******************************************************************************************************************************************
 
+// double round to closest int
+int (d+0.5)
+
 // round to closest 8/16/24/32...
 // if 12, then return 16
 // if 12, then return 8
