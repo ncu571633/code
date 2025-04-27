@@ -8,15 +8,22 @@ Exception is not handled, C++ run time calls std::terminate().
 vector
 
 * No-throw guarantee: 
-    No-throw guarantee, also known as failure transparency: Operations are guaranteed to succeed and satisfy all requirements even in exceptional situations. If an exception occurs, it will be handled internally and not observed by clients.
-    Implemented by ensuring that memory allocation never fails, or by defining the insert function's behavior on allocation failure (for example, by having the function return a boolean result indicating whether the insertion took place).
+    No-throw guarantee, also known as failure transparency: 
+Operations are guaranteed to succeed and satisfy all requirements even in exceptional situations. 
+If an exception occurs, it will be handled internally and not observed by clients.
+    Implemented by ensuring that memory allocation never fails, 
+or by defining the insert function's behavior on allocation failure (for example, 
+by having the function return a boolean result indicating whether the insertion took place).
     
 * Strong guarantee(commit or rollback semantics) either it completely succeeds or it has no effect.
-    doing any necessary allocation first, and then swapping buffers if no errors are encountered (the copy-and-swap idiom). In this case, either the insertion of x into v succeeds, or v remains unchanged despite the allocation failure.
+    doing any necessary allocation first, and then swapping buffers if no errors are encountered (the copy-and-swap idiom). 
+In this case, either the insertion of x into v succeeds, or v remains unchanged despite the allocation failure.
     
 * Basic exception safety:
     no memory is leaked and the object is still in a usable state even though the data might have been modified.
-    Implemented by ensuring that the count field is guaranteed to reflect the final size of v. For example, if an error is encountered, the insert function might completely deallocate v and reset its count field to zero. On failure, no resources are leaked, but v's old value is not preserved.
+    Implemented by ensuring that the count field is guaranteed to reflect the final size of v. 
+For example, if an error is encountered, the insert function might completely deallocate v and reset its count field to zero.
+On failure, no resources are leaked, but v's old value is not preserved.
 
 * No exception safety: An insertion failure -> corrupted content in v, an incorrect value in the count field, or a resource leak.
     
@@ -36,7 +43,8 @@ vector
     1. from try-catch implementation: C++ compiler doesn't add additional code. 
     2. Standard library containers try to be "exception safe". 
     For example, if the std::vector insertion fails for some reason, it is guaranteed that the vector appears to be unchanged. 
-    when move-construction could raise an exception, so if the value type's move-ctor is not exception safe, std::vector push_back() needs to use to the copy operation instead. (see example below)
+    when move-construction could raise an exception, so if the value type's move-ctor is not exception safe, 
+std::vector push_back() needs to use to the copy operation instead. (see example below)
     
 ********************************************************************************
 Exception in destructor: no
@@ -51,7 +59,8 @@ https://www.codeproject.com/Articles/2126/How-a-C-compiler-implements-exception-
 https://llvm.org/docs/ExceptionHandling.html#exception-tables
 How try-catch is implemented (depends on the compiler):
 
-Define exception object which is created in one function, destroyed in a caller thereof. So, it's typically not feasible to create the object on the stack. Object should not be big
+Define exception object which is created in one function, destroyed in a caller thereof. 
+So, it's typically not feasible to create the object on the stack. Object should not be big
 
 Transfer of control Two ways
 1. Code approach
@@ -70,7 +79,8 @@ Transfer of control Two ways
 
 2. table approach: uses compiler-generated static tables
 moves this information into tables outside the stack. 
-when an exception occurs, the call stack is used to find out which scopes are entered but not exited. Those are then looked up in the static tables to determine where the thrown exception will be handled, and which destructors run in between. 
+when an exception occurs, the call stack is used to find out which scopes are entered but not exited. 
+Those are then looked up in the static tables to determine where the thrown exception will be handled, and which destructors run in between. 
 This means there is less exception overhead on the stack; return addresses are needed anyway. 
 The tables are extra data, but the compiler can put them in a demand-loaded segment of the program.
 advantage: no runtime cost. All associated run-time costs occur only when an exception is thrown
@@ -81,7 +91,8 @@ added branches
 
 Compiler may reorder the instruction for optimization. 
 Because of try-catch, 
-Each object needs to be fully initialized before any exception could lead to its destruction, limiting the reordering of instructions (e.g. from an inlined constructor) across potentially throwing calls. 
+Each object needs to be fully initialized before any exception could lead to its destruction, 
+limiting the reordering of instructions (e.g. from an inlined constructor) across potentially throwing calls. 
 Likewise, an object must be completely destroyed before any possible subsequent exception.
 
 table is large: download the program and load it into RAM, cache friendly? 
