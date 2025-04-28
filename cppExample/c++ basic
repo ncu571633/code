@@ -7,8 +7,11 @@
 	Each thread has a private stack, which it can quickly add and remove items from. This makes stack based memory fast, but if you use too much stack memory, as occurs in infinite recursion, you will get a stack overflow. 
 
 ## Dangling pointers
-    arise when an object is deleted or deallocated, without modifying the value of the pointer, so that the pointer still points to the memory location of the deallocated memory.
+    arise when an object is deleted or deallocated, without modifying the value of the pointer, 
+so that the pointer still points to the memory location of the deallocated memory.
 
+## wild pointers
+  Declaration without initialization
 ***************************************************************************************************
 
 # composition/aggregation
@@ -35,9 +38,12 @@
     Encapsulation: A language mechanism for restricting access to some of the object's components
     
     polymorphism: polymorphism means that some code or operations or objects behave differently in different contexts.
-    Method overloading refers to methods that have the same name but different signatures inside the same class. Method overriding is where a subclass replaces the implementation of one or more of its parent's methods.
+    Method overloading refers to methods that have the same name but different signatures inside the same class. 
+Method overriding is where a subclass replaces the implementation of one or more of its parent's methods.
     
-    In classical inheritance where objects are defined by classes, classes can inherit attributes and behavior from pre-existing classes called base classes. The resulting classes are known as derived classes.
+    In classical inheritance where objects are defined by classes, 
+classes can inherit attributes and behavior from pre-existing classes called base classes. 
+The resulting classes are known as derived classes.
 
 3）class
 a class is a construct that is used to create instances of itself
@@ -68,28 +74,37 @@ A default constructor is a constructor that either has no parameters, or if it h
 # Copy constructor: creating a new object as a copy of an existing object.
 	The first argument of such a constructor is a reference to an object of the same type as is being constructed
 	This is the reason of passing a reference to copy constructor. If its not passed by reference then it would pass by value. 
-	If the argument is passed by value, its copy constructor would call itself to copy the actual parameter to formal parameter. This process would go on until the system runs out of memory
+	If the argument is passed by value, its copy constructor would call itself to copy the actual parameter to formal parameter. 
+This process would go on until the system runs out of memory
 
 # Copy assignment operator
     Copy constructor copies an existing object to a non existing object, which you are going to create. 
     Assignment operation can happen between two existing objects.
     The assignment operator for a class is what allows you to use = to assign one instance to another
-    Default version of it is generated automatically by the compiler if the programmer does not declare one, which performs a memberwise copy, where each member is copied by its own copy assignment operator (which may also be programmer-declared or compiler-generated).
+    Default version of it is generated automatically by the compiler if the programmer does not declare one, 
+which performs a memberwise copy, where each member is copied by its own copy assignment operator 
+(which may also be programmer-declared or compiler-generated).
 
 
 # diff: copy assignment operator vs copy ctor
-    it must clean up the data members of the assignment's target (and correctly handle self-assignment) whereas the copy constructor assigns values to uninitialized data members
+    it must clean up the data members of the assignment's target (and correctly handle self-assignment) 
+whereas the copy constructor assigns values to uninitialized data members
     the implementation is that assignment operators have a return value. Returning a reference to the object.
 
 
 # Can constructor be virtual? why it can or can not? how about destructor.
-	A virtual call is a mechanism to get work done given partial information. In particular, "virtual" allows us to call a function knowing only any interfaces and not the exact type of the object. To create an object you need complete information. In particular, you need to know the exact type of what you want to create. Consequently, a "call to a constructor" cannot be virtual.
+	A virtual call is a mechanism to get work done given partial information. 
+In particular, "virtual" allows us to call a function knowing only any interfaces and not the exact type of the object. 
+To create an object you need complete information. In particular, you need to know the exact type of what you want to create. 
+Consequently, a "call to a constructor" cannot be virtual.
 	
-	In C++, the constructor cannot be virtual, because when a constructor of a class is executed there is no virtual table in the memory, means no virtual pointer defined yet. So, the constructor should always be non-virtual.
-
+	In C++, the constructor cannot be virtual, because when a constructor of a class is executed there is no virtual table in the memory,
+means no virtual pointer defined yet. So, the constructor should always be non-virtual.
 
     Virtual destructor are useful when you can delete an instance of a derived class through a pointer to base class:
-If your derived class destructor is virtual then objects will be destrcuted in a order(firstly derived object then base ). If your derived class destructor is NOT virtual then only base class object will get deleted(because pointer is of base class "Base *myObj"). So there will be memory leak for derived object
+If your derived class destructor is virtual then objects will be destrcuted in a order(firstly derived object then base ). 
+If your derived class destructor is NOT virtual then only base class object will get deleted(because pointer is of base class "Base *myObj"). 
+So there will be memory leak for derived object
 
 # Virtual base classes/ Virtual Inheritance
     Suppose you have two derived classes B and C that have a common base class A, and you also have another class D that inherits from B and C. 
@@ -196,7 +211,8 @@ additional space is needed for pointers to vtables (virtual tables).
 # what's the difference of passing by reference & passing by value
     Passing by reference means the called functions' parameter will be the same as the callers' passed argument 
     Pass by value means the called functions' parameter will be a copy of the callers' passed argument. 
-Thus changes to a parameter done by the called function in one case changes the argument passed and in the other case just changes the value of the parameter in the called function (which is only a copy)
+Thus changes to a parameter done by the called function in one case changes the argument passed and 
+in the other case just changes the value of the parameter in the called function (which is only a copy)
 
 # Difference address reference 
     you can't pass NULL when passing by reference
@@ -213,19 +229,10 @@ Thus changes to a parameter done by the called function in one case changes the 
     the char 'x' will be implicitly converted to int and then will call the String(int) constructor. But this is not what the user might have intended. So to prevent such conditions, we shall define the constructor as explicit:
     class String { public: explicit String (int n); //allocate n bytes String(const char *p); // initialize sobject with string p };
 
-
-# Template
-Function templates are special functions that can operate with generic types. 
-can be adapted to more than one type or class without repeating the entire code for each type.
-
-Class templates are commonly used to implement containers
-You can use class templates to create a family of classes that operate on a type. Class templates are parameterized types. They imply that a separate class could be created for each conceivable value of the parameters (known as template arguments) passed in.
-Template arguments can be types or constant values of a specified type.
-
-
 # Deep copy & shallow copy
     The default copy constructor creates only shallow copies.
-    A deep copy copies all fields, and makes copies of dynamically allocated memory pointed to by the fields. A deep copy occurs when an object is copied along with the objects to which it refers. 
+    A deep copy copies all fields, and makes copies of dynamically allocated memory pointed to by the fields. 
+A deep copy occurs when an object is copied along with the objects to which it refers. 
     Shallow copy is a bit-wise copy of an object.
 
 # what's the difference of new & malloc
@@ -240,13 +247,15 @@ Template arguments can be types or constant values of a specified type.
 
 # what's the pure virtual function?
     virtual functions we have written have a body (a definition)
-    pure virtual function (or abstract function) that has no body at all, only the declaration to be redefined by derived classes. simply assign the function the value 0.
+    pure virtual function (or abstract function) that has no body at all, only the declaration to be redefined by derived classes. 
+simply assign the function the value 0.
 
 * Any class with one or more pure virtual functions becomes an abstract base class, which means that it can not be instantiated
 * Any derived class must define a body for this function, or that derived class will be considered an abstract base class as well.
 * An interface class is a class that has no members variables, and where all of the functions are pure virtual
 the class is purely a definition, and has no actual implementation.
-* Interfaces are useful when you want to define the functionality that derived classes must implement, but leave the details of how the derived class implements that functionality entirely up to the derived class.
+* Interfaces are useful when you want to define the functionality that derived classes must implement, 
+but leave the details of how the derived class implements that functionality entirely up to the derived class.
 
 # how to print "hello world" before main()
 global object, print hello in the constructor 
@@ -258,7 +267,8 @@ global object, print hello in the constructor
     A static global variable or a function is "seen" only in the file it's declared in
     C++:
     静态数据成员是私有类型，可以直接初始化，之后就不允许直接访问。
-    A static member function differs from a regular member function in that it can be called without an instance of a class, and since it has no instance, it cannot access non-static members of the class. 
+    A static member function differs from a regular member function in that it can be called without an instance of a class, 
+and since it has no instance, it cannot access non-static members of the class. 
 
 
 # What is Dynamic Binding and Static Binding?
@@ -279,14 +289,17 @@ constant
 # What are interface and abstract class?
     An interface class is a class that has no members variables, and where all of the functions are pure virtual
     Abstract class is a class that can not be instantiated. 
-    abstract classes are incomplete, it may contain only definition of the properties or methods and derived classes that inherit this implements it's properties or methods. 
+    abstract classes are incomplete, it may contain only definition of the properties or methods and derived classes that inherit
+this implements it's properties or methods. 
 
 # How would you choose between an abstract class and interface?
 Interfaces can't have any concrete implementations. Abstract base classes can. 
 
 # What are struct and union?
-    A structure contains an ordered group of data objects. Unlike the elements of an array, the data objects within a structure can have varied data types. Each data object in a structure is a member or field.
-    A union is an object similar to a structure except that all of its members start at the same location in memory. A union variable can represent the value of only one of its members at a time.
+    A structure contains an ordered group of data objects. Unlike the elements of an array, 
+the data objects within a structure can have varied data types. Each data object in a structure is a member or field.
+    A union is an object similar to a structure except that all of its members start at the same location in memory.
+A union variable can represent the value of only one of its members at a time.
 
 # What is the difference between a struct and a class in C++?
     members of a class are private by default, whereas members of a struct are public by default.
@@ -312,9 +325,6 @@ Interfaces can't have any concrete implementations. Abstract base classes can.
 Prevents implicit type conversions, which might cause errors. 
 To tell the compiler that a certain constructor may not be used to implicitly cast an expression to its class type. 
 
-# How to disable the default functions (like default constructor, default destructor …) in a class?
-Overload it
-
 
 # What is (default) copy constructor? When should a custom copy constructor be defined for a class and why?
 Outside resource. Shallow copy
@@ -337,7 +347,9 @@ Inheritance is a mechanism of reusing and extending existing classes without mod
 
 # What is a virtual memory, why do we use? Advantage? 
 In computing, virtual memory is a memory management technique developed for multitasking kernels. 
-This technique virtualizes the main storage available to a process or task, as a contiguous address space which is unique to each running process, or virtualizes the main storage available to all processes or tasks on the system as a contiguous global address space
+This technique virtualizes the main storage available to a process or task, 
+as a contiguous address space which is unique to each running process, 
+or virtualizes the main storage available to all processes or tasks on the system as a contiguous global address space
 
 
 # What is inline function?
@@ -383,8 +395,10 @@ This technique virtualizes the main storage available to a process or task, as a
 	void fun(const char *a)
     
     C++ allows functions to be overloaded on the basis of the const-ness of parameters only if the const parameter is a reference or a pointer. 
-    In program 1, the parameter ‘i’ is passed by value, so ‘i’ in fun() is a copy of ‘i’ in main(). Hence fun() cannot modify ‘i’ of main(). Therefore, it doesn’t matter whether ‘i’ is received as a const parameter or a normal parameter. 
-    When we pass by reference or pointer, we can modify the value referred or pointed, so we can have two versions of a function, one which can modify the referred or pointed value, other which can not.
+    In program 1, the parameter ‘i’ is passed by value, so ‘i’ in fun() is a copy of ‘i’ in main(). Hence fun() cannot modify ‘i’ of main(). 
+Therefore, it doesn’t matter whether ‘i’ is received as a const parameter or a normal parameter. 
+    When we pass by reference or pointer, we can modify the value referred or pointed, so we can have two versions of a function, 
+one which can modify the referred or pointed value, other which can not.
 
 
 # What is new and delete?
@@ -411,7 +425,8 @@ In object-oriented programming, a memory leak happens when an object is stored i
 
 # What are call by value and call by reference? What are their differences?
 Call by value: In the call by value method, the called function creates a new set of variables and copies the values of the arguments into them.
-Call by reference: In the call by reference method, instead of passing values to the function being called, references/pointers to the original variables are passed.
+Call by reference: In the call by reference method, instead of passing values to the function being called, 
+references/pointers to the original variables are passed.
 
 # What is variable scope?
 a scope is the context within a computer program in which a variable name or other identifier is valid and can be used, or within which a declaration has effect.
@@ -419,14 +434,10 @@ a scope is the context within a computer program in which a variable name or oth
 40.    What is extern variable? How are these variables resolved (at what stage: Compile /Link/ Run)?
 A variable must be defined once in one of the modules of the program. If there is no definition or more than one, an error is produced, possibly in the linking stage. 
 
-41.    What is storage draft?
- 
 42.    What are multi-cast, broadcast, unicast?
 Unicast is the term used to describe communication where a piece of information is sent from one point to another point.
 Broadcast is the term used to describe communication where a piece of information is sent from one point to all other points. 
 Multicast is the term used to describe communication where a piece of information is sent from one or more points to a set of other points
-
-43.    What is io multi plex?
 
 44.    What are pointer and reference? 
 1. A pointer can be re-assigned any number of times while a reference can not be reassigned after initialization. 
@@ -475,7 +486,9 @@ A static variable will only be visible (that is, accessible) inside the function
 全局变量和静态变量的区别： 全局变量在整个工程文件内都有效；静态全局变量只在定义它的文件内有效；静态局部变量只在定义它的函数内有效，只是程序仅分配一次内存，函数返回后，该变量不会消失；
 
 56.    Where is the static variable stored? Why is static?
-bss is used by many compilers and linkers for a part of the data segment containing statically-allocated variables represented solely by zero-valued bits initially (i.e., when execution begins). It is often referred to as the "bss section" or "bss segment"
+bss is used by many compilers and linkers for a part of the data segment containing statically-allocated variables represented
+solely by zero-valued bits initially (i.e., when execution begins). 
+It is often referred to as the "bss section" or "bss segment"
 
 57.    Differences between a static member function and non-static member functions.
 static variables keep their values and are not destroyed even after they go out of scope
@@ -585,7 +598,8 @@ const int * const ptr3; /* A constant pointer to a constant integer:
 const对左边的声明起作用。
 
 const Member Functions
-Declaring a member function const means that the this pointer is a pointer to a const object. Data members of the class will be const within that function. The function is still able to change the value, but requires a const_cast to do so:
+Declaring a member function const means that the this pointer is a pointer to a const object. 
+Data members of the class will be const within that function. The function is still able to change the value, but requires a const_cast to do so:
 void foo::p() const{
    member = 1;                       // illegal
    const_cast <int&> (member) = 1;   // a bad practice but legal
@@ -734,31 +748,6 @@ Generally enums are preferred as they are type-safe and more easily discoverable
 Inline functions are parsed by the compiler, 
 whereas macros are expanded by the C++ preprocessor.
 The difference between an inline function and a regular function is that wherever the compiler finds a call to an inline function, it writes a copy of the compiled function definition.
-
-
-dynamic_cast can be used only with pointers and references to objects. Its purpose is to ensure that the result of the type conversion is a valid complete object of the requested class.
-dynamic_cast performs a special checking during runtime to ensure that the expression yields a valid complete object of the requested class:
-a compilation error since base-to-derived conversions are not allowed with dynamic_cast unless the base class is polymorphic.
-
-
-
-static_cast can perform conversions between pointers to related classes, not only from the derived class to its base, but also from a base class to its derived
-no safety check is performed during runtime to check if the object being converted is in fact a full object of the destination type
-
-reinterpret_cast converts any pointer type to any other pointer type, even of unrelated classes. The operation result is a simple binary copy of the value from one pointer to the other
-
-What is Memory Alignment?
- 
-Most CPUs require that objects and variables reside at particular offsets in the system's memory. For example, 32-bit processors require a 4-byte integer to reside at a memory address that is evenly divisible by 4. This requirement is called "memory alignment". Thus, a 4-byte int can be located at memory address 0x2000 or 0x2004, but not at 0x2001. On most Unix systems, an attempt to use misaligned data results in a bus error, which terminates the program altogether. On Intel processors, the use of misaligned data is supported but at a substantial performance penalty. Therefore, most compilers automatically align data variables according to their type and the particular processor being used. This is why the size that structs and classes occupy is often larger than the sum of their members' size:
-
-struct Employee
-{
-int ID;
-char state[3]; //CA, NY etc. + terminating null
-int salary;
-};
-Apparently, Employee should occupy 11 bytes (4+3+4). However, most compilers add an unused padding byte after the field 'state' so that it aligns on a 4 byte boundary. Consequently, Employee occupies 12 bytes rather than 11. You can examine the actual size of an aggregate by using the expression sizeof(Employee).
-
 
 
 difference between tcp and ip?
