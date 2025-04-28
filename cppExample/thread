@@ -11,7 +11,8 @@ When one thread stops executing and another starts, we call that a thread contex
 Starvation
 The reason that thread 1 never runs is that thread 0 never voluntarily gives up the CPU
 
-Preemption This means that if one user-level thread is running, then at some point the operating system will interrupt it and run another user-level thread
+Preemption This means that if one user-level thread is running, then at some point the operating system will interrupt it
+and run another user-level thread
 pthread_attr_setscope(attr+i, PTHREAD_SCOPE_SYSTEM)
 
 A race condition occurs when 2 or more threads are able to access shared data and they try to change it at the same time. 
