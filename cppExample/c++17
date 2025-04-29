@@ -28,6 +28,10 @@ std::string_view is faster than const std::string&
 1. string: a memory allocation
 2. work with substrings without a copy
 3. No ownership. string_view is a pointer to someone else's memory
+
+    std::string s = "Hello, world!";
+    std::string_view sv = s;   // From std::string
+
 *****************************************************************************************************************************
 std::filesystem
 
@@ -153,7 +157,7 @@ class MyClass<N> {
 
 
 MyClass<'x'> myClass2;     // Primary template for char
-MyClass<2017>  myClass1;   // Partial specialisation for int
+MyClass<2017> myClass1;   // Partial specialisation for int
 *****************************************************************************************************************************
 std::optional: return int value, may not be valid. set this value as -1. or have two variable, one for value, another to  identify whether it is valid. 
     “value-or-not-value”, or “possibly an answer”, or “object with delayed initialization”
