@@ -543,7 +543,8 @@ static_assert (based on a Boost library)
 cast:
     static_cast: no check, ordinary type conversion: like converting float to int, char to int,    
 		int b = static_cast<int>(f)
-		While static_cast itself does not perform runtime checks for type correctness (unlike dynamic_cast), it can lead to undefined behavior if the cast is incorrect at runtime
+		While static_cast itself does not perform runtime checks for type correctness (unlike dynamic_cast), 
+it can lead to undefined behavior if the cast is incorrect at runtime
 		can be compile/runtime (dealing with pointers or references to classes)
 
     dynamic cast: used for handling polymorphism
@@ -625,11 +626,15 @@ If you copy a std::auto_ptr, a move operation will occur under the hood
             std::unique_ptr<int, decltype(log)> uniqueP(new int(5), log);
             std::shared_ptr<int> sharedP(new int(5), log);
         (6). When to create a control block: 
-            make_shared<T>()
+            make_shared<T>(): new once. 
             when shared_ptr is constructed from unique_ptr.
             shared_ptr is called with raw pointer: more than one: destroyed multiple times, undifined program behavior
-            avoid passing raw pointers to shared_ptr constructor, to use make_shared.
-            if shared_ptr constructor should be used, try to use sharedptr rather than raw pointer
+                   auto pw = new Widget;
+                   std::shared_ptr<Widget> spw1(pw, loggingDel);
+                   std::shared_ptr<Widget> spw2(pw, loggingDel);  // create 2nd control block.
+              so avoid passing raw pointers to shared_ptr constructor, to use make_shared.
+              if shared_ptr constructor should be used, try to use shared_ptr rather than raw pointer
+                   std::shared_ptr<Widget> spw2(spw1);
         (7). std::enable_shared_from_this: 
             base class template
             defines a member function crates a shared_ptr to the current obj, without duplicating coltrol block.
@@ -638,15 +643,19 @@ If you copy a std::auto_ptr, a move operation will occur under the hood
     4. weak_ptr: is a smart pointer that holds a non-owning ("weak") reference to an object that is managed by std::shared_ptr.
         temporary ownership: when an object needs to be accessed only if it exists, and it may be deleted at any time by someone else, 
         it must be converted to std::shared_ptr in order to access the referenced object.
-        points to a shared_ptr but does not increase its reference count, it is not considered an owner (This means that the underying object can still be deleted even though there is a weak_ptr reference to it)
+        points to a shared_ptr but does not increase its reference count, it is not considered an owner 
+(This means that the underying object can still be deleted even though there is a weak_ptr reference to it)
         Can't be dereferenced, can't be test for nullness. not standalone smart pointer, augmentation of shared_ptr.
         Created from shared_ptr, points to the same place, but don't affect the reference count. 
         If the original std::shared_ptr is destroyed at this time, the object's lifetime is extended until the temporary std::shared_ptr is destroyed as well.
 
         Usage:
-            Can be used to check dangle pointer(wild pointer): cache, cycle. By just using raw pointers it is impossible to know if the referenced data has been deallocated or not. 
-                (Instead, by letting a std::shared_ptr manage the data, and supplying std::weak_ptr to users of the data, can check whether the data is valid by calling expired() or lock())
-            Break reference cycles formed by objects managed by std::shared_ptr. If such cycle is orphaned (i.e., there are no outside shared pointers into the cycle), the shared_ptr reference counts cannot reach zero and the memory is leaked. 
+            Can be used to check dangle pointer(wild pointer): cache, cycle. By just using raw pointers it is impossible to know 
+if the referenced data has been deallocated or not. 
+                (Instead, by letting a std::shared_ptr manage the data, and supplying std::weak_ptr to users of the data, 
+can check whether the data is valid by calling expired() or lock())
+            Break reference cycles formed by objects managed by std::shared_ptr. If such cycle is orphaned 
+(i.e., there are no outside shared pointers into the cycle), the shared_ptr reference counts cannot reach zero and the memory is leaked. 
                 To prevent this, one of the pointers in the cycle can be made weak.
 
         Can weak_ptr be used in case the programmer cannot tell the ownership relationship and cannot establish any static ownership 
@@ -654,7 +663,6 @@ If you copy a std::auto_ptr, a move operation will occur under the hood
         If there is a cycle, the programmer has to find it and break it. 
         An alternative remedy is to use a programming language with full garbage collection (such as: Java, C#, Go, Haskell), 
         or to use a conservative (=imperfect) garbage collector which works with C/C++ (such as: Boehm GC).
-
 
         	test: weak_ptr.expired()
         	check expired, and return access to the obj:
