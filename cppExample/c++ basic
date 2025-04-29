@@ -48,6 +48,23 @@ The resulting classes are known as derived classes.
 3）class
 a class is a construct that is used to create instances of itself
 
+
+
+The Rule of Five in C++
+    If any of the below functions is defined for a class, then it is better to define all of them.
+    Destructor
+    Copy Constructor
+    Copy Assignment Operator
+    Move Constructor
+    Move Assignment Operator
+    Assume that you have some dynamically allocated resources in the object and you copy them using shallow copy. 
+This will lead to problems like segmentation faults when the source object is destroyed. Similar thing will happen with copy assignment, 
+move constructor and move assignment operator.
+    By implementing Rule of Big Five properly we can make sure that there are no resource leaks. 
+This can be achieved by ensuring that all the dynamically allocated memory or any other resources are released appropriately.
+
+
+
 ***************************************************************************************************
 # Constructor
 ## default constructor
