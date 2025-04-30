@@ -1,3 +1,22 @@
+Memory layout:
+1. stack
+2. heap
+3. .bss   uninitialized static data, both variables and constants
+static int i;
+static char a[12];
+
+4. .data  initialized static variables, i.e. global variables and local static variables 
+int i = 3;
+char a[] = "Hello World";
+static int b = 2023;    // Initialized static global variable
+void foo (void) {
+  static int c = 2023; // Initialized static local variable
+}
+
+5. code segment, also known as text segment
+contains executable code and is generally read-only and fixed size
+
+******************************************************************************************************************************************
 
 Alignment
 CPU can only memory at alignment of its word size
