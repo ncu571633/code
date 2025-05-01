@@ -142,6 +142,14 @@ the high level sequence of actions or processes that the system performs on the 
 	This also means you can easily add or remove nodes from clusters without impacting availability.
 	
 	(2) Sharding:
+Why: 
+Scalability: horizontal scaling by allowing organizations to distribute data across multiple servers
+No Single Server Bottleneck: By spreading data and load, sharding prevents any one server from becoming a performance bottleneck
+Performance: Improved Query Response Times: Each shard contains only a subset of the total data, 
+         so queries can be executed faster since each server scans fewer rows
+      Parallel Processing: With data distributed, multiple servers can process queries simultaneously
+Higher Availability: Isolates failures; system remains operational if a shard fails
+
 	Range-based sharding: based on a range of values.
 		for example, name first alphabet A to I -> shard A, J to S -> shard B, T to Z: shard C...
 	Hashed sharding: hash function(key) -> hash value
