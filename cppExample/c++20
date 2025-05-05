@@ -26,6 +26,13 @@ int main() {
 ****************************************************************************************
 Range Views: Range Views enable lazy evaluation, which allows operations like filter, transform, 
 or concatenate to be expressed in a readable, declarative style without immediate evaluation, often leading to performance improvements
+The view rv doesn’t do any job when creating it. We only compose the final receipt. 
+The execution happens lazy only when we iterate through it.
+
+Prever a and b, since a/b is a user-facing algorithm and should be preferred over option c (which should be considered implementation detail).
+auto a = v | views::transform(square);
+auto b = views::transform(v, square);
+auto c = ranges::transform_view(v, square);
 
 #include <iostream>
 #include <ranges>
@@ -34,13 +41,22 @@ or concatenate to be expressed in a readable, declarative style without immediat
 int main() {
     std::vector nums = {1, 2, 3, 4, 5, 6};
     
-    auto even_nums = nums | std::views::filter([](int n) { 
-        return n % 2 == 0; 
-    });
+    auto getEven = [](int n) { return n % 2 == 0; };
+    auto square = [](int n) { return n * n; };
+    auto even_nums = nums | std::views::filter(getEven)
+                        | std::views::transform(square);
     
     for (int n : even_nums)
         std::cout << n << " "; 
 }
+
+
+drop(n): creates a view excluding the first N elements of a range
+drop_while(p): leading elements that match a predicate are dropped
+
+auto conv = text
+    | std::views::drop_while( [](unsigned char c) { return std::isspace(c); } )
+    | std::views::transform( [](unsigned char c) { return std::toupper(c); } );
 
 
 ****************************************************************************************
