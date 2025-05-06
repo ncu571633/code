@@ -1,0 +1,137 @@
+/*
+Filter move catalog
+*/
+
+#include <algorithm>
+#include <unordered_map>
+#include <vector>
+
+class MovieCatalog {
+private:
+    struct Movie {
+        int movieId;
+        std::string title;
+        int date;
+        std::string genres;
+    };
+
+    std::unordered_map<std::string, std::vector<Movie>> genreIndex; // binary search
+
+public:
+    MovieCatalog(const std::string& filename) {
+        // read file
+        
+        // build index
+        for (const auto& movie : movies) {
+            size_t pos = 0;
+            std::string genres = movie.genres;
+            while ((pos = genres.find('|')) != std::string::npos) {
+                std::string genre = genres.substr(0, pos);
+                genreIndex[genre].push_back(movie);
+                genres.erase(0, pos + 1);
+            }
+            if (!genres.empty()) {
+                genreIndex[genres].push_back(movie);
+            }
+        }
+
+        // sort
+        for (auto& [genre, movies] : genreIndex) {
+            std::sort(movies.begin(), movies.end(),
+                [](const Movie& a, const Movie& b) { return a.date < b.date; });
+        }
+    }
+
+    std::vector<Movie> filter(const std::string& genre, int startYear, int endYear) {
+        std::vector<Movie> result;
+        if (auto it = genreIndex.find(genre); it != genreIndex.end()) {
+            const auto& movies = it->second;
+            
+            // binary search
+            auto lower = std::lower_bound(movies.begin(), movies.end(), startYear,
+                [](const Movie& m, int year) { return m.date < year; });
+            
+            auto upper = std::upper_bound(movies.begin(), movies.end(), endYear,
+                [](int year, const Movie& m) { return year < m.date; });
+
+            result.reserve(std::distance(lower, upper));
+            result.insert(result.end(), lower, upper);
+        }
+        return result;
+    }
+};
+
+
+
+
+/*
+Filter move catalog
+*/
+
+#include <algorithm>
+#include <unordered_map>
+#include <vector>
+
+class MovieCatalog {
+private:
+    struct Movie {
+        int movieId;
+        std::string title;
+        int date;
+        std::string genres;
+    };
+
+    std::unordered_map<std::string, std::vector<Movie>> genreIndex; // binary search: O(logn)
+
+
+std::unordered_map<std::string, 
+    std::unordered_map<int, std::vector<Movie>::iterator>> genreYearIndex;
+
+public:
+    MovieCatalog(const std::string& filename) {
+        // read file
+        
+        // build index
+        for (const auto& movie : movies) {
+            size_t pos = 0;
+            std::string genres = movie.genres;
+            while ((pos = genres.find('|')) != std::string::npos) {
+                std::string genre = genres.substr(0, pos);
+                genreIndex[genre].push_back(movie);
+                genres.erase(0, pos + 1);
+            }
+            if (!genres.empty()) {
+                genreIndex[genres].push_back(movie);
+            }
+        }
+
+        // sort
+        for (auto& [genre, movies] : genreIndex) {
+            std::sort(movies.begin(), movies.end(),
+                [](const Movie& a, const Movie& b) { return a.date < b.date; });
+        }
+    }
+
+    std::vector<Movie> filter(const std::string& genre, int startYear, int endYear) {
+
+
+        if (!genreIndex.contains(genre)) return {};
+
+        auto& movies = genreIndex[genre];
+        auto year_range = [=](const Movie& m) { 
+            return m.date >= startYear && m.date <= endYear; 
+        };
+
+        // 组合二分查找和范围视图
+        auto lower = std::lower_bound(movies.begin(), movies.end(), startYear,
+            [](auto&& m, int y) { return m.date < y; });
+        auto upper = std::upper_bound(movies.begin(), movies.end(), endYear,
+            [](int y, auto&& m) { return y < m.date; });
+
+        return std::ranges::subrange(lower, upper)
+               | std::views::filter(year_range)
+               | std::ranges::to<std::vector>();
+        }
+        return result;
+    }
+};
