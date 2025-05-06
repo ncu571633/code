@@ -1,0 +1,3 @@
+    Leaf Nodes are the elements of the input array. 
+    An array representation of tree is used to represent Segment Trees. 
+For each node at index i, the left child is at index (2*i+1), right child at (2*i+2) and the parent is at  (⌊(i – 1) / 2⌋).
