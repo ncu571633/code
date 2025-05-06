@@ -257,29 +257,23 @@ foo(T t) {
 
 Curiously Recurring Template Pattern (CRTP) 
 
-template <class T> 
-struct Base
-{
-    void interface()
-    {
-        // ...
-        static_cast<T*>(this)->implementation();
-        // ...
-    }
-
-    static void static_func()
-    {
-        // ...
-        T::static_sub_func();
-        // ...
+template <typename Derived>
+struct Base {
+    void interface() {
+        static_cast<Derived*>(this)->implementation();
     }
 };
 
-struct Derived : Base<Derived>
-{
-    void implementation();
-    static void static_sub_func();
+struct Derived : Base<Derived> {
+    void implementation() {
+        std::cout << "Derived implementation called\n";
+    }
 };
+
+int main() {
+    Derived d;
+    d.interface(); // Output: Derived implementation called
+}
 
 ********************************************************************************************
     cout<<(typeid(int) == typeid(double)) << endl;
