@@ -1,0 +1,82 @@
+Deducing this
+1. replace CRTP
+
+#include <iostream>
+template <typename Derived>
+struct BaseCRTP {
+    void interface() {
+        static_cast<Derived*>(this)->implementation();
+    }
+};
+struct DerivedCRTP : BaseCRTP<DerivedCRTP> {
+    void implementation() {
+        std::cout << "Derived implementation called\n";
+    }
+};
+
+struct BaseNew {
+    template <typename Self>
+    void interface(this Self&& self) { 
+        self.implementation();
+    }
+};
+struct DerivedNew : BaseNew { 
+    void implementation() {
+        std::cout << "Derived implementation called\n";
+    }
+};
+
+int main() {
+    DerivedCRTP d;
+    d.interface();
+    
+    DerivedNew d2;
+    d2.interface();    
+}
+
+******************************************************
+#include <print>
+int main() {
+    std::print("Hello, {}!\n", "world");
+}
+
+******************************************************
+A coroutine in C++ is a special kind of function that can suspend its execution at certain points 
+  and later be resumed from where it left off. 
+
+std::generator is a C++23 standard library type designed to make it easy to write coroutine-based generators 
+  that produce sequences of values on demand.
+  
+#include <generator>
+#include <iostream>
+#include <ranges>
+
+std::generator<int> fib() {
+    co_yield 0;
+    int a = 0, b = 1;
+    for (;;) {
+        int next = a + b;
+        a = b;
+        b = next;
+        co_yield next;
+    }
+}
+
+int main() {
+    for (int f : fib() | std::views::take(10)) {
+        std::print("{} ", f);
+    }
+    // Output: 0 1 2 3 5 8 13 21 34 55 
+}
+
+******************************************************
+std::ranges::to : converts a range or view into a concrete container type 
+
+#include <ranges>
+#include <vector>
+#include <ranges/to.hpp> // or <ranges> in C++23 and up
+
+int main() {
+    auto r = std::views::iota(0, 5); // produces 0, 1, 2, 3, 4
+    auto v = r | std::ranges::to<std::vector>(); // v is std::vector{0, 1, 2, 3, 4}
+}
