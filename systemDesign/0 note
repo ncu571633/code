@@ -233,6 +233,13 @@ between microservices in a distributed application.
 		loading balancing: between user/server, server/db
 		data caching: read heavy
 data sharding: break large table into smaller shards on multiple servers
+why sharding: 
+    Scalability: Sharding allows you to scale horizontally by adding more servers, each handling a subset of the data, 
+thus accommodating growth without degrading performance
+    Performance: Querying a massive, unsharded database can be slow because the system must scan large tables. 
+With sharding, each shard contains fewer rows, so queries are faster 
+    Fault Tolerance and High Availability: If a single database server fails, an unsharded system can become completely unavailable
+
 pros: horizontal scaling
     shard by creation time
         pros: limited shards to query
