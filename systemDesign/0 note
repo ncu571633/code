@@ -207,6 +207,8 @@ Higher Availability: Isolates failures; system remains operational if a shard fa
 
 A service mesh is a dedicated infrastructure layer that manages and controls communication 
 between microservices in a distributed application. 
+Centralized Traffic Management, Observability and Monitoring, 
+Service Discovery and Dynamic Scaling(Automated service discovery allows new services to be registered and found dynamically)
 
 	home timeline: 
 	 (1)pull mode: fetch tweets from N followers from DB, merge and return
