@@ -41,6 +41,7 @@ Communication: also ask for help if blocked
   “I was working on a project where I was tasked with creating a new feature for our service. 
   I was given a deadline of two weeks to complete the project. 
   However, I underestimated the amount of time it would take me to complete the project and ended up missing the deadline by a week. 
+The reason is that there are extern APIs not well documented, and it is hard to port into our system. 
   I learned that 
 1. it’s important to set realistic expectations. 
 Don't overcommit a task, and learn to push back reasonably. 
