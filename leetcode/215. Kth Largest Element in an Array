@@ -42,6 +42,27 @@ class Solution {
 
 class Solution {
 public:
+    int findKthLargest(vector<int>& nums, int k) 
+    {
+        map<int, int, std::greater<int>> m;
+        for(int i: nums)
+        {
+            m[i] ++;
+        }
+
+        for(auto p: m)
+        {
+            k -= p.second;
+            if (k<=0)
+                return p.first;
+        }
+
+        return -1;
+    }
+};
+
+class Solution {
+public:
     int partition(vector<int>& v, int l, int r)
     {
         int left = l;
