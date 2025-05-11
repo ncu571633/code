@@ -1,4 +1,17 @@
-Deducing this
+Deducing this(explicit object parameters):
+a new way of specifying non-static member functions. 
+Usually when we call an object’s member function, the object is implicitly passed to the member function, 
+despite not being present in the parameter list.
+make this parameter explicit, giving it a name and const/reference qualifiers
+struct implicit_style {
+    void do_something(); //object is implicit
+};
+
+struct explicit_style {
+    void do_something(this explicit_style& self); //object is explicit
+};
+
+
 1. replace CRTP
 
 #include <iostream>
