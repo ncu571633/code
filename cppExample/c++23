@@ -11,8 +11,28 @@ struct explicit_style {
     void do_something(this explicit_style& self); //object is explicit
 };
 
+1. De-duplication
+class cat {
+    toy held_toy_;
 
-1. replace CRTP
+public:
+    //Before explicit object parameters
+    toy& get_held_toy() { return held_toy_; }
+    const toy& get_held_toy() const { return held_toy_; }
+
+    //After
+    template <class Self>
+    auto&& get_held_toy(this Self&& self) {
+        return self.held_toy_;
+    }
+
+    //After + forwarding
+    template <class Self>
+    auto&& get_held_toy(this Self&& self) {
+        return std::forward<Self>(self).held_toy_;
+    }
+};
+2. replace Curiously Recurring Template Pattern (CRTP): compile-time polymorphism 
 
 #include <iostream>
 template <typename Derived>
