@@ -265,6 +265,34 @@ a)        Tell me about a time where you thought of a new way to save money for 
 b)        Describe a time when you had to manage a budget (or manage time/money/resources/etc.). Were you able to get more out of less?
 c)        Tell me about a time when you had to work with limited time and resources / no resource.
 
+how to negotiate and alloc more resources from the team
+Situation:
+In my previous role as a software engineer, our team was assigned a high-priority project with a tight deadline. 
+However, we dont have enough people due to overlapping commitments with another ongoing project, 
+and it became clear that our current resources would not be sufficient to deliver on time
+
+Task:
+As the lead developer, I was responsible for ensuring the project stayed on track.
+My goal was to secure additional resources-specifically, to meet our delivery commitments without compromising quality.
+
+Action:
+I started by analyzing our current workload and identifying the specific bottlenecks that were slowing us down. 
+I gathered data on our estimation and projected timelines, 
+which showed we would likely miss our deadline by two weeks without intervention. 
+I then prepared a concise proposal outlining these findings, the risks involved, and the potential business impact of a delay. 
+I scheduled a meeting with my manager and the resource manager, presented the data,
+and suggested reallocating one engineer from a lower-priority project and temporarily increasing our cloud testing resources. 
+To facilitate a smooth transition, 
+I offered to onboard the new team member myself and adjust our sprint planning to maximize their impact from day one
+
+Result:
+Management approved the reallocation and we got one extra engineer. 
+With the extra support, we not only met our deadline but also improved our code coverage by 30%. 
+The project’s success led to a new process for reviewing resource allocation at the start of each major project, 
+
+
+
+
 12.        Common Follow-ups
 a)        What’s your role in this project
 b)        What’s your impact in this project
