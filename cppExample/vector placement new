@@ -3,6 +3,13 @@ placement new:
 1. pointer you pass to the “placement new” operator points to a region of memory that is big enough 
 2. is properly aligned for the object type that you’re creating
 
+Difference Between emplace_back and push_back in std::vector
+differ in how and when they construct the element to be added, which impacts performance, code clarity, and safety.
+Usage	Adds an existing object (copy/move)	Constructs an object in-place
+Arguments	Takes an object of the vector's type	Takes constructor arguments for the type
+Performance	May involve copy/move	Avoids extra copy/move if constructing
+
+
 deletion: call destructor
 only delete memeroy for new
     // buffer on stack
