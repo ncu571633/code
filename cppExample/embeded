@@ -5,6 +5,11 @@ Memory layout:
 static int i;
 static char a[12];
 
+Advantage:
+Saves disk space (no need to store zeros in the executable)
+Efficient for large arrays that don’t need explicit initialization.
+
+
 4. .data  initialized static variables, i.e. global variables and local static variables 
 int i = 3;
 char a[] = "Hello World";
