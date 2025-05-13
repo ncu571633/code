@@ -29,8 +29,9 @@ std::string_view is faster than const std::string&
 2. work with substrings without a copy
 3. No ownership. string_view is a pointer to someone else's memory
 
-    std::string s = "Hello, world!";
-    std::string_view sv = s;   // From std::string
+    std::string str = "example";
+    std::string_view sv(str);          // Create a view of the whole string
+    std::string_view sub_sv = sv.substr(1, 3); // View from index 1, length 3 ("xam")
 
 *****************************************************************************************************************************
 std::filesystem
