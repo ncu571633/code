@@ -133,5 +133,9 @@ Thread A finds the queue non-empty and does the second job.
 Thread B gets scheduled, having been woken, but finds the queue still empty.
 
 
-
+************************************************
+std::jthread C++20
+Automatic Joining: in destructor
+Stop Request Mechanism: std::stop_token and std::stop_source
+Compared to std::thread: safter due to automatic joining
 
