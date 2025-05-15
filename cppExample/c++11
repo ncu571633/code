@@ -626,6 +626,18 @@ cannot use std::make_unique with an existing raw pointer
 std::make_unique allocates memory itself and constructs the object
 std::unique_ptr<int> ptr1 = std::make_unique<int>(10);
 
+
+Empty Base Optimization (EBO) is a C++ compiler optimization technique that can reduce the size of a class by 
+eliminating the storage space required for empty base classes. 
+When a class inherits from an empty class, the compiler may choose not to allocate any space for the base class, 
+effectively merging it with the derived class.
+
+std::unique_ptr can benefit from EBO when its deleter is an empty class type 
+(a stateless function object or a capture-less lambda). 
+In such cases, the std::unique_ptr implementation can store the managed pointer and the deleter in a way that allows the compiler to apply EBO,
+resulting in a std::unique_ptr that is the same size as a raw pointer.
+
+
     3. shared_ptr: smart pointer for shared ownership: more than one shared_ptr can pointing at the resource
         So for each instance of the shared_ptr the reference count is increased by one. 
         If two share_ptr objects refer the each other they will never get deleted because they will never end up with a reference count of zero. (cycle)
