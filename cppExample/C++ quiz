@@ -191,5 +191,21 @@ memset(bar, 0, sizeof(bar));
 
 The last argument to memset should be sizeof(*bar), not sizeof(bar). 
 
+10. How to print address of ch
+char ch = 'a'
+
+int main()
+{
+    char ch = 'a';
+    std::cout<< &ch << std::endl;
+int main()
+{
+    char ch = 'a';
+    std::cout<< (void *)&ch << std::endl;
+    std::cout<< &ch << std::endl;
+    return 0;
+}
+    return 0;
+}
 
 
