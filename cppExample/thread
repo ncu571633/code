@@ -131,11 +131,127 @@ You signal the condition variable, waking thread B.
 Thread A gets scheduled, does the first job.
 Thread A finds the queue non-empty and does the second job.
 Thread B gets scheduled, having been woken, but finds the queue still empty.
+************************************************
+threading primitives
+Mutex:
+Condition variable:
+Semaphores: A mutex (mutual exclusion lock) ensures that only one thread can access a shared resource at a time, 
+    providing exclusive access, while a semaphore allows multiple threads to access a shared resource concurrently, within a specified limit
 
+std::barrier: It operates as a barrier that all threads must reach before the program can continue
+    The std::barrier class sets itself apart from other synchronization primitives by allowing users
+    to specify a callback function that executes after the barrier is lifted. 
+    This callback function can perform additional tasks that must be completed after the barrier has been crossed
+    When the completion step finishes, the expected count is reset to the value specified 
+    at construction less the number of calls to arrive_and_drop since, and the next barrier phase begins
+    #include <barrier>
+    #include <iostream>
+    #include <thread>
+    std::barrier my_barrier{ 3, [](){ std:: cout<<"... done\n";} };
+    void my_function()
+    {
+        my_barrier.arrive_and_wait();
+    }
+    int main()
+    {
+        // creating threads
+        std::thread t1(my_function);
+        std::thread t2(my_function);
+        std::thread t3(my_function);
+        t1.join();
+        t2.join();
+        t3.join();
+        std::cout << "All threads have finished\n";
+        return 0;
+    }
+
+std::latch: a downward counter of type std::ptrdiff_t 
+The value of the counter is initialized on creation. Threads may block on the latch until the counter is decremented to zero
+There is no possibility to increase or reset the counter, which makes the latch a single-use barrier. 
+
+
+************************************************
+False sharing
+Imagine two threads accessing different variables within the same cache line.
+If one thread writes to its variable, the entire cache line is marked as invalid in other processors' caches
+How to avoid:
+1. use thread private data
+2. Add padding (unused bytes) to data structures or arrays so that variables accessed by different threads are placed on separate cache lines
+
+Since caches operate at the granularity of cache lines (typically 64 bytes), 
+struct ThreadData {
+    int value;
+    char pad[60]; // Padding to ensure each struct is 64 bytes
+};
+
+************************************************
+Spurious wakeup
+A spurious wakeup occurs when a thread waiting on a condition variable wakes up even though it was not explicitly signaled, 
+interrupted, or timed out, and the condition it was waiting for is still unsatisfied
+
+Race Conditions: When multiple threads are waiting on a condition variable and a signal or broadcast occurs, 
+all may be woken, but only one will find the condition satisfied; the others experience spurious wakeups
+
+Always use a loop to check the condition after waking from a condition variable wait.
+
+std::unique_lock<std::mutex> lock(mtx);
+while (!condition) {
+    cv.wait(lock);
+}
+// Proceed only if condition is true
+
+************************************************
+Spinning lock vs sleep lock
+Spin Lock(Busy-wait)： thread attempting to acquire the lock repeatedly checks (spins) until the lock becomes available.
+Sleep Lock：A sleep lock (sometimes implemented as a mutex or semaphore) puts the waiting thread to 
+sleep if the lock is not available.
+
+CPU Usage:  high  vs low
+Overhead:	Low for short waits	vs High (context switch)
+Best Use Case:	Short critical sections	vs. Long critical sections
 
 ************************************************
 std::jthread C++20
 Automatic Joining: in destructor
 Stop Request Mechanism: std::stop_token and std::stop_source
 Compared to std::thread: safter due to automatic joining
+
+std::thread
+Not joined, but goes out of scope.
+When a thread object is destroyed, its destructor checks if the thread is still joinable (i.e., it has not been joined or detached).
+If the thread is joinable at destruction, the destructor calls std::terminate
+This is a safety feature: automatically joining in the destructor could cause deadlocks or unexpected blocking,
+while detaching could lead to dangerous situations where threads outlive the data they reference.
+
+Joined:	Safe, thread cleaned up
+Detached:	Safe, thread runs independently
+Joinable (not joined/detached):	std::terminate called, program aborts
+
+************************************************
+#include <iostream>
+#include <mutex>
+#include <thread>
+
+int i = 0;
+std::mutex m;
+
+void fun(int n)
+{
+    std::scoped_lock<std::mutex> lck(m);
+    i+=n;
+}
+
+int main()
+{
+    {
+        std::jthread t1(fun, 10);
+        std::jthread t2(fun, 10);
+        
+        // thread join here when destroy
+    }
+    
+    std::cout<<i;
+
+    return 0;
+}
 
