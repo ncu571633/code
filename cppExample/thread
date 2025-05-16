@@ -62,20 +62,12 @@ no other process is to be allowed to execute in its critical section
 mutual exclusion (short for Mutex) refers to the requirement of ensuring that no two processes or threads 
 (henceforth referred to only as processes) are in their critical section at the same time. 
 
-
-mutex, semaphore
-
 Monitor
 a monitor is an object or module intended to be used safely by more than one thread
 When locks and condition variables are used together like this, the result is called a monitor : 
 A collection of procedures manipulating a shared data structure. 
 One lock that must be held whenever accessing the shared data (typically each procedure acquires the lock at the very beginning and releases the lock before returning). 
 One or more condition variables used for waiting. 
-
-
-condition variable
-used to wait for a particular condition to become true 
-
 
 synchronization
 Thread synchronization is the application of particular mechanisms to ensure that two concurrently-executing threads or processes do not execute specific portions of a program at the same time. If one thread has begun to execute a serialized portion of the program, any other thread trying to execute this portion must wait until the first thread finishes. 
@@ -84,7 +76,54 @@ Thread-safe
 A piece of code is thread-safe if it only manipulates shared data structures in a manner that guarantees safe execution by multiple threads at the same time
 avoiding race condition
 
+************************************************
+threading primitives
+Mutex:
+Condition variable:
+    used to wait for a particular condition to become true 
 
+Semaphores: A mutex (mutual exclusion lock) ensures that only one thread can access a shared resource at a time, 
+    providing exclusive access, while a semaphore allows multiple threads to access a shared resource concurrently, within a specified limit
+
+std::barrier: It operates as a barrier that all threads must reach before the program can continue
+    The std::barrier class sets itself apart from other synchronization primitives by allowing users
+    to specify a callback function that executes after the barrier is lifted. 
+    This callback function can perform additional tasks that must be completed after the barrier has been crossed
+    When the completion step finishes, the expected count is reset to the value specified 
+    at construction less the number of calls to arrive_and_drop since, and the next barrier phase begins
+    #include <barrier>
+    #include <iostream>
+    #include <thread>
+    std::barrier my_barrier{ 3, [](){ std:: cout<<"... done\n";} };
+    void my_function()
+    {
+        my_barrier.arrive_and_wait();
+    }
+    int main()
+    {
+        // creating threads
+        std::thread t1(my_function);
+        std::thread t2(my_function);
+        std::thread t3(my_function);
+        t1.join();
+        t2.join();
+        t3.join();
+        std::cout << "All threads have finished\n";
+        return 0;
+    }
+
+std::latch: a downward counter of type std::ptrdiff_t 
+The value of the counter is initialized on creation. Threads may block on the latch until the counter is decremented to zero
+There is no possibility to increase or reset the counter, which makes the latch a single-use barrier. 
+
+
+
+
+
+
+
+
+************************************************
 std::lock_guard:
     exclusive ownership of a mutex for a scoped duration
     The lock is acquired upon construction and automatically released when the std::lock_guard object goes out of scope
@@ -131,43 +170,7 @@ You signal the condition variable, waking thread B.
 Thread A gets scheduled, does the first job.
 Thread A finds the queue non-empty and does the second job.
 Thread B gets scheduled, having been woken, but finds the queue still empty.
-************************************************
-threading primitives
-Mutex:
-Condition variable:
-Semaphores: A mutex (mutual exclusion lock) ensures that only one thread can access a shared resource at a time, 
-    providing exclusive access, while a semaphore allows multiple threads to access a shared resource concurrently, within a specified limit
 
-std::barrier: It operates as a barrier that all threads must reach before the program can continue
-    The std::barrier class sets itself apart from other synchronization primitives by allowing users
-    to specify a callback function that executes after the barrier is lifted. 
-    This callback function can perform additional tasks that must be completed after the barrier has been crossed
-    When the completion step finishes, the expected count is reset to the value specified 
-    at construction less the number of calls to arrive_and_drop since, and the next barrier phase begins
-    #include <barrier>
-    #include <iostream>
-    #include <thread>
-    std::barrier my_barrier{ 3, [](){ std:: cout<<"... done\n";} };
-    void my_function()
-    {
-        my_barrier.arrive_and_wait();
-    }
-    int main()
-    {
-        // creating threads
-        std::thread t1(my_function);
-        std::thread t2(my_function);
-        std::thread t3(my_function);
-        t1.join();
-        t2.join();
-        t3.join();
-        std::cout << "All threads have finished\n";
-        return 0;
-    }
-
-std::latch: a downward counter of type std::ptrdiff_t 
-The value of the counter is initialized on creation. Threads may block on the latch until the counter is decremented to zero
-There is no possibility to increase or reset the counter, which makes the latch a single-use barrier. 
 
 
 ************************************************
