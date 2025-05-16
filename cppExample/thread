@@ -77,13 +77,15 @@ A piece of code is thread-safe if it only manipulates shared data structures in 
 avoiding race condition
 
 ************************************************
-threading primitives
-Mutex:
-Condition variable:
-    used to wait for a particular condition to become true 
-
-Semaphores: A mutex (mutual exclusion lock) ensures that only one thread can access a shared resource at a time, 
-    providing exclusive access, while a semaphore allows multiple threads to access a shared resource concurrently, within a specified limit
+Threading primitives
+Mutex (mutual exclusion object): ensures that only one thread can access a shared resource at a time, providing exclusive access
+    Protects critical sections to prevent race conditions 
+Semaphores: allows multiple threads to access a shared resource concurrently, within a specified limit
+    Mutex works upon the locking mechanism, Semaphore uses signaling mechanism(wait/signal).
+    No Ownership: Any thread can increment or decrement the semaphore
+Condition variable: used to wait for a particular condition to become true 
+    Always used with a mutex to protect the condition check
+    wait/signal/broadcast
 
 std::barrier: It operates as a barrier that all threads must reach before the program can continue
     The std::barrier class sets itself apart from other synchronization primitives by allowing users
