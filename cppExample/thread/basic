@@ -197,10 +197,10 @@ struct ThreadData {
 };
 
 ************************************************
-Spurious wakeup
-A spurious wakeup occurs when a thread waiting on a condition variable wakes up even though it was not explicitly signaled, 
+Spurious wakeup: when a thread is waiting on a condition variable, but it wakes up even though it was not explicitly signaled, 
 interrupted, or timed out, and the condition it was waiting for is still unsatisfied
 
+Why: 
 Race Conditions: When multiple threads are waiting on a condition variable and a signal or broadcast occurs, 
 all may be woken, but only one will find the condition satisfied; the others experience spurious wakeups
 
@@ -211,6 +211,9 @@ while (!condition) {
     cv.wait(lock);
 }
 // Proceed only if condition is true
+
+Or, using the C++11 lambda predicate:
+cv.wait(lock, []{ return data_ready; }); // This form internally loops until the predicate is true
 
 ************************************************
 Spinning lock vs sleep lock
