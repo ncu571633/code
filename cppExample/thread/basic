@@ -142,18 +142,19 @@ std::unique_lock
     Allows manual unlocking, relocking, and transferring of ownership between different scopes or threads.
     Provides advanced functionalities like Deferred locking, Timeout locks, condition variables, Transfer of ownership (being moveable), and deadlock avoidance.
 
+std::scoped_lock is for the simple case of wanting to lock some number of mutex objects in a deadlock-free way. 
+    Locking a single mutex is just a special case of locking multiple ones
+
 std::shared_lock
     designed for shared ownership of a mutex, enabling multiple readers.
     Allows multiple threads to acquire the lock concurrently for shared access.
     Similar to std::lock_guard, it does not support manual unlocking or relocking.
 
-std::scoped_lock is for the simple case of wanting to lock some number of mutex objects in a deadlock-free way. 
-    Locking a single mutex is just a special case of locking multiple ones
-
 Difference:
 lock_guard and unique_lock are pretty much the same thing; lock_guard is a restricted version with a limited interface.
 unique_lock calls lock() on the mutex. shared_lock calls shared_lock().
 
+lock_guard/scoped_lock/unique_lock are for the exclusive ownership, shard_lock is for shared ownership.
 lock_guard if you need to lock exactly 1 mutex for an entire scope.
 scoped_lock if you need to lock a number of mutexes that is not exactly 1.
 unique_lock if you need to unlock within the scope of the block (which includes use with a condition_variable).
