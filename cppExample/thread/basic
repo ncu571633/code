@@ -83,6 +83,12 @@ Mutex (mutual exclusion object): ensures that only one thread can access a share
 Semaphores: allows multiple threads to access a shared resource concurrently, within a specified limit
     Mutex works upon the locking mechanism, Semaphore uses signaling mechanism(wait/signal).
     No Ownership: Any thread can increment or decrement the semaphore
+    Wait (P operation): This operation checks the semaphore's value. If the value is greater than 0, the process is allowed to continue, 
+and the semaphore's value is decremented by 1. If the value is 0, the process is blocked (waits) until the semaphore value becomes greater 
+than 0.
+    Signal (V operation): After a process is done using the shared resource, it performs the signal operation. This increments the 
+semaphore's value by 1, potentially unblocking other waiting processes and allowing them to access the resource.
+
 Condition variable: used to wait for a particular condition to become true 
     Always used with a mutex to protect the condition check
     wait/signal/broadcast
