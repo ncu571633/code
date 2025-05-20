@@ -1,0 +1,42 @@
+#include <iostream>
+#include <thread>
+#include <queue>
+#include <mutex>
+#include <semaphore>
+
+std::mutex mtx;  // Protect queue access
+std::counting_semaphore<1> semaphore(0);  // Tracks available items
+std::queue<int> q;
+constexpr int dataCount = 10;
+
+void producer() {
+    for (int i = 0; i < dataCount; i++) {
+        // Produce data
+        {
+            std::lock_guard<std::mutex> lock(mtx);
+            q.push(i);
+            std::cout << "Produced: " << i << std::endl;
+        }
+        
+        semaphore.release();  // Signal availability to consumer
+    }
+}
+
+void consumer() {
+    for (int i = 0; i < dataCount; i++) {
+        semaphore.acquire();  // Wait for available item
+        
+        // Consume data
+        {
+            std::lock_guard<std::mutex> lock(mtx);
+            std::cout << "Consumed: " << q.front() << std::endl;
+            q.pop();
+        }
+    }
+}
+
+int main() {
+    std::jthread consumer_thread(consumer);
+    std::jthread producer_thread(producer);
+    return 0;
+}
