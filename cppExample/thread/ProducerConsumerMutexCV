@@ -1,0 +1,43 @@
+#include <condition_variable>
+#include <iostream>
+#include <mutex>
+#include <thread>
+#include <queue>
+
+std::mutex mtx;
+std::condition_variable cv;
+std::queue<int> q;
+
+constexpr int MAX_BUFFER_SIZE = 10;
+
+void producer()
+{
+	for (int i=0; i<10; i++)
+	{
+		std::unique_lock<std::mutex> lock(mtx);
+		cv.wait(lock, []{ return q.size() < MAX_BUFFER_SIZE; });
+		q.push(i);
+		std::cout << "Data Produced: " << i<< std::endl;
+		cv.notify_one();
+	}
+}
+
+void consumer()
+{
+	for (int i=0; i<10; i++)
+	{
+		std::unique_lock<std::mutex> lock(mtx);
+		cv.wait(lock, [] { return !q.empty(); });
+		std::cout << "Data consumed! " << q.front() << std::endl;
+		q.pop();
+		cv.notify_one();
+	}
+}
+
+int main()
+{
+	std::jthread consumer_thread(consumer);
+	std::jthread producer_thread(producer);
+
+	return 0;
+}
