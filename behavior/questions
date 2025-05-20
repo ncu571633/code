@@ -189,8 +189,67 @@ c)        Tell me a time when you earned trust of others
 d)        Tell me a time when you motivated others
 e)        Tell me a time when you persuaded someone to do something
 f)        Tell me a time when you showed leadership
+
+
+Situation
+Last year, I was working on a team responsible for developing a new feature for our company’s flagship product. 
+We were on a tight deadline, and the feature was highly anticipated by our clients.
+
+Task
+During development, I noticed a potential performance bottleneck in the way our API was handling large data requests. 
+My task was to ensure the feature was delivered on time, but I realized that if we ignored this issue, it could lead to major problems after release.
+Action
+
+Instead of keeping quiet to avoid delays, I brought the issue to my team during our daily stand-up. 
+I explained the potential risks and suggested a solution that involved refactoring part of the codebase. 
+I volunteered to take on the extra work and collaborated closely with QA to make sure the fix wouldn’t introduce new bugs. 
+I also kept stakeholders updated on our progress and any changes to the timeline.
+
+Result
+Although it required a short extension to our deadline, the team and stakeholders appreciated my transparency and proactive approach. 
+The feature launched smoothly, with no performance issues reported by clients. Afterward, my team lead praised my integrity and problem-solving skills, 
+and my teammates began to consult me more often for technical advice. 
+This experience helped me build strong trust within my team and with our stakeholders.
+
 g)        Tell me about a time when you had to deal with a poor performer on your team.
+
+Situation
+Last year, I was working on a project developing a new feature. 
+One of our team members, who was responsible for a key module, consistently missed deadlines and delivered code with frequent bugs, 
+which started to impact our overall progress.
+
+Task
+As the project’s lead developer, it was my responsibility to ensure the team stayed on track and delivered a high-quality product.
+I needed to address this performance issue without demotivating the team member or disrupting team morale.
+
+Action
+I scheduled a one-on-one meeting with the team member to discuss my observations. 
+I approached the conversation with empathy, asking if there were any challenges they were facing and how I could help. 
+It turned out they were struggling with some of the newer technologies we were using and felt uncomfortable asking for help. 
+I offered to pair-program with them on some tasks and encouraged them to attend our internal training sessions. 
+I also set up regular check-ins to provide guidance and feedback.
+
+Result
+Over the next few weeks, their performance improved significantly. 
+Their code quality increased, and they started meeting their deadlines. 
+The team’s overall productivity improved, and the project was delivered on time. 
+The team member later thanked me for the support, and we maintained a positive working relationship. 
+This experience reinforced the importance of open communication and providing support to help teammates succeed.
+
+
 h)        Tell me about a time when you had to convince your team on some design decision.
+Situation
+
+Last year, my team was tasked with building a new microservices-based backend for our company’s flagship product. During the design phase, there was a debate about whether to use synchronous REST APIs or adopt an asynchronous message queue for inter-service communication.
+Task
+
+As a senior engineer, I believed that using an asynchronous message queue would make our system more resilient and scalable. However, most of the team was more comfortable with REST APIs and was concerned about the learning curve and potential complexity.
+Action
+
+To address their concerns, I prepared a detailed comparison document outlining the pros and cons of both approaches, including scalability, fault tolerance, and maintenance. I also created a small prototype demonstrating how message queues could handle service failures gracefully. I presented my findings in a team meeting, encouraged open discussion, and answered everyone’s questions. I made sure to listen to their concerns and addressed them with practical examples and data from our prototype.
+Result
+
+After the discussion and seeing the prototype in action, the team agreed to move forward with the message queue approach. The decision paid off—our system handled unexpected traffic spikes smoothly and was easier to maintain than anticipated. My willingness to listen, provide evidence, and collaborate helped the team feel confident in the decision, and we successfully delivered a robust backend system.
 
 7.        Responsibility / High Standard / Deep Dive
 a)        Tell me a time when your team or company undergoing some change
