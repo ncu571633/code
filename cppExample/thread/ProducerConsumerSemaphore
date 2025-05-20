@@ -5,33 +5,33 @@
 #include <semaphore>
 
 std::mutex mtx;  // Protect queue access
-std::counting_semaphore<1> semaphore(0);  // Tracks available items
 std::queue<int> q;
-constexpr int dataCount = 10;
+constexpr int MAXBUFFERSIZE = 10;
+
+std::counting_semaphore<MAXBUFFERSIZE> empty(MAXBUFFERSIZE);  // Tracks available slots
+std::counting_semaphore<MAXBUFFERSIZE> full(0);    // Tracks filled slots
 
 void producer() {
-    for (int i = 0; i < dataCount; i++) {
-        // Produce data
+    for (int i = 0; i < 20; i++) {
+        empty.acquire();  // Wait for empty slot
         {
             std::lock_guard<std::mutex> lock(mtx);
             q.push(i);
             std::cout << "Produced: " << i << std::endl;
         }
-        
-        semaphore.release();  // Signal availability to consumer
+        full.release();  // Signal new item
     }
 }
 
 void consumer() {
-    for (int i = 0; i < dataCount; i++) {
-        semaphore.acquire();  // Wait for available item
-        
-        // Consume data
+    for (int i = 0; i < 20; i++) {
+        full.acquire();  // Wait for item
         {
             std::lock_guard<std::mutex> lock(mtx);
             std::cout << "Consumed: " << q.front() << std::endl;
             q.pop();
         }
+        empty.release();  // Signal free slot
     }
 }
 
