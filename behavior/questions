@@ -190,7 +190,36 @@ d)        Tell me a time when you motivated others
 e)        Tell me a time when you persuaded someone to do something
 f)        Tell me a time when you showed leadership
 
+if a senior high level team member made a mistake
+Situation:
+During a critical project phase, a senior architect on our team made a configuration error that led to a system outage, 
+affecting our clients for several hours. Acutally it is not his fault, but his code triggered a hidden which is 
+not covered by test. 
 
+Task:
+As a team member, I needed to help resolve the issue quickly while maintaining a positive working relationship 
+and ensuring we learned from the incident to prevent future occurrences.
+
+Action:
+I first gathered all the facts about what happened, avoiding assumptions or blame. 
+I approached the senior member privately and with empathy, recognizing that mistakes can happen to anyone, 
+regardless of experience. 
+We discussed the error together, focusing on understanding the root cause using techniques like the “5 Whys” to 
+uncover any process or communication gaps rather than personal shortcomings. 
+I asked for their perspective and listened carefully, 
+then we collaborated on a plan to fix the immediate problem and agreed on steps to prevent similar issues in the future, 
+such as updating documentation or introducing additional checks. 
+I encouraged sharing the lessons learned with the team to foster transparency and growth
+
+Result:
+The senior team member appreciated the respectful and constructive approach, 
+which helped preserve trust and morale. We resolved the outage quickly and implemented new safeguards. 
+By focusing on solutions and learning, we improved our processes and strengthened our team’s culture of accountability 
+and continuous improvement
+
+
+
+c)        Tell me a time when you earned trust of others
 Situation
 Last year, I was working on a team responsible for developing a new feature for our company’s flagship product. 
 We were on a tight deadline, and the feature was highly anticipated by our clients.
@@ -198,8 +227,8 @@ We were on a tight deadline, and the feature was highly anticipated by our clien
 Task
 During development, I noticed a potential performance bottleneck in the way our API was handling large data requests. 
 My task was to ensure the feature was delivered on time, but I realized that if we ignored this issue, it could lead to major problems after release.
-Action
 
+Action
 Instead of keeping quiet to avoid delays, I brought the issue to my team during our daily stand-up. 
 I explained the potential risks and suggested a solution that involved refactoring part of the codebase. 
 I volunteered to take on the extra work and collaborated closely with QA to make sure the fix wouldn’t introduce new bugs. 
