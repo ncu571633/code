@@ -117,11 +117,17 @@ d)        Tell me a time when you provided suggestion but had not been considere
 e)        Tell me a time when you had to go behind your manager's back to do something
 
 My manager asked me to work together with one co-worker. However, I had a conflict with him over the choice of design for a project.
+For the feature design, I prefer to use design patterns so we can reuse code, also easy to maintain. 
+He perfers to use a prodecure way since we don't have enough time to do my approach. 
 We both had strong opinions and valid arguments, but we could not agree on which one was better. 
 So I decided to have a meeting with him and explain why I preferred my option, but also listen to his reasoning.  (Communicate directly and respectfully with the co-worker)
-First we make sure we have same assumption/goal/requirement, then to see in which part we agree with each other, and also find out the difference of our approach. 
+First we make sure we have same assumption/goal/requirement, then to see in which part we agree with each other, 
+and also find out the difference of our approach. 
 Then we both understood each other's suggestions and presented our ideas to the rest of the team, which allowed everyone to voice their opinions. 
 We were able to come to a mutual decision as a group. 
+The solution is due to the time constraint, we use a producure way to do the work, but we reserze the APIs so we can use in the future. 
+When we have time, we can continue working on the design pattern and we don't redo the work and waste the effert. 
+
 
 Situation:
 In a previous role, I was working on a critical feature that was scheduled for release. 
