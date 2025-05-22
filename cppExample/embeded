@@ -1,6 +1,12 @@
 Memory layout:
 1. stack
 2. heap
+Why stack is fater than heap
+1: Allocation/Deallocation:	Simple pointer adjustment	vs Complex search and bookkeeping
+Access Pattern:	   Contiguous, cache-friendly        vs	Scattered, less cache-friendly
+Indirection	   Direct access	  vs  Requires pointer dereferencing
+Thread Safety	No synchronization needed	  vs.  May require synchronization
+
 3. .bss   uninitialized static data, both variables and constants
 static int i;
 static char a[12];
@@ -21,6 +27,20 @@ void foo (void) {
 5. code segment, also known as text segment
 contains executable code and is generally read-only and fixed size
 
+******************************************************************************************************************************************
+Kernel Space vs User Space
+Kernel space and user space are two distinct regions of memory and execution modes in a modern operating system. 
+protected area of memory in an operating system where the kernel, device drivers, and other privileged system code reside
+
+how to change thread privilege
+meaning switching its ability to execute privileged (kernel) instructions or access protected resources
+The most common way for a thread to temporarily gain higher privileges is by making a system call. 
+This triggers a controlled transition from user mode to kernel mode, 
+allowing the kernel to execute privileged operations on behalf of the thread
+    The CPU switches to kernel mode for the duration of the system call, then returns to user mode when done.
+
+Traps and System Calls in Operating System
+https://www.geeksforgeeks.org/traps-and-system-calls-in-operating-system-os/
 ******************************************************************************************************************************************
 
 Alignment
