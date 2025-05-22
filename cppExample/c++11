@@ -343,7 +343,11 @@ brace-or-equal initializers, list initialization
 	       widget(std::initializer_list<long> il);
 	}
 	widget w{10, true} -> initializer_list ctor
-	
+
+most vexing parse: ambiguity resolution
+ creation of an object parameter and specification of a function's type  (default later)
+int i(int(my_dbl))
+
 *****************************************************************************************************************************************************************************
 char16_t and char32_t
     16-bit wide character used to store Unicode encoded as UTF-16LE
