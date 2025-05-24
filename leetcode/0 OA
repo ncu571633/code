@@ -1,0 +1,217 @@
+https://www.1point3acres.com/bbs/thread-1111077-1-1.html
+
+#include <map>
+#include <set>
+#include <list>
+#include <cmath>
+#include <ctime>
+#include <deque>
+#include <queue>
+#include <stack>
+#include <string>
+#include <bitset>
+#include <cstdio>
+#include <limits>
+#include <vector>
+#include <climits>
+#include <cstring>
+#include <cstdlib>
+#include <fstream>
+#include <numeric>
+#include <sstream>
+#include <iostream>
+#include <algorithm>
+#include <unordered_map>
+
+using namespace std;
+
+struct Commit
+{
+    int id;
+    int timestamp;
+    vector<pair<string, string>> files;
+};
+
+class DisasterRecoveryEngine
+{
+public: 
+    DisasterRecoveryEngine(istream& input)
+        : inputStream (input)
+    {}
+
+    void processCommits()
+    {
+        int n;
+        inputStream >> n;
+        inputStream.ignore();
+        
+        vector<Commit> commits(n); // store input commits
+        unordered_map<string, vector<int>> commitFiles; // file "path&id" -> commit index
+        for (int i=0; i<n; i++)
+        {
+            string line;
+            getline(inputStream, line);
+            istringstream iss(line);
+            string tmp;
+            iss >> tmp >> commits[i].id     // "id", commit id,
+                >> tmp >> commits[i].timestamp; // "timestamp", commit timestamp
+            string filePath, id;
+            while(iss >> filePath >> id)
+            {
+                commits[i].files.emplace_back(filePath, id);
+                string key = getFileKey(filePath, id);
+                commitFiles[key].push_back(i);
+            }
+        }
+        
+        // build graph: nodes: commits, edges: if they share same file+id
+        // graph: nodes: commits, edges: if they share same file+id
+        vector<vector<int>> graph(n);
+        for(const auto& [key, index]: commitFiles)
+        {
+            for(size_t i=1; i<index.size(); i++)
+            {
+                graph[index[i-1]].emplace_back(index[i]);
+                graph[index[i]].emplace_back(index[i-1]);
+            }
+        }
+        
+        // find repositories: from how commits are connected
+        vector<int> repos(n, -1);
+        for(int i=0; i<n; ++i)
+        {
+            if (repos[i] != -1)
+                continue;
+            
+            queue<int> q;
+            q.push(i);
+            repos[i] = repoCount;
+            while(!q.empty())
+            {
+                int t = q.front();
+                q.pop();
+                for(int v: graph[t])
+                {
+                    if (repos[v] == -1)
+                    {
+                        repos[v] = repoCount;
+                        q.push(v);
+                    }
+                }
+            }
+            repoCount ++;
+        }
+
+        // For each repo: indexing: [file+id] -> commits, then sort by time
+        repoFileMap.resize(repoCount);
+        for (int i=0; i<n; i++)
+        {
+            int r = repos[i]; // repo id
+            for (auto& [filePath, id]: commits[i].files)
+            {
+                string key = getFileKey(filePath, id);
+                repoFileMap[r][key].emplace_back(commits[i].timestamp, commits[i].id);
+            }
+        }
+        
+        for (auto& repo: repoFileMap)
+        {
+            unordered_map<string, string> files; // file name -> file id
+            for(auto& [key, v]: repo)
+            {
+                string filePath = getFilePath(key);
+                string fileId = getFileId(key);
+                if (files.count(filePath) == 0)
+                {
+                    files[filePath] = fileId;
+                }
+                else
+                {
+                    if (files[filePath] != fileId)
+                    {
+                        cout << "AMBIGUOUS INPUT!" << endl;
+                        return ;
+                    }
+                }
+                
+                sort(v.begin(), v.end());
+            }
+        }
+
+
+        int q;
+        inputStream >> q;
+        inputStream.ignore();
+        for(int i=0; i<q; i++)
+        {
+            string line;
+            getline(inputStream, line);
+            istringstream iss(line);
+            int start, end;
+            string path, id;
+            iss >> start >> end >> path >> id;
+            
+            string key = getFileKey(path, id);
+            set<pair<int, int>> results;
+            for(int r=0; r<repoFileMap.size(); r++)
+            {
+                if (repoFileMap[r].count(key))
+                {
+                    // map: key: filename|fileid, value: time, commit id
+                    for(auto& p: repoFileMap[r])
+                    {
+                        auto& v = p.second;
+                        for(auto timeIdPair: v)
+                        {
+                            if (start <= timeIdPair.first && timeIdPair.first <= end)
+                            {
+                                
+                                results.insert({timeIdPair.first, timeIdPair.second});
+                            }
+                        }
+                    }
+                }
+            }
+            if (results.empty())
+            {
+                cout << "\n";
+            }
+            else {
+                for(auto& p: results)
+                    cout << p.second << " ";
+                cout << "\n";
+            }
+        }
+    }
+    
+private:
+    inline string getFileKey(const string& filePath, const string& id)
+    {
+        return filePath + "|" + id;
+    }
+
+    inline string getFilePath(const string& key)
+    {
+        size_t pos = key.find('|');
+        return key.substr(0, pos);
+    }
+    
+    inline string getFileId(const string& key)
+    {
+        size_t pos = key.find('|');
+        return key.substr(pos+1);
+    }
+    
+    int repoCount = 0;
+    // vector: repos; map: key: filename|fileid, value: time, commit id
+    vector<map<string, vector<pair<int, int>>>> repoFileMap;
+    
+    istream& inputStream;
+};
+
+int main() {
+    DisasterRecoveryEngine engine(cin);
+    engine.processCommits();
+
+    return 0;
+}
