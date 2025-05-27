@@ -5,39 +5,48 @@
 #include <queue>
 
 std::mutex mtx;
-std::condition_variable cv;
+std::condition_variable cv_producer, cv_consumer;
 std::queue<int> q;
-
+std::atomic<bool> finished;
 constexpr int MAX_BUFFER_SIZE = 10;
 
-void producer()
-{
-	for (int i=0; i<10; i++)
-	{
-		std::unique_lock<std::mutex> lock(mtx);
-		cv.wait(lock, []{ return q.size() < MAX_BUFFER_SIZE; });
-		q.push(i);
-		std::cout << "Data Produced: " << i<< std::endl;
-		cv.notify_one();
-	}
+void producer() {
+    for (int i = 0; i < MAX_BUFFER_SIZE; ++i) {
+        {
+            std::unique_lock<std::mutex> lock(mtx);
+            // cv_producer.wait(lock, []{ return q.size() < MAX_BUFFER_SIZE; });
+            q.push(i);
+            std::cout << "Produced: " << i << "\n";
+            if (i == MAX_BUFFER_SIZE - 1)
+                finished = true;
+        }
+        cv_consumer.notify_one();
+    }
 }
 
-void consumer()
-{
-	for (int i=0; i<10; i++)
-	{
-		std::unique_lock<std::mutex> lock(mtx);
-		cv.wait(lock, [] { return !q.empty(); });
-		std::cout << "Data consumed! " << q.front() << std::endl;
-		q.pop();
-		cv.notify_one();
-	}
+void consumer() {
+    while (true) 
+    {
+        std::unique_lock<std::mutex> lock(mtx);
+        cv_consumer.wait(lock, []{ return !q.empty(); });
+        
+        int value = q.front();
+        q.pop();
+        std::cout << "Consumed: " << value << "\n";
+        
+        if (finished && q.empty())
+            break;
+        lock.unlock();
+
+        // cv_producer.notify_one();
+    }
 }
 
-int main()
-{
-	std::jthread consumer_thread(consumer);
-	std::jthread producer_thread(producer);
-
-	return 0;
+int main() {
+    {
+        std::jthread producer_thread(producer);
+        std::jthread consumer_thread(consumer);
+    }
+    std::cout<< "Code finished" << std::endl; 
+    return 0;
 }
