@@ -1,3 +1,7 @@
+A max heap is a complete binary tree in which the value of a node is greater than or equal to the values of its children. 
+Max Heap data structure is useful for sorting data using heap sort.
+We can only get top().
+
 #include <queue>
 #include <vector>
 #include <iostream>
