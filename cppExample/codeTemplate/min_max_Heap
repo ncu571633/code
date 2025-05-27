@@ -103,3 +103,9 @@ int main()
     
     return 0;
 }
+
+***************************************************************************************************
+Pre-allocating Underlying Storage: specify queue size
+std::vector<int> storage;
+storage.reserve(100); // Pre-allocate space for 100 elements
+std::priority_queue<int, std::vector<int>> heap(std::less<int>(), std::move(storage));
