@@ -1,1 +1,18 @@
+#include <queue>
+#include <vector>
+#include <iostream>
 
+int main()
+{
+    std::priority_queue<int, std::vector<int>, std::greater<int>> minHeap;
+    for (int i=0; i<10; i++)
+        minHeap.push(i);
+    
+    while(!minHeap.empty())
+    {
+        std::cout << minHeap.top() << std::endl;
+        minHeap.pop();
+    }
+    
+    return 0;
+}
