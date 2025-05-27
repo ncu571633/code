@@ -17,13 +17,17 @@ pthread_attr_setscope(attr+i, PTHREAD_SCOPE_SYSTEM)
 
 A race condition occurs when 2 or more threads are able to access shared data and they try to change it at the same time. 
 
-In our race program, we can fix the race condition by enforcing that no thread can be interrupted by another thread when it is modifying and printing s. This can be done with a mutex, sometimes called a ``lock'' or sometimes a ``binary semaphore.'' 
+In our race program, we can fix the race condition by enforcing that no thread can be interrupted by another thread when it is modifying and printing s.
+This can be done with a mutex, sometimes called a ``lock'' or sometimes a ``binary semaphore.'' 
 
-If you are performing a very time consuming operation (such as writing to a socket or file) while holding the mutex, then you should consider the use of buffering so that you can move the time consuming operation out of the code that holds the mutex. 
+If you are performing a very time consuming operation (such as writing to a socket or file) while holding the mutex, 
+then you should consider the use of buffering so that you can move the time consuming operation out of the code that holds the mutex. 
 
-A monitor is a data structure which a thread can "enter" and "exit". Only one thread may be in the monitor at a time. This is just like a mutex, and in pthreads, there is no entity called a "monitor". You just use a mutex. 
+A monitor is a data structure which a thread can "enter" and "exit". Only one thread may be in the monitor at a time. 
+This is just like a mutex, and in pthreads, there is no entity called a "monitor". You just use a mutex. 
 
-Condition variables allow you to do more sophisticated things with monitors. A condition variable must be associated with a specific monitor. 
+Condition variables allow you to do more sophisticated things with monitors. 
+A condition variable must be associated with a specific monitor. 
 
 Flynn's classification
 Single instruction single data: sequential
@@ -66,11 +70,14 @@ Monitor
 a monitor is an object or module intended to be used safely by more than one thread
 When locks and condition variables are used together like this, the result is called a monitor : 
 A collection of procedures manipulating a shared data structure. 
-One lock that must be held whenever accessing the shared data (typically each procedure acquires the lock at the very beginning and releases the lock before returning). 
+One lock that must be held whenever accessing the shared data (typically each procedure acquires the lock at the very beginning and releases 
+the lock before returning). 
 One or more condition variables used for waiting. 
 
 synchronization
-Thread synchronization is the application of particular mechanisms to ensure that two concurrently-executing threads or processes do not execute specific portions of a program at the same time. If one thread has begun to execute a serialized portion of the program, any other thread trying to execute this portion must wait until the first thread finishes. 
+Thread synchronization is the application of particular mechanisms to ensure that two concurrently-executing threads or processes do not execute 
+specific portions of a program at the same time. If one thread has begun to execute a serialized portion of the program, 
+any other thread trying to execute this portion must wait until the first thread finishes. 
 
 Thread-safe
 A piece of code is thread-safe if it only manipulates shared data structures in a manner that guarantees safe execution by multiple threads at the same time
@@ -140,7 +147,8 @@ std::lock_guard:
 std::unique_lock
     supports both exclusive ownership and shared ownership of a mutex
     Allows manual unlocking, relocking, and transferring of ownership between different scopes or threads.
-    Provides advanced functionalities like Deferred locking, Timeout locks, condition variables, Transfer of ownership (being moveable), and deadlock avoidance.
+    Provides advanced functionalities like Deferred locking, Timeout locks, condition variables, Transfer of ownership (being moveable), 
+and deadlock avoidance.
 
 std::scoped_lock is for the simple case of wanting to lock some number of mutex objects in a deadlock-free way. 
     Locking a single mutex is just a special case of locking multiple ones
@@ -161,13 +169,15 @@ unique_lock if you need to unlock within the scope of the block (which includes 
 
 
 
-In computing, a computer program or subroutine is called reentrant if it can be interrupted in the middle of its execution and then safely called again ("re-entered") before its previous invocations complete execution. The interruption could be caused by an internal action such as a jump or call, or by an external action such as a hardware interrupt or signal.
+In computing, a computer program or subroutine is called reentrant if it can be interrupted in the middle of its execution and then safely called again 
+("re-entered") before its previous invocations complete execution. The interruption could be caused by an internal action such as a jump or call, or by an external action such as a hardware interrupt or signal.
 
 
 The pthread_join() function waits for the thread specified by thread to terminate.
 Preemptive scheduling: The preemptive scheduling is prioritized. The highest priority process should always be the process that is currently utilized.
 
-Non-Preemptive scheduling: When a process enters the state of running, the state of that process is not deleted from the scheduler until it finishes its service time.
+Non-Preemptive scheduling: When a process enters the state of running, the state of that process is not deleted from the scheduler until it finishes 
+its service time.
 
 Why do you need a while loop while waiting for a condition variable
 
