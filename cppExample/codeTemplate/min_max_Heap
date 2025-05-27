@@ -1,0 +1,58 @@
+#include <queue>
+#include <vector>
+#include <iostream>
+
+int main()
+{
+    std::priority_queue<int, std::vector<int>, std::greater<int>> minHeap;
+    for (int i=0; i<10; i++)
+        minHeap.push(i);
+    
+    while(!minHeap.empty())
+    {
+        std::cout << minHeap.top() << std::endl;
+        minHeap.pop();
+    }
+    
+    return 0;
+}
+
+***************************************************************************************************  
+#include <queue>
+#include <vector>
+#include <iostream>
+#include <string>
+
+struct Trading_Event
+{
+    std::string ticker;
+    int price;
+    int vol;
+};
+
+struct Compare {
+    bool operator()(const Trading_Event& a, const Trading_Event& b) const 
+    {
+        // return a.price*a.vol > b.price*b.vol; // min-heap by price
+        return a.price*a.vol < b.price*b.vol; // max-heap by price
+    }
+};
+
+int main()
+{
+    std::priority_queue<Trading_Event, std::vector<Trading_Event>, Compare> heap;
+    for (int i=0; i<10; i++)
+    {
+        heap.push({std::to_string(i), i, i});
+    }
+    
+    while(!heap.empty())
+    {
+        Trading_Event e = heap.top();
+        std::cout << e.price << " " << e.vol << std::endl;
+        heap.pop();
+    }
+    
+    return 0;
+}
+
