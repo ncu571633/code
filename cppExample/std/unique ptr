@@ -1,0 +1,44 @@
+template <class T>
+class my_unique_ptr {
+private:
+    T* ptr = nullptr;
+
+public:
+    my_unique_ptr() = default;  // Default constructor
+
+    explicit my_unique_ptr(T* p) : ptr(p) {} 
+    
+    my_unique_ptr(const my_unique_ptr&) = delete;  // Copy forbidden
+    my_unique_ptr& operator=(const my_unique_ptr&) = delete;  // Copy forbidden
+
+    my_unique_ptr(my_unique_ptr&& dyingObj) noexcept
+        : ptr(dyingObj.ptr) 
+    {
+        dyingObj.ptr = nullptr;
+    }
+
+    my_unique_ptr& operator=(my_unique_ptr&& dyingObj) noexcept
+    {
+        if (this != &dyingObj) {
+            __cleanup__();
+            ptr = dyingObj.ptr;
+            dyingObj.ptr = nullptr;
+        }
+        return *this;
+    }
+
+    T* operator->() const { return ptr; }
+    T& operator*() const { return *ptr; }
+
+    ~my_unique_ptr() { __cleanup__(); }
+
+    // Optional helper functions
+    T* get() const noexcept { return ptr; }
+    explicit operator bool() const noexcept { return ptr != nullptr; }
+
+private:
+    void __cleanup__() {
+        delete ptr;
+        ptr = nullptr;
+    }
+};
