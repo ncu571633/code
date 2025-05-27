@@ -16,3 +16,39 @@ int main()
     
     return 0;
 }
+
+****************************************************************************************
+#include <set>
+#include <iostream>
+#include <string>
+
+struct Trading_Event
+{
+    std::string ticker;
+    int price;
+    int vol;
+};
+
+struct Compare {
+    bool operator()(const Trading_Event& a, const Trading_Event& b) const 
+    {
+        return a.price*a.vol > b.price*b.vol; // descreasing
+        // return a.price*a.vol < b.price*b.vol; // increasing
+    }
+};
+
+int main()
+{
+    std::set<Trading_Event, Compare> s;
+    for (int i=0; i<10; i++)
+    {
+        s.insert({std::to_string(i), i, i});
+    }
+    
+    for(auto& e: s)
+    {
+        std::cout << e.price << " " << e.vol << std::endl;
+    }
+    
+    return 0;
+}
