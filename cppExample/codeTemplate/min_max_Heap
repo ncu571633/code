@@ -66,3 +66,40 @@ int main()
     return 0;
 }
 
+***************************************************************************************************
+#include <queue>
+#include <vector>
+#include <iostream>
+#include <string>
+
+struct Trading_Event
+{
+    std::string ticker;
+    int price;
+    int vol;
+};
+
+int main()
+{
+    auto cmp = [](const Trading_Event& a, const Trading_Event& b) {
+        // return a.price * a.vol < b.price * b.vol; // Max-heap comparison
+        return a.price * a.vol > b.price * b.vol; // min-heap comparison
+    };
+    
+    std::priority_queue<Trading_Event, 
+                        std::vector<Trading_Event>, 
+                        decltype(cmp)> heap(cmp);
+    for (int i=0; i<10; i++)
+    {
+        heap.push({std::to_string(i), i, i});
+    }
+    
+    while(!heap.empty())
+    {
+        Trading_Event e = heap.top();
+        std::cout << e.price << " " << e.vol << std::endl;
+        heap.pop();
+    }
+    
+    return 0;
+}
