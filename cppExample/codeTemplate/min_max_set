@@ -52,3 +52,40 @@ int main()
     
     return 0;
 }
+
+****************************************************************************************
+#include <vector>
+#include <string>
+#include <set>
+#include <iostream>
+#include <functional>
+
+struct Trading_event
+{
+    std::string ticker;
+    int price;
+    int vol;
+};
+
+int main()
+{
+    auto compare = [](const Trading_event& t1, const Trading_event& t2){ return t1.price * t1.vol > t2.price * t2.vol;};
+    std::set<Trading_event, decltype(compare)> s(compare);
+    /*
+    std::function<bool(const Trading_event&, const Trading_event&)> compare = 
+        [](const Trading_event& t1, const Trading_event& t2)
+        { return t1.price * t1.vol > t2.price * t2.vol;};
+    std::set<Trading_event, std::function<bool(const Trading_event&, const Trading_event&)>> s(compare);
+    */
+    for (int i=0; i<10; i++)
+    {
+        s.insert({std::to_string(i), i, i});
+    }
+    
+    for(auto& e: s)
+    {
+        std::cout << e.price << " " << e.vol << std::endl;
+    }
+    
+    return 0;
+}
