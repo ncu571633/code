@@ -68,3 +68,100 @@ public:
         return h->next;
     }
 };
+
+
+merge k sorted stream。读stream需要先request(stream_id)，然后再next(stream_id)。
+request(stream_id)会在后台读取stream的data。next(stream_id)会block直到data is available。
+stream client不threa safe。in flight stream read不能超过n，需要尽可能高的concurrency level。
+
+如果没有concurrency level的limit，但是限制memory usage，如何尽可能提高concurrency level。
+给heap加上capacity，同时确保每个stream至少能insert第一个元素进heap（如果heap里没有stream x的数据，那么stream x可以insert进heap。
+不然的话要看heap size有没有超过capacity）。每个stream一个thread来读，
+
+main thread do the merge，用global lock来serialize execution。
+
+#include <vector>
+#include <queue>
+#include <mutex>
+#include <condition_variable>
+#include <thread>
+#include <atomic>
+#include <unordered_map>
+#include <climits>
+
+using namespace std;
+
+class StreamMerger {
+public:
+    StreamMerger(int capacity) : capacity_(capacity) {}
+
+    vector<int> mergeStreams(const vector<int>& stream_ids) {
+        struct Element {
+            int value;
+            int stream_id;
+            bool operator>(const Element& other) const { return value > other.value; }
+        };
+
+        priority_queue<Element, vector<Element>, greater<>> pq;
+        mutex global_mutex;
+        condition_variable cv;
+        unordered_map<int, int> stream_counts;
+        atomic<int> active_streams = stream_ids.size();
+
+        vector<thread> readers;
+        for (int id : stream_ids) {
+            readers.emplace_back([&, id]() {
+                while (true) {
+                    request(id);
+                    int value = next(id);
+                    if (value == INT_MAX) {
+                        active_streams--;
+                        break;
+                    }
+
+                    unique_lock<mutex> lock(global_mutex);
+                    if (stream_counts[id] == 0) {  // 首次插入必须保证
+                        if (pq.size() >= capacity_) {
+                            Element replaced = pq.top();
+                            pq.pop();
+                            if (--stream_counts[replaced.stream_id] == 0) {
+                                stream_counts.erase(replaced.stream_id);
+                            }
+                        }
+                        pq.push({value, id});
+                        stream_counts[id]++;
+                    } else if (pq.size() < capacity_) {  // 非首次且堆未满
+                        pq.push({value, id});
+                        stream_counts[id]++;
+                    }
+                    cv.notify_one();
+                }
+            });
+        }
+
+        vector<int> merged;
+        while (active_streams > 0 || !pq.empty()) {
+            unique_lock<mutex> lock(global_mutex);
+            cv.wait(lock, [&]() { return !pq.empty() || active_streams == 0; });
+            
+            if (!pq.empty()) {
+                Element e = pq.top();
+                pq.pop();
+                merged.push_back(e.value);
+                if (--stream_counts[e.stream_id] == 0) {
+                    stream_counts.erase(e.stream_id);
+                }
+            }
+        }
+
+        for (auto& t : readers) if (t.joinable()) t.join();
+        return merged;
+    }
+
+private:
+    int capacity_;
+
+    void request(int stream_id) { /* 异步请求流数据 */ }
+    int next(int stream_id) { /* 阻塞获取数据 */ }
+};
+
