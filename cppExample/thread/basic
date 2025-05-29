@@ -55,6 +55,13 @@ For example, two threads that hold respectively lock A and lock B, and are both 
 
 we can prevent deadlock if we assign an order to our locks and require that locks always be acquired in order. 
 
+livelock: where two or more threads are not blocked but are unable to make progress 
+because they keep responding to each other's actions without ever resolving their conflict. 
+Unlike a deadlock, where threads are stuck waiting indefinitely for resources, in a livelock, 
+threads are actively changing states or repeatedly releasing and reacquiring locks, but the system as a whole remains stuck.
+
+
+
 Mutual exclusion condition: a resource that cannot be used by more than one process at a time
 Hold and wait condition: processes already holding resources may request new resources
 No preemption condition: No resource can be forcibly removed from a process holding it, resources can be released only by the explicit action of the process
@@ -87,6 +94,13 @@ avoiding race condition
 Threading primitives
 Mutex (mutual exclusion object): ensures that only one thread can access a shared resource at a time, providing exclusive access
     Protects critical sections to prevent race conditions 
+  std::recursive_mutex: allows mutex to be locked more than once without getting to a deadlock 
+    void foo() {
+   ... mutex_acquire();
+   ... foo();
+   ... mutex_release();
+}
+
 Semaphores: allows multiple threads to access a shared resource concurrently, within a specified limit
     Mutex works upon the locking mechanism, Semaphore uses signaling mechanism(wait/signal).
     No Ownership: Any thread can increment or decrement the semaphore
