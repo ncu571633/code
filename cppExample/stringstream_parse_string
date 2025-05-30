@@ -1,3 +1,7 @@
+std::stringstream: Used for both input and output operations on a string. Can do >> and <<
+std::istringstream: Used for input operations from a string. Can do >> extraction
+std::ostringstream: for output
+
 #include <iostream>
 #include <sstream>
 using namespace std;
@@ -6,25 +10,30 @@ int main()
 {
     string a("1 2 3");
     istringstream my_stream(a);
-    while (my_stream) 
+    int n;
+    while (my_stream >> n)
     {
-        string n;
-        my_stream >> n;
-        if(n.empty())
-            continue;
         cout << n << endl;
     }
-    
     return 0;
 }
 
+#include <iostream>
+#include <sstream>
+using namespace std;
 
-    string a("1, 16, 23");
+int main()
+{
+    string a("1 16  23");
     istringstream ss(a);
     std::string token;
-    while(std::getline(ss, token, ',')) {
-        std::cout << atoi(token.c_str()) << '\n';
+    while(std::getline(ss, token, ' ')) {
+        if (!token.empty()) { // Skip empty tokens
+            std::cout << atoi(token.c_str()) << '\n';
+        }
     }
+    return 0;
+}
 
 
 #include <iostream>
