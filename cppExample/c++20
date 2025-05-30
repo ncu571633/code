@@ -34,7 +34,7 @@ auto a = v | views::transform(square);
 auto b = views::transform(v, square);
 auto c = ranges::transform_view(v, square);
 
-1. for each
+* for each
 int main()
 {
     int sum = 0;
@@ -43,7 +43,11 @@ int main()
     std::cout << sum ;
 }
 
-2. Filter
+* all: returns a view that includes all elements of its range argument.
+std::vector nums = {1, 2, 3, 4, 5, 6};
+std::views::all(nums);
+
+* Filter
 #include <iostream>
 #include <ranges>
 #include <vector>
@@ -54,15 +58,78 @@ int main() {
     for (int n : even_nums)
         std::cout << n << " "; 
 }
+// 4, 16, 36
 
-3. Drop
+* Drop
 drop(n): creates a view excluding the first N elements of a range
 drop_while(p): leading elements that match a predicate are dropped
 
-auto conv = text
-    | std::views::drop_while( [](unsigned char c) { return std::isspace(c); } )
-    | std::views::transform( [](unsigned char c) { return std::toupper(c); } );
+std::vector nums = {1, 2, 3, 4, 5, 6};
+auto even_nums = nums
+    | std::views::drop_while([](int n) { return n % 2 == 1; } )
+    | std::views::transform([](int n) { return n * n; });
+// 4 9 16 25 36 
 
+* Take
+take(n): take first n elements
+take_while(n): initial elements of another view, until the first element on which a predicate returns false
+std::vector nums = {1, 2, 3, 4, 5, 6};
+auto even_nums = nums
+    | std::views::take_while([](int n) { return n % 2 == 1; } )
+    | std::views::transform([](int n) { return n * n; });
+
+* Join: sequence obtained from flattening a view of ranges
+Join_With: sequence obtained from flattening a view of ranges, with the delimiter in between elements
+ const std::vector<std::vector<int>> v{{1, 2}, {3, 4, 5}, {6}, {7, 8, 9}};
+    auto jv = std::ranges::join_view(v);
+// 1 2 3 4 5 6 7 8 9
+    std::vector v{"This"sv, "is"sv, "a"sv, "test."sv};
+    auto joined = v | std::views::join_with(' ');
+// This is a test.
+
+* Split: obtained from splitting another view using a delimiter
+    using std::operator""sv;
+    constexpr auto words{"Hello^_^C++^_^20^_^!"sv};
+    constexpr auto delim{"^_^"sv};
+    for (const auto word : std::views::split(words, delim))
+        // with string_view's C++23 range constructor:
+        std::cout << std::quoted(std::string_view(word)) << ' ';
+// "Hello" "C++" "20" "!"
+
+* Concat
+    std::vector<int> v0{1, 2, 3}, v1{4, 5};
+    int a[]{6, 7};
+    int i{8};
+    auto ie{std::views::single(i)}; 
+    auto con = std::views::concat(v0, v1, a, ie);
+con: [1, 2, 3, 4, 5, 6, 7, 8]
+
+* reverse
+* keys: takes a view consisting of pair-like values and produces a view of the first elements of each pair
+values:  takes a view consisting of pair-like values and produces a view of the second elements of each pair
+std::map<std::string, int> map{{"one", 1}, {"two", 2}}; 
+for (auto const& key : std::views::keys(map))
+    std::cout << key << ' ';
+for (auto const& key : std::views::values(map))
+    std::cout << key << ' ';
+
+* zip: tuples of references to corresponding elements of the adapted views
+    auto x = std::vector{1, 2, 3, 4};
+    auto y = std::list<std::string>{"α", "β", "γ", "δ", "ε"};
+    auto z = std::array{'A', 'B', 'C', 'D', 'E', 'F'};
+    for (std::tuple<int&, std::string&, char&> elem : std::views::zip(x, y, z))
+    {
+        std::cout << std::get<0>(elem) << ' '
+                  << std::get<1>(elem) << ' '
+                  << std::get<2>(elem) << '\n';
+    }
+
+* enumerate: maps each element of adapted sequence to a tuple of both the element's position and its value
+    constexpr static auto v = {'A', 'B', 'C', 'D'};
+    for (auto const [index, letter] : std::views::enumerate(v))
+        std::cout << '(' << index << ':' << letter << ") ";
+    std::cout << '\n';
+(0:A) (1:B) (2:C) (3:D)
 
 ****************************************************************************************
 Concept: a set of constraints on template parameters evaluated at compile time.
