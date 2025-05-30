@@ -208,6 +208,11 @@ int main() {
 
     The compiler also adds a hidden pointer to the base class, which we will call *__vptr
 
+a virtual table (vtable) is created for each class that defines or inherits virtual functions, not for each object. 
+Each object of such a class contains a hidden pointer (often called a vpointer or vptr) to the appropriate vtable for its class. 
+This vpointer is added by the compiler and is unique to each object, but the vtable itself is shared among all objects of the same class.
+
+
 # class size: what's the size of empty class
     The C++ standard guarantees that the size of any class is at least one. 
 The C++ standard states that no object shall have the same memory address as another object. There are several good reasons for this.
