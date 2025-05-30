@@ -34,23 +34,28 @@ auto a = v | views::transform(square);
 auto b = views::transform(v, square);
 auto c = ranges::transform_view(v, square);
 
+1. for each
+int main()
+{
+    int sum = 0;
+    std::string in{"123456"};
+    std::ranges::for_each(in, [&sum](const char& x) { sum = sum * 10 + x - '0'; });
+    std::cout << sum ;
+}
+
+2. Filter
 #include <iostream>
 #include <ranges>
 #include <vector>
-
 int main() {
     std::vector nums = {1, 2, 3, 4, 5, 6};
-    
-    auto getEven = [](int n) { return n % 2 == 0; };
-    auto square = [](int n) { return n * n; };
-    auto even_nums = nums | std::views::filter(getEven)
-                        | std::views::transform(square);
-    
+    auto even_nums = nums | std::views::filter([](int n) { return n % 2 == 0; })
+                        | std::views::transform([](int n) { return n * n; });
     for (int n : even_nums)
         std::cout << n << " "; 
 }
 
-
+3. Drop
 drop(n): creates a view excluding the first N elements of a range
 drop_while(p): leading elements that match a predicate are dropped
 
