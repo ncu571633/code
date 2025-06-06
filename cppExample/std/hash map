@@ -24,32 +24,34 @@ When load factor is larger than the threshold, make bucket array larger(allocati
 Avoid dynamic memory allocation during computation.
 use smaller data types: link list used more memory to store pointer. 
 
-
-#include<iostream>
+#include<print>
 #include<list>
 #include<vector>
 #include<functional>
 #include<iterator>
-using namespace std;
 
-template<typename KType, typename VType>
+template<typename K, typename V>
 class hash_map
 {
 public:
-	using allocSpace = allocator_traits<allocator<pair<KType, VType>>>;
-	using bucketType = list<pair<KType, VType>>;
+	using bucketType = std::list<std::pair<K, V>>;
 	hash_map()
 		: _capacity(2)
 	{
-		// buckets = allocSpace::allocate(_a, _capacity);
 		buckets = new bucketType[_capacity];
 	}
 
-	hash_map(int n)
-		: _capacity(n)
+	hash_map(const size_t capacity)
+		: _capacity(capacity)
 	{
+		buckets = new bucketType[_capacity];
 	}
 
+    ~hash_map()
+    {
+        delete []buckets;
+    }
+    
 	hash_map(const hash_map& m)
 	{
 		_size = m._size;
@@ -61,29 +63,27 @@ public:
 		}
 		else
 		{
-			buckets = allocSpace::allocate(_a, _capacity);
+			buckets = new bucketType[_capacity];
 			for (int i = 0; i < _capacity; i++)
 			{
 				if (m.buckets[i])
 				{
-					buckets[i] = list<pair<KType, VType>>(m.buckets[i].begin(), m.buckets[i].begin());
+					buckets[i] = std::list<std::pair<K, V>>(m.buckets[i].begin(), m.buckets[i].begin());
 				}
 			}
 		}
 	}
 
-	hash_map(hash_map&& m) noexcept
-	{
-		_size = m._size;
-		_capacity = m._capacity;
-		buckets = m.buckets;
+    hash_map(hash_map&& other) noexcept
+        : _size(other._size),
+          _capacity(other._capacity),
+          buckets(std::move(other.buckets))
+    {
+        other._size = 0;
+        other._capacity = 0;
+    }
 
-		m._size = 0;
-		m._capacity = 0;
-		m.buckets = nullptr;
-	}
-
-	void insert(KType key, VType val) 
+	void insert(K key, V val) 
 	{
 		auto it = find(key);
 		int index = getIndex(key);
@@ -96,8 +96,8 @@ public:
 		_size++;
 	}
 
-	// typename list<pair<KType, VType>>::iterator find(KType key)
-	auto find(KType key)
+	// typename list<pair<K, V>>::iterator find(K key)
+	auto find(K key)
 	{
 		int index = getIndex(key);
 		// for (auto& i: buckets[index])
@@ -123,7 +123,7 @@ public:
 		}
 	}
 
-	VType& operator[] (KType k)
+	V& operator[] (K k)
 	{
 		auto it = find(k);
 		int index = getIndex(k);
@@ -131,6 +131,7 @@ public:
 		{
 			return it->second;
 		}
+		return it->second;
 	}
 
 #if false
@@ -151,29 +152,28 @@ public:
 #endif
 
 private:
-	int getIndex(KType k)
+	int getIndex(K k)
 	{
-		hash<KType> hash_obj;
+		std::hash<K> hash_obj;
 		return hash_obj(k) % _capacity;
 	}
 
-	list<pair<KType, VType >>* buckets;
-	int _size = 0;
-	int _capacity = 2;
-	allocator<pair<KType, VType>> _a;
+	std::list<std::pair<K, V>>* buckets;
+	size_t _size = 0;
+	size_t _capacity = 2;
 };
 
 int main()
 {
-	hash_map<int, string> m;
+	hash_map<int, std::string> m;
 	m.insert(1, "1");
 	m.insert(2, "2");
 	m.insert(3, "3");
 	m.insert(4, "4");
 
-	cout << m[3] << endl;
+	std::print("{}\n", m[3]);
 	m[3] = "4";
-	cout << m[3] << endl;
+	std::print("{}\n", m[3]);
 
 	return 0;
 }
