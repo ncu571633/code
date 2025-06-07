@@ -28,21 +28,24 @@ use smaller data types: link list used more memory to store pointer.
 #include<list>
 #include<vector>
 #include<functional>
-#include<iterator>
+#include<utility>
 
+constexpr int CAPACITY = 2;
 template<typename K, typename V>
 class hash_map
 {
 public:
 	using bucketType = std::list<std::pair<K, V>>;
 	hash_map()
-		: _capacity(2)
+		: _size(0), 
+		_capacity(CAPACITY)
 	{
 		buckets = new bucketType[_capacity];
 	}
 
 	hash_map(const size_t capacity)
-		: _capacity(capacity)
+		: _size(0), 
+		_capacity(capacity)
 	{
 		buckets = new bucketType[_capacity];
 	}
@@ -51,36 +54,24 @@ public:
     {
         delete []buckets;
     }
-    
-	hash_map(const hash_map& m)
-	{
-		_size = m._size;
-		_capacity = m._capacity;
-
-		if (m.buckets == nullptr)
-		{
-			buckets = nullptr;
-		}
-		else
-		{
-			buckets = new bucketType[_capacity];
-			for (int i = 0; i < _capacity; i++)
-			{
-				if (m.buckets[i])
-				{
-					buckets[i] = std::list<std::pair<K, V>>(m.buckets[i].begin(), m.buckets[i].begin());
-				}
-			}
-		}
-	}
+	
+	hash_map(const hash_map& m) 
+    : _size(m._size), _capacity(m._capacity),
+      buckets(new bucketType[m._capacity])
+    {
+        for (size_t i = 0; i < _capacity; i++) {
+            buckets[i] = m.buckets[i];  // Direct copy entire list
+        }
+    }
 
     hash_map(hash_map&& other) noexcept
         : _size(other._size),
           _capacity(other._capacity),
           buckets(std::move(other.buckets))
     {
-        other._size = 0;
-        other._capacity = 0;
+        _size = std::exchange(other._size, 0);
+        _capacity = std::exchange(other._capacity, 0);
+        buckets = std::exchange(other.buckets, nullptr);
     }
 
 	void insert(K key, V val) 
@@ -96,20 +87,29 @@ public:
 		_size++;
 	}
 
-	// typename list<pair<K, V>>::iterator find(K key)
-	auto find(K key)
+	// std::list<std::pair<K, V>>::iterator find(const K& key)
+	auto find(const K& key)
 	{
 		int index = getIndex(key);
+		
+		return std::find_if(buckets[index].begin(), 
+		    buckets[index].end(), 
+		    [&key](const std::pair<K, V>& p){
+		        return p.first == key;
+		    });
+
+#if false
 		// for (auto& i: buckets[index])
-		for (auto i = buckets[index].begin(); i != buckets[index].end(); ++i)
+		for (auto it = buckets[index].begin(); it != buckets[index].end(); ++it)
 		{
-			if (i->first == key) 
+			if (it->first == key) 
 			{
-				return i;
+				return it;
 			}
 		}
 
 		return buckets[index].end();
+#endif
 	}
 
 	void erase(int key) 
@@ -123,16 +123,18 @@ public:
 		}
 	}
 
-	V& operator[] (K k)
-	{
-		auto it = find(k);
-		int index = getIndex(k);
-		if (it != buckets[index].end()) 
-		{
-			return it->second;
-		}
-		return it->second;
-	}
+    V& operator[](K k)
+    {
+        int index = getIndex(k);
+        auto it = find(k);
+        if (it == buckets[index].end()) {
+            insert(k, V{});  // Insert default-constructed value
+            it = buckets[index].end();
+            --it;  // Point to newly inserted element
+        }
+        return it->second;
+    }
+
 
 #if false
 	void rehashIfNeeded() {
@@ -152,7 +154,7 @@ public:
 #endif
 
 private:
-	int getIndex(K k)
+	inline int getIndex(K k)
 	{
 		std::hash<K> hash_obj;
 		return hash_obj(k) % _capacity;
@@ -160,7 +162,7 @@ private:
 
 	std::list<std::pair<K, V>>* buckets;
 	size_t _size = 0;
-	size_t _capacity = 2;
+	size_t _capacity = CAPACITY;
 };
 
 int main()
