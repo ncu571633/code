@@ -18,12 +18,12 @@ public:
         _data = std::aligned_alloc(32, _capacity * sizeof(T));
     }
     
-    myVector(int n, const T& v)
+    myVector(int n, const T& e)
     {
         _size = _capacity = n;
         _data = std::aligned_alloc(32, _capacity * sizeof(T));
         for(size_t i=0; i<n; i++)
-            MyStruct* p = std::construct_at(reinterpret_cast<MyStruct*>(_data), v);
+            _data[i] = std::construct_at(reinterpret_cast<T*>(_data + i), e);
     }
     
     myVector(const myVector& v)
@@ -35,22 +35,17 @@ public:
             _data = nullptr;
         else
         {
-            _data = allocator_traits<allocator<T>>::allocate(_a, _capacity);
-            for(size_t i=0; i<_size; i++)
-                allocator_traits<allocator<T>>::construct(_a, _data+i, *(v._data+i));
+            _data = std::aligned_alloc(32, _capacity * sizeof(T));
+            for(size_t i=0; i<n; i++)
+                _data[i] = std::construct_at(reinterpret_cast<T*>(_data + i), v[i]);
         }
     }
     
     myVector(myVector<T>&& v)
     {
-        _data = v._data;
-        _size = v._size;
-        _capacity = v._capacity;
-        _a = move(v._a);
-        
-        v._data = nullptr;
-        v._size = 0;
-        v._capacity = 0;
+        _capacity = std::exchange(v._capacity, 0);
+        _size = std::exchange(v._size, 0);
+        _data = std::exchange(v._data, nullptr);
     }
 
         myVector& operator=(const vector& other) 
