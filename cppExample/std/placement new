@@ -1,0 +1,40 @@
+1. Placement New C++98
+
+#include <iostream>
+#include <new>      // Required for placement new
+
+struct MyStruct {
+    int x;
+    MyStruct(int val) : x(val) {
+        std::cout << "Constructor called! x = " << x << std::endl;
+    }
+    ~MyStruct() {
+        std::cout << "Destructor called! x = " << x << std::endl;
+    }
+};
+
+int main() {
+    // char* buffer = new char[sizeof(MyStruct)];
+    char *buffer = (char*)std::aligned_alloc(8, sizeof(MyStruct));
+    MyStruct* p = new (buffer) MyStruct(42);
+    std::cout << "Value: " << p->x << std::endl;
+    p->~MyStruct();
+    std::free(buffer);
+    return 0;
+}
+
+2. std::construct_at (C++20)
+int main() {
+    char *buffer = (char*)std::aligned_alloc(8, sizeof(MyStruct));
+    
+    // 2. placement new
+    MyStruct* p = std::construct_at(reinterpret_cast<MyStruct*>(buffer), 42);
+    std::cout << "Value: " << p->x << std::endl;
+    
+    std::destroy_at(p);  // template: array: foreach or p->~T(); 
+    std::free(buffer);
+    return 0;
+}
+
+3. Allocator Classes: Custom allocation logic
+https://learn.microsoft.com/en-us/cpp/standard-library/allocator-traits-class?view=msvc-170
