@@ -1,4 +1,8 @@
 #include <iostream>
+#include <memory>
+#include <utility>
+
+#include <print>
 
 constexpr size_t DEFAULT_CAPACITY = 2;
 
@@ -7,15 +11,15 @@ class myVector
 {
 public:
     myVector()
-    {
-        myVector(DEFAULT_CAPACITY);
-    }
+    : myVector(DEFAULT_CAPACITY)
+    {}
 
     myVector(int n)
     {
         _capacity = n;
         _size = 0;
         _data = std::aligned_alloc(32, _capacity * sizeof(T));
+        // _data = static_cast<T*>(std::aligned_alloc(32, _capacity * sizeof(T)));
     }
     
     myVector(int n, const T& e)
@@ -23,7 +27,7 @@ public:
         _size = _capacity = n;
         _data = std::aligned_alloc(32, _capacity * sizeof(T));
         for(size_t i=0; i<n; i++)
-            _data[i] = std::construct_at(reinterpret_cast<T*>(_data + i), e);
+            std::construct_at(reinterpret_cast<T*>(_data) + i, e);
     }
     
     myVector(const myVector& v)
@@ -36,8 +40,8 @@ public:
         else
         {
             _data = std::aligned_alloc(32, _capacity * sizeof(T));
-            for(size_t i=0; i<n; i++)
-                _data[i] = std::construct_at(reinterpret_cast<T*>(_data + i), v[i]);
+            for(size_t i=0; i < _size; i++)
+                std::construct_at(reinterpret_cast<T*>(_data) + i, v[i]);
         }
     }
     
@@ -48,27 +52,29 @@ public:
         _data = std::exchange(v._data, nullptr);
     }
 
-        myVector& operator=(const vector& other) 
+        myVector& operator=(const myVector& other) 
         {
             if (this == &other) 
                 return *this;
             
             for (size_t i=0; i < _size; ++i)
-                allocator_traits<allocator<T>>::destroy(_a, _data + i);
+                std::destroy_at(_data + i);
                 
             if (other._data)
             {
                 if (other.size() > _capacity) 
                 {
-                    allocator_traits<allocator<T>>::deallocate(_a, _data, _capacity);
-                                
-                    _capacity = other;
-                    _data = allocator_traits<allocator<T>>::allocate(_a, _capacity);
+                    std::free(_data);
+
+                    _capacity = other._capacity;
+                    _data = std::aligned_alloc(32, _capacity * sizeof(T));
                 }
                 
                 _size = other._size;
-                for (size_t i=0; i < _size; ++i) {
-                    allocator_traits<allocator<T>>::construct(_a, _data + i, *(other._data + i));
+                for (size_t i=0; i < _size; ++i)
+                {
+                    std::construct_at(reinterpret_cast<T*>(_data) + i, other._data[i]);
+                }
 
             }
             else 
@@ -79,44 +85,19 @@ public:
             return *this;
         }
         
-        
-        constexpr vector& operator=(vector&& other) noexcept 
+        constexpr myVector& operator=(myVector&& other) noexcept 
         {
-            if (this == &other) { return *this; }
-
-            if constexpr (std::allocator_traits<allocator_type>::propagate_on_container_move_assignment::value) {
-                deallocate_and_destruct(capacity(), size());
-                m_allocator = other.get_allocator();
-                m_vector = other.m_vector;
-                reset(other);
-            }
-            else if (m_allocator == other.m_allocator) {
-                deallocate_and_destruct(capacity(), size());
-                m_vector = other.m_vector;
-                reset(other);
-            }
-            else {
-                destruct(size());
-                reallocate(capacity(), other.capacity());
-                            m_size = other.m_size;
-            m_capacity = other.m_capacity;
-            for (size_type index{ 0 }; index < m_size; ++index)
-                allocator_traits<allocator_type>::construct(m_allocator, m_vector + index, std::move(*(other.m_vector + index)));
-                
-                uninitialized_alloc_move(std::move(other));
-            }
-            
-            _size = other._size;
-            _capacity = other._capacity;
-
+             _size = std::exchange(other._size, 0);
+            _capacity = std::exchange(other._capacity, 0);
+            _data = std::exchange(other._data, nullptr);
             return *this;
         }
 	
     ~myVector()
     {
-        for (std::size_t i = 0; i < _size; ++i)
-            allocator_traits<allocator<T>>::destroy(_a, _data + i);
-        allocator_traits<allocator<T>>::deallocate(_a, _data, _capacity);
+        for (size_t i = 0; i < _size; ++i)
+            std::destroy_at(_data + i);
+        std::free(_data);
         _size = _capacity = 0;
         _data = nullptr;
     }
@@ -126,74 +107,22 @@ public:
         return _data[i];
     }
 
-    // when move-construction could raise an exception, so if the value type's move-ctor is not exception safe, std::vector push_back() needs to use to the copy operation instead during size*2. 
-    // 
-    	template<class T>
-	void Fwd(T &&v) { Call(std::forward<T>(v)); }
-
-    // perfect forwarding
-    // reference collapsing rules (save for A& & -> A&, which is C++98/03) exist for one reason: to allow  to work.
-	// "Perfect" forwarding means to effectively forward parameters as if the user had called the function directly (minus elision, which is broken by forwarding). 
-	// by value, by (possibly const) lvalue reference, and by (possibly const) rvalue reference.
-
     template<typename U>
     void push_back(U&& e)
     {
-        bool moveNothrow = std::is_nothrow_move_constructible<Type>::value;
-        // || (!std::is_nothrow_move_constructible<Type>::value && !std::is_copy_constructible<Type>::value)
-        // or: nothrow move ctor, and no copy ctor
-
         if(_size < _capacity)
         {
-            if(moveNoThrow)
-            {
-                allocator_traits<allocator<T>>::construct(_a, _data+_size, forward<U>(e));
-                _size ++;
-            }
-            else
-            {
-                try
-                {
-                    allocator_traits<allocator<T>>::construct(_a, _data+_size, forward<U>(e));
-                }
-                catch(...)
-                {
-                    allocator_traits<allocator<T>>::destroy(_a, _data+_size);
-                    throw;
-                }
-                _size ++;
-
-            }
+            std::construct_at(reinterpret_cast<T*>(_data) + _size, std::forward<U>(e));
+            _size ++;
         }
         else
         {
-            T* temp = allocator_traits<allocator<T>>::allocate(_a, _capacity*2);
-            if(moveNothrow)
+            T* temp = std::aligned_alloc(32, 2 * _capacity * sizeof(T));
+            for(size_t i=0; i<_size; i++)
             {
-                for(size_t i=0; i<_size; i++)
-                    allocator_traits<allocator<T>>::construct(_a, temp+i, forward<T>(_data[i])); // move ctor                    
+                std::construct_at(temp + i, forward<T>(_data[i]));
             }
-            else
-            {
-                size_t success = 0;
-                try
-                {
-                    for(size_t i=0; i<_size; i++)
-                    {
-                        allocator_traits<allocator<T>>::construct(_a, temp+i, _data[i]); // copy ctor
-                        success++;
-                    }
-                }
-                catch(...)
-                {
-                    for (size_t i=0; i < success; ++i)
-                        allocator_traits<allocator_type>::destroy(_a, temp + i);
-                    std::allocator_traits<allocator_type>::deallocate(m_allocator, temp, capacity);
-
-                    throw;
-                }
-            }
-            
+            std::free(_data);
             _data = temp;
             _size ++;
             _capacity *= 2;
@@ -206,19 +135,16 @@ public:
 	    size_t _size = 0;
 	    size_t _capacity = 2;
 	    T* _data = nullptr;
-	    allocator<T> _a;
 	};
 	
 	int main()
 	{
-	    
-	    myVector<string> v;
-	    v.push_back(move("h1"));
-	    string s = "h2";
+	    myVector<std::string> v;
+	    v.push_back(std::move("h1"));
+	    std::string s = "h2";
 	    v.push_back(s);
 	    v.push_back("h3");
 	    v.push_back("h4");
-	    
 	    
 	    /*
 	    myVector<int> v;
@@ -226,10 +152,9 @@ public:
 	    v.push_back(2);
 	    v.push_back(3);
 	    v.push_back(4);    */
-	    myVector<string> v2(v);
-	     for(size_t i=0; i<v2.size(); i++)
-	        cout << i << v2[i] << endl;
+	    myVector<std::string> v2(v);
+	    for(size_t i=0; i<v2.size(); i++)
+	        std::print("{} {}\n", i, v2[i]);
 	        
-	    
 	    return 0;
-	}
+}
