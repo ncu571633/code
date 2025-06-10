@@ -14,20 +14,19 @@ public:
     : myVector(DEFAULT_CAPACITY)
     {}
 
-    myVector(int n)
+    myVector(size_t n)
     {
         _capacity = n;
         _size = 0;
-        _data = std::aligned_alloc(32, _capacity * sizeof(T));
-        // _data = static_cast<T*>(std::aligned_alloc(32, _capacity * sizeof(T)));
+        _data = static_cast<T*>(std::aligned_alloc(alignof(T), _capacity * sizeof(T)));
     }
     
-    myVector(int n, const T& e)
+    myVector(size_t n, const T& e)
     {
         _size = _capacity = n;
-        _data = std::aligned_alloc(32, _capacity * sizeof(T));
+        _data = static_cast<T*>(std::aligned_alloc(alignof(T), _capacity * sizeof(T)));
         for(size_t i=0; i<n; i++)
-            std::construct_at(reinterpret_cast<T*>(_data) + i, e);
+            std::construct_at(_data + i, e);
     }
     
     myVector(const myVector& v)
@@ -39,9 +38,9 @@ public:
             _data = nullptr;
         else
         {
-            _data = std::aligned_alloc(32, _capacity * sizeof(T));
+            _data = static_cast<T*>(std::aligned_alloc(alignof(T), _capacity * sizeof(T)));
             for(size_t i=0; i < _size; i++)
-                std::construct_at(reinterpret_cast<T*>(_data) + i, v[i]);
+                std::construct_at(_data + i, v[i]);
         }
     }
     
@@ -67,13 +66,13 @@ public:
                     std::free(_data);
 
                     _capacity = other._capacity;
-                    _data = std::aligned_alloc(32, _capacity * sizeof(T));
+                    _data = static_cast<T*>(std::aligned_alloc(alignof(T), _capacity * sizeof(T)));
                 }
                 
                 _size = other._size;
                 for (size_t i=0; i < _size; ++i)
                 {
-                    std::construct_at(reinterpret_cast<T*>(_data) + i, other._data[i]);
+                    std::construct_at(_data + i, other._data[i]);
                 }
 
             }
@@ -87,6 +86,14 @@ public:
         
         constexpr myVector& operator=(myVector&& other) noexcept 
         {
+            if (this == &other)
+                return *this;
+                
+            // Clean existing resources
+            for (size_t i = 0; i < _size; ++i)
+                std::destroy_at(_data + i);
+            std::free(_data);
+        
              _size = std::exchange(other._size, 0);
             _capacity = std::exchange(other._capacity, 0);
             _data = std::exchange(other._data, nullptr);
@@ -95,33 +102,45 @@ public:
 	
     ~myVector()
     {
-        for (size_t i = 0; i < _size; ++i)
-            std::destroy_at(_data + i);
-        std::free(_data);
+        if (_data)
+        {
+            for (size_t i = 0; i < _size; ++i)
+                std::destroy_at(_data + i);
+            std::free(_data);
+            _data = nullptr;
+        }
         _size = _capacity = 0;
-        _data = nullptr;
     }
-    
+
     T& operator[] (size_t i)
     {
         return _data[i];
     }
 
+    const T& operator[] (size_t i) const
+    {
+        return _data[i];
+    }
+    
     template<typename U>
     void push_back(U&& e)
     {
         if(_size < _capacity)
         {
-            std::construct_at(reinterpret_cast<T*>(_data) + _size, std::forward<U>(e));
+            std::construct_at(_data + _size, std::forward<U>(e));
             _size ++;
         }
         else
         {
-            T* temp = std::aligned_alloc(32, 2 * _capacity * sizeof(T));
+            T* temp = static_cast<T*>(std::aligned_alloc(alignof(T), 2 * _capacity * sizeof(T)));
             for(size_t i=0; i<_size; i++)
             {
-                std::construct_at(temp + i, forward<T>(_data[i]));
+                std::construct_at(temp + i, std::move(_data[i]));
             }
+            
+            // Add new element
+            std::construct_at(temp + _size, std::forward<U>(e));
+        
             std::free(_data);
             _data = temp;
             _size ++;
@@ -129,7 +148,7 @@ public:
         }           
     }
     
-    inline size_t size() { return _size; }
+    inline size_t size() const { return _size; }
     
 	private:
 	    size_t _size = 0;
@@ -140,7 +159,7 @@ public:
 	int main()
 	{
 	    myVector<std::string> v;
-	    v.push_back(std::move("h1"));
+	    v.push_back("h1");
 	    std::string s = "h2";
 	    v.push_back(s);
 	    v.push_back("h3");
