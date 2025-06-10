@@ -37,10 +37,8 @@ class hash_map
 public:
 	using bucketType = std::list<std::pair<K, V>>;
 	hash_map()
-		: _size(0), 
-		_capacity(CAPACITY)
+		: hash_map(CAPACITY)
 	{
-		buckets = new bucketType[_capacity];
 	}
 
 	hash_map(const size_t capacity)
@@ -65,9 +63,6 @@ public:
     }
 
     hash_map(hash_map&& other) noexcept
-        : _size(other._size),
-          _capacity(other._capacity),
-          buckets(std::move(other.buckets))
     {
         _size = std::exchange(other._size, 0);
         _capacity = std::exchange(other._capacity, 0);
@@ -114,13 +109,25 @@ public:
 
 	void erase(int key) 
 	{
-		auto it = find(key);
 		int index = getIndex(key);
+		std::erase_if(buckets[index], 
+		    [&](const std::pair<K, V>& p) 
+		    { 
+		        if(p.first == key)
+		        {
+		            _size--;
+		            return true;
+		        }
+		        return false;
+		  });
+	#if false
+		auto it = find(key);
 		if (it != buckets[index].end())
 		{
 			buckets[index].erase(it);
 			_size--;
 		}
+	#endif
 	}
 
     V& operator[](K k)
@@ -128,9 +135,8 @@ public:
         int index = getIndex(k);
         auto it = find(k);
         if (it == buckets[index].end()) {
-            insert(k, V{});  // Insert default-constructed value
-            it = buckets[index].end();
-            --it;  // Point to newly inserted element
+            insert(k, V{});
+            it = find(k);
         }
         return it->second;
     }
@@ -153,6 +159,7 @@ public:
 	}
 #endif
 
+    inline size_t size() { return _size; }
 private:
 	inline int getIndex(K k)
 	{
@@ -173,9 +180,12 @@ int main()
 	m.insert(3, "3");
 	m.insert(4, "4");
 
+    std::print("size: {}\n", m.size());
 	std::print("{}\n", m[3]);
 	m[3] = "4";
 	std::print("{}\n", m[3]);
-
+    
+    m.erase(3);
+    std::print("size: {}\n", m.size());
 	return 0;
 }
