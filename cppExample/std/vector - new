@@ -1,0 +1,132 @@
+#include <iostream>
+#include <memory>
+#include <new>  // Required for placement new
+#include <print>
+
+constexpr size_t DEFAULT_CAPACITY = 2;
+
+template<typename T>
+class myVector {
+public:
+    myVector() : myVector(DEFAULT_CAPACITY) {}
+
+    myVector(size_t n) {
+        allocate(n);
+    }
+    
+    myVector(size_t n, const T& e) {
+        allocate(n);
+        _size = n;
+        for(size_t i=0; i<n; i++)
+            new (_data + i) T(e);  // Placement new
+    }
+    
+    myVector(const myVector& v) {
+        allocate(v._capacity);
+        _size = v._size;
+        for(size_t i=0; i<_size; i++)
+            new (_data + i) T(v[i]);  // Copy-construct in place
+    }
+    
+    myVector(myVector&& v) noexcept {
+        _capacity = std::exchange(v._capacity, 0);
+        _size = std::exchange(v._size, 0);
+        _data = std::exchange(v._data, nullptr);
+    }
+
+    myVector& operator=(const myVector& other) {
+        if (this == &other) return *this;
+        
+        clear();
+        if (other._size > _capacity)
+            reallocate(other._capacity);
+            
+        _size = other._size;
+        for(size_t i=0; i<_size; i++)
+            new (_data + i) T(other[i]);  // Copy-construct in place
+            
+        return *this;
+    }
+        
+    myVector& operator=(myVector&& other) noexcept {
+        if (this == &other) return *this;
+        
+        clear();
+        free_memory();
+        
+        _size = std::exchange(other._size, 0);
+        _capacity = std::exchange(other._capacity, 0);
+        _data = std::exchange(other._data, nullptr);
+        return *this;
+    }
+    
+    ~myVector() {
+        clear();
+        free_memory();
+    }
+
+    template<typename U>
+    void push_back(U&& e) {
+        if(_size >= _capacity)
+            reallocate(_capacity * 2);
+            
+        new (_data + _size) T(std::forward<U>(e));  // Perfect forwarding
+        _size++;
+    }
+    
+    void clear() noexcept {
+        for(size_t i=0; i<_size; i++)
+            _data[i].~T();  // Explicit destructor call
+        _size = 0;
+    }
+    
+    size_t size() const noexcept { return _size; }
+    size_t capacity() const noexcept { return _capacity; }
+    
+    T& operator[](size_t i) { return _data[i]; }
+    const T& operator[](size_t i) const { return _data[i]; }
+
+private:
+    size_t _size = 0;
+    size_t _capacity = 0;
+    T* _data = nullptr;
+
+    void allocate(size_t n) {
+        _capacity = n;
+        _data = static_cast<T*>(::operator new(_capacity * sizeof(T)));  // Raw allocation
+    }
+    
+    void reallocate(size_t new_cap) {
+        T* new_data = static_cast<T*>(::operator new(new_cap * sizeof(T)));
+        
+        // Move existing elements
+        for(size_t i=0; i<_size; i++) {
+            new (new_data + i) T(std::move(_data[i]));  // Move construct
+            _data[i].~T();  // Destroy original
+        }
+        
+        ::operator delete(_data);  // Free old memory
+        _data = new_data;
+        _capacity = new_cap;
+    }
+    
+    void free_memory() noexcept {
+        ::operator delete(_data);
+        _data = nullptr;
+        _capacity = 0;
+    }
+};
+
+int main() {
+    myVector<std::string> v;
+    v.push_back("h1");
+    v.push_back("h2");
+    v.push_back("h3");
+    v.push_back("h4");
+    
+    myVector<std::string> v2(v);
+    for(size_t i=0; i<v2.size(); i++)
+        std::print("{} {}\n", i, v2[i]);
+        
+    return 0;
+}
