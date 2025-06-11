@@ -1,167 +1,161 @@
-#include<print>
-#include<list>
-#include<vector>
-#include<functional>
-#include<utility>
+#include <print>
+#include <vector>
+#include <functional>
+#include <optional>
+#include <stdexcept>
+#include <utility>
 
-constexpr size_t CAPACITY = 2;
+constexpr size_t INITIAL_CAPACITY = 8;
+constexpr double MAX_LOAD_FACTOR = 0.75;
+
 template<typename K, typename V>
-class hash_map
-{
+class hash_map {
 public:
-    hash_map():
-        hash_map(CAPACITY)
-    {}
+    hash_map() : hash_map(INITIAL_CAPACITY) {}
 
-    hash_map(size_t capacity)
+    explicit hash_map(size_t capacity)
         : _size(0),
-        _capacity(capacity),
-        bucketsStatus(std::vector<bool>(capacity, false))
-    {
-        _data = static_cast<std::pair<K, V>*>(::operator new(_capacity * sizeof(std::pair<K, V>)));
+          _capacity(capacity),
+          buckets(capacity) {}
+
+    ~hash_map() = default;
+
+    // Copy operations
+    hash_map(const hash_map& other)
+        : _size(other._size),
+          _capacity(other._capacity),
+          buckets(other.buckets) {}
+
+    hash_map& operator=(const hash_map& other) {
+        if (this != &other) {
+            _size = other._size;
+            _capacity = other._capacity;
+            buckets = other.buckets;
+        }
+        return *this;
     }
 
-    ~hash_map()
-    {
-        for (int i=0; i<_capacity; ++i)
-        {
-            if(bucketsStatus[i])
-            {
-                _data[i].~V();
-            }
+    // Move operations
+    hash_map(hash_map&& other) noexcept
+        : _size(std::exchange(other._size, 0)),
+          _capacity(std::exchange(other._capacity, 0)),
+          buckets(std::move(other.buckets)) {}
+
+    hash_map& operator=(hash_map&& other) noexcept {
+        if (this != &other) {
+            _size = std::exchange(other._size, 0);
+            _capacity = std::exchange(other._capacity, 0);
+            buckets = std::move(other.buckets);
         }
-        ::operator delete(_data);
-        _size = _capacity = 0;
-    }
-    
-    hash_map& operator=(const hash_map& other)
-    {
-        if (this == &other)
-        {
-            return *this;
-        }
-        
-        _size = other._size;
-        _capacity = other._capacity;
-        bucketsStatus = other.bucketsStatus;
-        _data = other._data;
+        return *this;
     }
 
-    hash_map(hash_map&& other)
-    {
-        if (this == &other)
-        {
-            return;
+    template<typename Key, typename Value>
+    void insert(Key&& key, Value&& value) {
+        if (load_factor() >= MAX_LOAD_FACTOR) {
+            resize(_capacity * 2);
         }
-        
-        _size = std::exchange(other._size, 0);
-        _capacity = std::exchange(other._capacity, 0);
-        bucketsStatus = other.bucketsStatus;
-        _data = other._data;
-    }
-    
-    void insert(K&& key, V&& value)
-    {
-        if (_size == _capacity)
-            return ;
-        
-        int index = getIndex(key);
-        for(int i = index; ; )
-        {
-            if (!bucketsStatus[i])
-            {
-                bucketsStatus[i] = true;
-                std::construct_at(_data + i, std::move(value));   
-            }
-            
-            i++;
-            if (i==_capacity)
-                i = 0;
-        }
-    }
-    
-    void erase(K&& key)
-    {
-        if (_size == 0)
-            return ;
-        
-        int index = getIndex(key);
-        for(int i = index; ; )
-        {
-            if (!bucketsStatus[i])
-                break;
-            
-            int index2 = getIndex(_data[i].first);
-            if (index != index2)
-                break;
 
-            if (_data[i].first == key)
-            {
-                bucketsStatus[i] = false;
-                std::destroy_at(_data + i);   
-            }
-            
-            i++;
-            if (i==_capacity)
-                i = 0;
+        size_t index = find_slot(key);
+        if (!buckets[index].has_value()) {
+            ++_size;
         }
+        buckets[index] = std::make_pair(std::forward<Key>(key), 
+                                      std::forward<Value>(value));
     }
-    
-    V& operator [](K key)
-    {
-        int index = getIndex(key);
-        for(int i = index; ; )
-        {
-            if (!bucketsStatus[i])
-            {
-                
-            }
-            
-            int index2 = getIndex(_data[i].first);
-            if (index != index2)
-                break;
 
-            if (_data[i].first == key)
-            {
-                bucketsStatus[i] = false;
-                std::destroy_at(_data + i);   
-            }
-            
-            i++;
-            if (i==_capacity)
-                i = 0;
+    void erase(const K& key) {
+        size_t index = find_existing(key);
+        if (buckets[index].has_value()) {
+            buckets[index].reset();
+            --_size;
         }
     }
-    
-    inline size_t size() { return _size; }
-    
+
+    V& operator[](const K& key) {
+        size_t index = find_slot(key);
+        if (!buckets[index].has_value()) {
+            if (load_factor() >= MAX_LOAD_FACTOR) {
+                resize(_capacity * 2);
+                index = find_slot(key);
+            }
+            buckets[index] = std::make_pair(key, V{});
+            ++_size;
+        }
+        return buckets[index]->second;
+    }
+
+    [[nodiscard]] size_t size() const { return _size; }
+    [[nodiscard]] size_t capacity() const { return _capacity; }
+    [[nodiscard]] double load_factor() const { 
+        return static_cast<double>(_size) / _capacity; 
+    }
+
 private:
-    inline size_t getIndex(K key)
-    {
-        std::hash<K> h;
-        return h(key) % _capacity;
+    size_t _size;
+    size_t _capacity;
+    std::vector<std::optional<std::pair<K, V>>> buckets;
+
+    size_t hash(const K& key) const {
+        return std::hash<K>{}(key) % _capacity;
     }
 
-	std::pair<K, V>* _data = nullptr;
-	std::vector<bool> bucketsStatus;
-	size_t _size = 0;
-	size_t _capacity = CAPACITY;
+    size_t probe(size_t hash, size_t attempt) const {
+        return (hash + attempt * attempt) % _capacity;
+    }
+
+    size_t find_slot(const K& key) const {
+        size_t h = hash(key);
+        for (size_t attempt = 0; ; ++attempt) {
+            size_t index = probe(h, attempt);
+            if (!buckets[index].has_value() || 
+                buckets[index]->first == key) {
+                return index;
+            }
+        }
+    }
+
+    size_t find_existing(const K& key) const {
+        size_t h = hash(key);
+        for (size_t attempt = 0; ; ++attempt) {
+            size_t index = probe(h, attempt);
+            if (!buckets[index].has_value()) break;
+            if (buckets[index]->first == key) {
+                return index;
+            }
+        }
+        throw std::out_of_range("Key not found");
+    }
+
+    void resize(size_t new_capacity) {
+        std::vector<std::optional<std::pair<K, V>>> new_buckets(new_capacity);
+        std::swap(buckets, new_buckets);
+        std::swap(_capacity, new_capacity);
+        _size = 0;
+
+        for (auto& entry : new_buckets) {
+            if (entry.has_value()) {
+                insert(std::move(entry->first), 
+                      std::move(entry->second));
+            }
+        }
+    }
 };
 
-int main()
-{
-	hash_map<int, std::string> m;
-	m.insert(1, "1");
-	m.insert(2, "2");
-	m.insert(3, "3");
-	m.insert(4, "4");
+int main() {
+    hash_map<int, std::string> m;
+    m.insert(1, "1");
+    m.insert(2, "2");
+    m.insert(3, "3");
+    m.insert(4, "4");
 
-    std::print("size: {}\n", m.size());
-	std::print("{}\n", m[3]);
-	m[3] = "4";
-	std::print("{}\n", m[3]);
+    std::print("Size: {}\n", m.size());
+    std::print("Value at 3: {}\n", m[3]);
+    m[3] = "4";
+    std::print("Updated value at 3: {}\n", m[3]);
     
     m.erase(3);
-    std::print("size: {}\n", m.size());
-	return 0;
+    std::print("Size after erase: {}\n", m.size());
+    
+    return 0;
 }
