@@ -18,7 +18,7 @@ public:
         _capacity(capacity),
         bucketsStatus(std::vector<bool>(capacity, false))
     {
-        _data = static_cast<T*>(::operator new(_capacity * sizeof(std::pair<T, V>)));
+        _data = static_cast<std::pair<K, V>*>(::operator new(_capacity * sizeof(std::pair<K, V>)));
     }
 
     ~hash_map()
@@ -34,7 +34,7 @@ public:
         _size = _capacity = 0;
     }
     
-    hash_map& override operator=(const hash_map& other)
+    hash_map& operator=(const hash_map& other)
     {
         if (this == &other)
         {
@@ -44,20 +44,20 @@ public:
         _size = other._size;
         _capacity = other._capacity;
         bucketsStatus = other.bucketsStatus;
-        buckets = others.buckets;
+        _data = other._data;
     }
 
     hash_map(hash_map&& other)
     {
         if (this == &other)
         {
-            return *this;
+            return;
         }
         
         _size = std::exchange(other._size, 0);
         _capacity = std::exchange(other._capacity, 0);
         bucketsStatus = other.bucketsStatus;
-        buckets = others.buckets;
+        _data = other._data;
     }
     
     void insert(K&& key, V&& value)
@@ -80,7 +80,7 @@ public:
         }
     }
     
-    void remove(K&& key)
+    void erase(K&& key)
     {
         if (_size == 0)
             return ;
@@ -95,7 +95,7 @@ public:
             if (index != index2)
                 break;
 
-            if (_datga[i].first == key)
+            if (_data[i].first == key)
             {
                 bucketsStatus[i] = false;
                 std::destroy_at(_data + i);   
@@ -107,19 +107,21 @@ public:
         }
     }
     
-    V& operator [](K& key)
+    V& operator [](K key)
     {
         int index = getIndex(key);
         for(int i = index; ; )
         {
             if (!bucketsStatus[i])
-                break;
+            {
+                
+            }
             
             int index2 = getIndex(_data[i].first);
             if (index != index2)
                 break;
 
-            if (_datga[i].first == key)
+            if (_data[i].first == key)
             {
                 bucketsStatus[i] = false;
                 std::destroy_at(_data + i);   
@@ -131,10 +133,12 @@ public:
         }
     }
     
+    inline size_t size() { return _size; }
+    
 private:
     inline size_t getIndex(K key)
     {
-        std::hask<K> h;
+        std::hash<K> h;
         return h(key) % _capacity;
     }
 
