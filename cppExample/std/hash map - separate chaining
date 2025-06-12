@@ -24,11 +24,12 @@ When load factor is larger than the threshold, make bucket array larger(allocati
 Avoid dynamic memory allocation during computation.
 use smaller data types: link list used more memory to store pointer. 
 
-#include<print>
+#include<iostream>
 #include<list>
 #include<vector>
 #include<functional>
 #include<utility>
+#include<ostream>
 
 constexpr int CAPACITY = 2;
 template<typename K, typename V>
@@ -159,6 +160,9 @@ public:
 	}
 #endif
 
+    template <typename Key, typename Val>
+    friend std::ostream& operator<<(std::ostream& os, const hash_map<Key, Val>& map);
+
     inline size_t size() { return _size; }
 private:
 	inline int getIndex(K k)
@@ -172,6 +176,12 @@ private:
 	size_t _capacity = CAPACITY;
 };
 
+template <typename K, typename V>
+std::ostream& operator<<(std::ostream& os, const hash_map<K, V>& map) {
+  os << map._size;
+  return os;  
+}
+
 int main()
 {
 	hash_map<int, std::string> m;
@@ -180,12 +190,15 @@ int main()
 	m.insert(3, "3");
 	m.insert(4, "4");
 
-    std::print("size: {}\n", m.size());
-	std::print("{}\n", m[3]);
+    std::cout << "size:" << m.size() << std::endl;
+    std::cout << m[3] << std::endl;
 	m[3] = "4";
-	std::print("{}\n", m[3]);
+    std::cout << m[3] << std::endl;
     
     m.erase(3);
-    std::print("size: {}\n", m.size());
+    std::cout << "size:" << m.size() << std::endl;
+    std::cout << m << std::endl;
+
 	return 0;
 }
+
