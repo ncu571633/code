@@ -11,8 +11,6 @@ Advantages Over Monolithic Architecture:
     Scalability: Only the required services are scaled, rather than the entire application
 
 
-
-
 1. clarify the requirement/goal of the system
     traffic size: daily active user
     
@@ -70,21 +68,10 @@ Examples of systems that require strong consistency include:
     Booking systems for limited resources (airline seats, event tickets, hotel rooms) where you need to prevent double-booking
     Inventory management systems, where stock levels need to be precisely tracked to avoid overselling products
 
-Index: Indexing is about making data faster to query
-1. The most basic method of indexing is simply keeping our data in a hash map by a specific key. 
-When we need to grab data by that key, we can do so in O(1) time. 
-2. data in a sorted list: do binary search to find the data we need in O(log n) time. This is a common way of indexing data in databases.
-3. most relational databases allow you to create indexes on any column or group of columns in a table
-4. Geospatial indexes are used to index location data. 
-This is useful for systems that need to do things like find the nearest restaurant or the nearest gas station
-5. Vector databases are used to index high-dimensional data. 
-This is useful for systems that need to do things like find similar images or similar documents
-
 Communication Protocols
 1. Internally, for a typical microservice application which consistitues 90%+ of system design problems, either HTTP(S) or gRPC will do the job. 
 Don't make things complicated.
 2. Externally, you'll need to consider how your clients will communicate with your system
-
 
 2. capacity estimation。 可以不用，perform calculations only if they will directly influence your design
 	how many daily active user, how many tweets
@@ -108,6 +95,29 @@ while REST is simpler, more flexible, and widely used for web applications.
 	likeOrUnlickTweet(userToken, string tweetId, bool like)
 	readHomeTimeLine(userToken, int pageSize, pageToken)
 	readUserTimeLine(userToken, int pageSize, pageToken)
+
+How to design a REST API
+addBook(), getBook()
+            1. endpoint
+            2. HTTP Method
+            3. RequestBody/PathVariable
+            4. ResponseBody
+Considering book as a resource, the following can be the REST APIs:
+
+    create a book resouce
+    POST /api/books
+    get a particular book
+    GET /api/books/{id}
+    update details of a book
+    PUT /api/books/{ID}
+    get all books
+    GET /api/books
+    search books collection
+    GET /api/books?name=twinke
+    GET /api/books?author=nobody
+    delete a particular book
+    DELETE /api/books/{id}
+
 
 [Optional] Data Flow 
 the high level sequence of actions or processes that the system performs on the inputs to produce the desired outputs
@@ -183,6 +193,16 @@ Higher Availability: Isolates failures; system remains operational if a shard fa
  		Conflict Avoidance: application can ensure that all writes for a particular record go through the same master (data center), then conflicts cannot occur.
 	in normal operation, users are geoDNS rounded to the closest data center, with a split traffic of x% in east and 100-x in west.
 
+Index: Indexing is about making data faster to query
+1. The most basic method of indexing is simply keeping our data in a hash map by a specific key. 
+When we need to grab data by that key, we can do so in O(1) time. 
+2. data in a sorted list: do binary search to find the data we need in O(log n) time. This is a common way of indexing data in databases.
+3. most relational databases allow you to create indexes on any column or group of columns in a table
+4. Geospatial indexes are used to index location data. 
+This is useful for systems that need to do things like find the nearest restaurant or the nearest gas station
+5. Vector databases are used to index high-dimensional data. 
+This is useful for systems that need to do things like find similar images or similar documents
+
 5. Message queue
 	supports async communication, servers as a buffer and distributes async requests. 
 	producers/consumers.
@@ -193,8 +213,10 @@ Higher Availability: Isolates failures; system remains operational if a shard fa
 
 
 6. high level system design
-	user -> load balancer  -> tweet writer server  -> DB
-	                       -> timeline service     -> cache   (need low latency, read cache join together on the fly)
+user -> API Gateway -> load balancer  -> tweet writer server  -> DB
+	               	             -> timeline service     -> cache   (need low latency, read cache join together on the fly)
+
+        API Gateway: authentication, rate limiting, and logging
 
 	load balancer: evenly distributs incoming traffic amoung web servers.
             L4 load balancer: Transport Layer (Layer 4) Route traffic based on IP addresses, TCP/UDP ports, and basic network information
@@ -266,9 +288,6 @@ Elasticsearch: a distributed search engine built on Apache Lucene
 	estimate the relevance of documents to a given search query
 
 
-
-
-
 Scale from zero to millions of users
 
 1. Single server setup
@@ -331,27 +350,4 @@ Message Format	Custom but generally JSON or XML	Protocol buffers
 Message Payload Size	Medium/Large	Small
 Processing Complexity	Higher (text parsing)	Lower (well-defined binary structure)
 Browser Support	Yes (native)	Yes (via gRPC-Web)
-
-
-How to design a REST API
-addBook(), getBook()
-            1. endpoint
-            2. HTTP Method
-            3. RequestBody/PathVariable
-            4. ResponseBody
-Considering book as a resource, the following can be the REST APIs:
-
-    create a book resouce
-    POST /api/books
-    get a particular book
-    GET /api/books/{id}
-    update details of a book
-    PUT /api/books/{ID}
-    get all books
-    GET /api/books
-    search books collection
-    GET /api/books?name=twinke
-    GET /api/books?author=nobody
-    delete a particular book
-    DELETE /api/books/{id}
 
