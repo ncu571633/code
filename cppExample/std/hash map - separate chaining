@@ -95,7 +95,6 @@ public:
 		    });
 
 #if false
-		// for (auto& i: buckets[index])
 		for (auto it = buckets[index].begin(); it != buckets[index].end(); ++it)
 		{
 			if (it->first == key) 
