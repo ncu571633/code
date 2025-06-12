@@ -1,3 +1,7 @@
+why std use separate chaining: 
+When a std::unordered_map rehashes, existing iterators remain valid in separate chaining, whereas open addressing would invalidate them .
+
+
 HashMap(unordered_map)
 
 1. Separate chaining
