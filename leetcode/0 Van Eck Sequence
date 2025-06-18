@@ -1,0 +1,54 @@
+0, 0, 1, 0, 2, 0, 2, 2, 1, 6, 0, 5, 0, 2, 6, 5, 4, 0, 5, 3, 0, 3, 2, 9, 0, ...
+
+#include <iostream>
+#include <vector>
+using namespace std;
+int main()
+{
+    vector<int> v {0};
+    int count = 10;
+    for(int n = 0; n < count; ++n)
+    {
+        bool found = false;
+        for (int m = n-1; m>=0; m--)
+        {
+            if (v[m] == v[n])
+            {
+                v.push_back(n-m);
+                found = true;
+                break;
+            }
+        }
+        if (!found)
+            v.push_back(0);
+    }
+
+    for(auto i: v)
+        cout << i << ", ";
+    return 1;
+}
+
+
+#include <iostream>
+#include <vector>
+#include <unordered_map>
+using namespace std;
+int main()
+{
+    vector<int> v {0};
+    int count = 10;
+    unordered_map<int, int> last_pos = {{0, 0}}; // value -> index
+    for(int n = 0; n < count; ++n)
+    {
+        auto it = last_pos.find(v[n]);
+        if (it != last_pos.end() && it->second != n)
+            v.push_back(n - it->second);
+        else
+            v.push_back(0);
+        last_pos[v[n]] = n;
+    }
+
+    for(auto i: v)
+        cout << i << ", ";
+    return 1;
+}
