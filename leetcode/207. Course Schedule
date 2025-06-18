@@ -29,7 +29,7 @@ public:
         }
         queue<int> q;
         for(int i=0; i<in.size(); i++) {
-            if(in[i]==0)
+            if(in[i]==0)  // starting point
                 q.push(i);
         }
         while(!q.empty()) {
@@ -37,7 +37,7 @@ public:
             q.pop();
             for(int i=0; i<graph[t].size(); i++) {
                 in[graph[t][i]]--;
-                if(!in[graph[t][i]])
+                if(!in[graph[t][i]])  // also starting point, in degree == 0. Also inDegree won't increase.
                     q.push(graph[t][i]);
             }
         }
