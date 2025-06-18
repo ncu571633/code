@@ -18,14 +18,14 @@ You may assume that there are no duplicate edges in the input prerequisites.
 
 class Solution {
 public:
-    bool canFinish(int numCourses, vector<pair<int, int>>& prerequisites) {
+    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
         if(!numCourses)
             return false;
         vector<vector<int>> graph(numCourses, vector<int>(0));
         vector<int> in(numCourses, 0);
         for(int i=0; i<prerequisites.size(); i++) {
-            graph[prerequisites[i].second].push_back(prerequisites[i].first);
-            in[prerequisites[i].first]++;
+            graph[prerequisites[i][1]].push_back(prerequisites[i][0]);
+            in[prerequisites[i][0]]++;
         }
         queue<int> q;
         for(int i=0; i<in.size(); i++) {
