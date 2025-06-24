@@ -3,99 +3,34 @@ Given a string, find the length of the longest substring without repeating chara
 Examples:
 
 Given "abcabcbb", the answer is "abc", which the length is 3.
-
 Given "bbbbb", the answer is "b", with the length of 1.
-
 Given "pwwkew", the answer is "wke", with the length of 3. Note that the answer must be a substring, "pwke" is a subsequence and not a substring.
 
 
 class Solution {
 public:
     int lengthOfLongestSubstring(string s) {
-        // Start typing your C/C++ solution below
-        // DO NOT write int main() function
-        int i=0, j=0;
-        bool c[256];
-        memset(c, 0, 256);
-        int len = 0;
-        while(j<s.size())
-        {
-            if(c[ s[j] ] == true)
-            {
-                len = max(len, j-i);
-                
-                while( s[i] != s[j])
-                    c[ s[i] ] = false, i++;
-                i++, j++;
-            }
-            else
-            {
-                c[ s[j] ] = true;
-                j++;
-            }
-        }
-        len = max(len, j-i);
-        return len;
-    }
-};
-
-class Solution {
-public:
-    int lengthOfLongestSubstring(string s) {
-        int start = 0, ret = 0;
         unordered_map<char, int> m;
-        for(int i=0; i<s.size(); i++) {
-            m[s[i]] ++;
-            if(m[s[i]] == 1) {
-                ret = max(ret, i-start+1);
-            } else {
-                while(s[start]!=s[i]) {
-                    m[s[start]]--;
-                    start++;
-                }
-                m[s[start]]--;
-                start++;
-            }
-        }
-        return ret;
-    }
-};
-
-class Solution {
-public:
-    int lengthOfLongestSubstring(string s) {
-        int start = 0, end = 1;
-        unordered_set<char> temp;
         int ret = 0;
-        for (int i=0; i<s.size(); i++)
+        for(int i = 0, j = 0; j < s.size(); j++)
         {
-            if (!temp.count(s[i]))
+            char c = s[j];
+            m[c]++;
+            if(m[c] == 1)
             {
-                temp.insert(s[i]);
-                end = i;
+                ret = max(ret, j-i+1);
             }
             else
             {
-                int j = start;
-                for (j = start; j < i; j++)
+                do
                 {
-                    if (s[j] == s[i])
-                        break;
-                    else
-                    {
-                        temp.erase(s[j]);
-                    }
-                }
-                start = j+1;
-                end = i;
-                temp.insert(s[i]);
+                    m[s[i]]--;
+                    i ++;
+                }while(s[i-1] != c && i <= j);
             }
-                
-            if (temp.size() > ret)
-                ret = temp.size();
         }
-        
-        return max(ret, (int)temp.size());
+
+        return ret;
     }
 };
 
