@@ -45,3 +45,49 @@ private:
     int min_val;
     stack<int> st;
 };
+
+
+class MinStack {
+public:
+    MinStack() {
+        
+    }
+    
+    void push(int val) {
+        s.push(val);
+        if (minS.empty() || minS.top().first > val)
+        {
+            minS.push({val, 1});
+            return ;
+        }
+        if (minS.top().first == val)
+        {
+            minS.top().second ++;
+            return ;
+        }
+    }
+    
+    void pop() {
+        int i = s.top();
+        s.pop();
+        if (minS.top().first == i)
+        {
+            minS.top().second --;
+            if(minS.top().second == 0)
+            {
+                minS.pop();
+            }
+        }
+    }
+    
+    int top() {
+        return s.top();
+    }
+    
+    int getMin() {
+        return minS.top().first;
+    }
+private:
+    stack<int> s;
+    stack<pair<int, int>> minS;
+};
