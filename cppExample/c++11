@@ -566,10 +566,17 @@ it can lead to undefined behavior if the cast is incorrect at runtime
   	checks consistency at runtime; slower than static cast.
 	The value of a failed cast to pointer type is the null pointer value of the required result type, no exception.
 	If the cast fails and new_type is a reference type, it throws an exception: A failed cast to reference type throws std::bad_cast
+
+     dynamic_cast relies on runtime type information (RTTI) to validate conversions  AA* a = dynamic_cast<AA*>(b); 
+     1. If B is polymorphic (has virtual functions), dynamic_cast attempts to access RTTI. 
 	1. Run-Time Type Information (RTTI) stored in an object's virtual table (vtable) to validate and execute type conversions at runtime
 	2. The runtime checks if Derived is in the inheritance graph of base_ptr's dynamic type using RTTI
 	3. not valid: returns null
+            A null pointer result (for pointers)
+	    A std::bad_cast exception (for references)
 	4. valid: adjusts the pointer using stored offsets 
+    2. If B is not polymorphic, dynamic_cast fails at compile time (it requires polymorphic types)
+
     const_cast: add/remove const to a variable; no other C++ cast is capable of removing it
   	Modifying a formerly const value is undefined 
   	Remove const from objects in order to pass to non-const functions you know won't modify the argument.
