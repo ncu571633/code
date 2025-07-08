@@ -30,6 +30,9 @@ public:
             return root;
         if(root==p || root==q)
             return root;
+
+// - 若p和q分别位于左右子树中，那么对左右子结点调用递归函数，会分别返回p和q结点的位置，而当前结点正好就是p和q的最小共同父结点，
+// 直接返回当前结点即可，这就是题目中的例子1的情况。
         TreeNode* l = lowestCommonAncestor(root->left, p, q);
         TreeNode* r = lowestCommonAncestor(root->right, p, q);
         if(l&&r)
