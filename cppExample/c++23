@@ -77,6 +77,23 @@ int main() {
 A coroutine in C++ is a special kind of function that can suspend its execution at certain points 
   and later be resumed from where it left off. 
 
+Traditional (blocking):
+void process_file() {
+    open_file();   // Blocks until complete
+    read_data();   // Blocks entire thread
+    process_data();
+}
+
+With coroutines (non-blocking, readable):
+task<> process_file() {
+    co_await async_open();  // Suspend without blocking
+    co_await async_read();  // Suspend during I/O
+    process_data();
+}
+
+This coroutine version allows other tasks to run while waiting for I/O, without complicated callbacks or extra threads
+
+
 std::generator is a C++23 standard library type designed to make it easy to write coroutine-based generators 
   that produce sequences of values on demand.
   
@@ -113,3 +130,20 @@ int main() {
     auto r = std::views::iota(0, 5); // produces 0, 1, 2, 3, 4
     auto v = r | std::ranges::to<std::vector>(); // v is std::vector{0, 1, 2, 3, 4}
 }
+
+******************************************************
+stacktrace
+
+#include <iostream>
+#include <stacktrace>
+
+void foo() {
+    auto trace = std::stacktrace::current();
+    std::cout << trace << std::endl;
+}
+
+int main() {
+    foo();
+    return 0;
+}
+
