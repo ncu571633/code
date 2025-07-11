@@ -1,0 +1,76 @@
+
+******************************************************************************************
+https://en.cppreference.com/w/cpp/atomic/atomic/compare_exchange.html
+
+compare_exchange_weak:
+1. Intended for use inside loops, is allowed to fail spuriously
+2. better performance on some platforms: maps directly to hardware instructions
+
+compare_exchange_strong:
+The strong version only fails if the value does not match the expected value; it does not fail spuriously
+
+******************************************************************************************
+Memory order: compiler/CPU may reorder the instructions. 
+
+1. memory_order_relaxed: No ordering or synchronization guarantees except for atomicity.
+2. memory_order_consume: Only data-dependent operations after the load are ordered; other operations may be reordered.
+消费顺序要求在当前线程中，所有后续依赖于该原子操作的读操作都必须在原子操作完成后执行。这种顺序确保了读操作之间的依赖关系，并且对于写操作或其他线程中的读操作没有顺序要求。
+3. memory_order_release: All memory writes before the release store are visible to threads that synchronize with it using acquire.
+在这条指令执行前的对内存的读写指令都执行完毕，这条语句之后的对内存的修改指令不能超越这条指令优先执行。这像一道栅栏。
+4. memory_order_acquire: All memory accesses after the acquire load in program order are not reordered before it.
+获取顺序要求在当前线程中，所有后续的读操作都必须在原子操作完成后执行。这种顺序确保了当前线程对原子操作的读取操作不会被重新排序到原子操作之前，但对于写操作或其他线程中的读操作没有顺序要求。
+5. memory_order_seq_cst: The strongest ordering; all operations appear in a single global order, seen the same by all threads.
+memory_order_acq_rel	是memory_order_acquire和memory_order_release的合并，这条语句前后的语句都不能被reorder。
+
+#include <atomic>
+ 
+template<typename T>
+struct node
+{
+    T data;
+    node* next;
+    node(const T& data) : data(data), next(nullptr) {}
+};
+ 
+template<typename T>
+class stack
+{
+    std::atomic<node<T>*> head;
+public:
+    void push(const T& data)
+    {
+        node<T>* new_node = new node<T>(data);
+ 
+        // put the current value of head into new_node->next
+        new_node->next = head.load(std::memory_order_relaxed);
+ 
+        // now make new_node the new head, but if the head
+        // is no longer what's stored in new_node->next
+        // (some other thread must have inserted a node just now)
+        // then put that new head into new_node->next and try again
+        while (!head.compare_exchange_weak(new_node->next, new_node,
+                                           std::memory_order_release,
+                                           std::memory_order_relaxed))
+            ; // the body of the loop is empty
+ 
+// Note: the above use is not thread-safe in at least 
+// GCC prior to 4.8.3 (bug 60272), clang prior to 2014-05-05 (bug 18899)
+// MSVC prior to 2014-03-17 (bug 819819). The following is a workaround:
+//      node<T>* old_head = head.load(std::memory_order_relaxed);
+//      do
+//      {
+//          new_node->next = old_head;
+//      }
+//      while (!head.compare_exchange_weak(old_head, new_node,
+//                                         std::memory_order_release,
+//                                         std::memory_order_relaxed));
+    }
+};
+ 
+int main()
+{
+    stack<int> s;
+    s.push(1);
+    s.push(2);
+    s.push(3);
+}
