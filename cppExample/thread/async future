@@ -1,0 +1,20 @@
+#include <iostream>       // std::cout
+#include <future>         // std::async, std::future
+
+// a non-optimized way of checking for prime numbers:
+bool is_prime (int x) {
+  for (int i=2; i<x; ++i) if (x%i==0) return false;
+  return true;
+}
+
+int main ()
+{
+  // call function asynchronously:
+  std::future<bool> fut = std::async (is_prime,444444443); 
+
+  bool x = fut.get();     // retrieve return value
+
+  std::cout << "\n444444443 " << (x?"is":"is not") << " prime.\n";
+
+  return 0;
+}
