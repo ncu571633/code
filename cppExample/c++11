@@ -114,6 +114,16 @@ avoiding code duplication, and providing a strong exception guarantee.
 A call like this: f(expr).
 Compiler use expr to deduct two types: T and paramType. They are frequently different, as paramType often contains const/reference. void f(const int& param)
 
+Reference Collapsing: we can't have a reference to a reference directly
+However, in templates or other scenarios involving type deduction, we may encounter situations where a reference to a reference could theoretically exist. 
+Reference collapsing rules dictate how these references are handled by the compiler to produce a valid type.
+
+    T& & becomes T&: If we try to form a reference to a reference where both are lvalue references (&), it collapses to a single lvalue reference.
+    T& && becomes T&: If we have an lvalue reference to an rvalue reference, it collapses to an lvalue reference.
+    T&& & becomes T&: If we have an rvalue reference to an lvalue reference, it collapses to an lvalue reference.
+    T&& && becomes T&&: If we have an rvalue reference to an rvalue reference, it remains an rvalue reference.
+
+
 2. auto 
 3. decltype (compile time):
     If e is the name of a variable, i.e. an "id-expression", then the resulting type is the type of the variable.
