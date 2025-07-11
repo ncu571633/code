@@ -1,3 +1,20 @@
+****************************************************************************
+std::future vs std::shared_future
+std::future
+    Single Ownership: A std::future is move-only and cannot be copied. Only one instance can refer to a particular asynchronous result
+    Single Retrieval: You can call .get() only once. After calling .get(), the future becomes invalid, and the result is moved out. Any further access is undefined
+    Use Case: Use std::future when only one thread needs to access the result of an asynchronous operation, or when you only need to retrieve the result once.
+std::shared_future
+    Shared Ownership: A std::shared_future is copyable. Multiple shared_future objects can refer to the same asynchronous result (shared state)
+    Multiple Retrievals: You can call .get() multiple times, even from different threads. The result is returned as a const reference, allowing safe concurrent access
+    Use Case: 
+        Multiple threads need to access the result of the same asynchronous operation.
+        The result needs to be accessed multiple times, even if only from a single thread
+****************************************************************************
+
+
+
+
 #include <iostream>       // std::cout
 #include <future>         // std::async, std::future
 
