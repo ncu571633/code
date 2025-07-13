@@ -43,6 +43,47 @@ class Solution {
 public:
     int steps(int k)
     {
+        if (k == 1)
+            return 0;
+        if (k % 2)
+        {
+            return steps(3*k+1) + 1;
+        }
+        else
+        {
+            return steps(k / 2) + 1;
+        }
+    }
+    int getKth(int lo, int hi, int k) 
+    {
+        map<int, set<int>> m;
+        for (int i=lo; i<=hi; i++)
+        {
+            m[steps(i)].insert(i);
+        }
+
+        for(auto p: m)
+        {
+            for (auto p2: p.second)
+            {
+                if (k==1)
+                {
+                    return p2;
+                }
+                k--;
+            }
+        }
+
+        return hi;
+    }
+};
+
+
+
+class Solution {
+public:
+    int steps(int k)
+    {
         static unordered_map<int, int> stepMap;
         if (k == 1)
             return 0;
