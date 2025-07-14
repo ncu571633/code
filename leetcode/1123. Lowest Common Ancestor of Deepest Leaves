@@ -1,0 +1,54 @@
+Given a rooted binary tree, return the lowest common ancestor of its deepest leaves.
+
+Recall that:
+
+    The node of a binary tree is a  leaf  if and only if it has no children
+    The  depth  of the root of the tree is 0, and if the depth of a node is d, the depth of each of its children is d+1.
+    The  lowest common ancestor  of a set Sof nodes is the node A with the largest depth such that every node in S is in the subtree with root A.
+
+
+class Solution {
+public:
+    TreeNode* lcaDeepestLeaves(TreeNode* root) {
+        if (!root) return nullptr;
+        int left = getDepth(root->left), right = getDepth(root->right);
+        if (left == right) return root;
+        return (left > right) ? lcaDeepestLeaves(root->left) : lcaDeepestLeaves(root->right);
+    }
+    int getDepth(TreeNode* node) {
+        if (!node) return 0;
+        return 1 + max(getDepth(node->left), getDepth(node->right));
+    }
+};
+
+
+class Solution {
+public:
+    unordered_map<TreeNode*, int> m;
+    TreeNode* lcaDeepestLeaves(TreeNode* root) {
+        if (!root) return nullptr;
+        int left = getDepth(root->left, m), right = getDepth(root->right, m);
+        if (left == right) return root;
+        return (left > right) ? lcaDeepestLeaves(root->left) : lcaDeepestLeaves(root->right);
+    }
+    int getDepth(TreeNode* node, unordered_map<TreeNode*, int>& m) {
+        if (!node) return 0;
+        if (m.count(node)) return m[node];
+        return m[node] = 1 + max(getDepth(node->left, m), getDepth(node->right, m));
+    }
+};.
+
+
+class Solution {
+public:
+    TreeNode* lcaDeepestLeaves(TreeNode* root) {
+        return helper(root).first;
+    }
+    pair<TreeNode*, int> helper(TreeNode* node) {
+        if (!node) return {nullptr, 0};
+        auto left = helper(node->left), right = helper(node->right);
+        if (left.second > right.second) return {left.first, left.second + 1};
+        if (left.second < right.second) return {right.first, right.second + 1};
+        return {node, left.second + 1};
+    }
+};
