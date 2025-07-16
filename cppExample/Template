@@ -1,6 +1,20 @@
-Template meta-programming (TMP) refers to uses of the C++ template system to perform computation at compile-time within the code
+https://www.geeksforgeeks.org/cpp/templates-cpp/
 
-This is because 'variables' are all immutable, and hence it is necessary to use recursion rather than iteration to process elements of a set
+Template types:
+    Function Templates
+    Class Templates
+    Variable Templates (Since C++ 14)
+        template <typename T> 
+        constexpr T pi = T(3.14159);
+
+    Default Template Arguments
+        template <typename T1, typename T2 = double, typename T3 = string>
+        class Geek {
+          public:
+            T1 x;
+            T2 y;
+            T3 z;
+        };
 
 ********************************************************************************************
 Template Specialization: get a special behavior for a particular data type
@@ -19,6 +33,51 @@ Template Specialization: get a special behavior for a particular data type
     }
 
 ********************************************************************************************
+Template Non-Type Arguments: 
+  Non-type parameters are mainly used for specifying max or min values or any other constant value for a particular instance of a template
+  The important thing to note about non-type parameters is, that they must be const
+template <class T, int max> 
+int arrMin(T arr[], int n)
+{
+    int m = max;
+    for (int i = 0; i < n; i++)
+        if (arr[i] < m)
+            m = arr[i];
+    return m;
+}
+
+********************************************************************************************
+Template Argument Deduction
+    Template argument deduction automatically deduces the data type of the argument passed to the templates. 
+This allows us to instantiate the template without explicitly specifying the data type.
+int main()
+{
+    cout << max(3, 4);
+    return 0;
+}
+
+********************************************************************************************
+Template meta-programming (TMP) refers to uses of the C++ template system to perform computation at compile-time within the code
+In C++, template metaprogramming refers to template perform computation at the compile time rather than runtime. To perform computation at compile time, 
+template metaprogramming involves recursive template structures where templates call other templates during compilation.
+
+template <int N> 
+struct Factorial
+{
+    static const int value = N * Factorial<N - 1>::value;
+};
+
+// Specialization for the
+// base case (Factorial<0>)
+template <> 
+struct Factorial<0>
+{
+    static const int value = 1;
+};
+
+
+
+********************************************************************************************
 Variadic Template
 
     base case. Idea: unpack and reduce
@@ -31,6 +90,16 @@ Variadic Template
     double sum(T t, Rest... rest) {  //Rest... rest: funciton parameter pack
       return t + sum(rest...);
     }
+
+
+
+
+
+
+
+
+
+
 
 ********************************************************************************************
 Variadic data structures
