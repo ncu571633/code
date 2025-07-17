@@ -27,11 +27,43 @@ Template Specialization: get a special behavior for a particular data type
 
     template<>
     void fun(int a)
+    // can also be: void fun<int>(int a)
     {
         cout << "Specialized Template for int type: "
              << a << endl;
     }
 
+class: 
+#include <iostream>
+using namespace std;
+
+template <class T>
+class Test
+{
+public:
+   Test()
+   {
+       cout << "General template object \n";
+   }
+};
+
+template <>
+class Test <int>
+{
+public:
+   Test()
+   {
+       cout << "Specialized template object\n";
+   }
+};
+
+int main()
+{
+    Test<int> a;
+    Test<char> b;
+    Test<float> c;
+    return 0;
+}
 ********************************************************************************************
 Template Non-Type Arguments: 
   Non-type parameters are mainly used for specifying max or min values or any other constant value for a particular instance of a template
@@ -58,13 +90,16 @@ int main()
 
 ********************************************************************************************
 Template meta-programming (TMP) refers to uses of the C++ template system to perform computation at compile-time within the code
-In C++, template metaprogramming refers to template perform computation at the compile time rather than runtime. To perform computation at compile time, 
+In C++, template metaprogramming refers to template perform computation at the compile time rather than runtime. 
+To perform computation at compile time, 
 template metaprogramming involves recursive template structures where templates call other templates during compilation.
+
+Recursive:
 
 template <int N> 
 struct Factorial
 {
-    static const int value = N * Factorial<N - 1>::value;
+    static const int value = 2 * Factorial<N - 1>::value;
 };
 
 // Specialization for the
@@ -75,7 +110,11 @@ struct Factorial<0>
     static const int value = 1;
 };
 
-
+int main()
+{
+    cout << Factorial<8>::value << endl;
+    return 0;
+}
 
 ********************************************************************************************
 Variadic Template
@@ -92,11 +131,95 @@ Variadic Template
     }
 
 
+********************************************************************************************
+Branching: 
+A conditional branch can be constructed by writing two alternative specialisations of a template class. 
+The compiler will choose the one that fits the types provided, and a value defined in the instantiated class can then be accessed.
+
+#include <iostream>
+using namespace std;
+
+template <typename T, typename U>
+struct isSameClass
+{
+    static const bool value = false;
+};
+
+template <typename T>
+struct isSameClass<T, T>
+{
+    static const bool value = true;
+};
+
+template <class A, class B>
+bool IsSameClass() {
+    return isSameClass<A, B>::value;
+}
+
+int main() {
+    cout << IsSameClass<int, double>() << endl;
+    cout << IsSameClass<int, int>() << endl;
+    return 0;
+}
+
+********************************************************************************************
+
+Curiously Recurring Template Pattern (CRTP) 
+
+template <typename Derived>
+struct Base {
+    void interface() {
+        static_cast<Derived*>(this)->implementation();
+    }
+};
+
+struct Derived : Base<Derived> {
+    void implementation() {
+        std::cout << "Derived implementation called\n";
+    }
+};
+
+int main() {
+    Derived d;
+    d.interface(); // Output: Derived implementation called
+}
+
+********************************************************************************************
+SFINAE (Substitution failure is not an error)
+There are some overloading functions with template. 
+The compiler tries to substitute of arguments for one of the template function, and an error happens. 
+Instead of stopping with a compilation error, compilier continues with other functions. 
+
+When the compiler tries to compile a function call (simplified):
+    Perform a name lookup.
+    For function templates the template argument values are deduced from the types of the actual arguments passed into the function.
+        All occurrences of the template parameter (in the return type and parameters types) are substituted with those deduced types.
+        When this process leads to invalid type the particular function is removed from the overload resolution set. 
+(SFINAE)
+    At the end, we have a list of viable functions that can be used for the specific call.
+        If this set is empty, then the compilation fails.
+        If more than one function is chosen, we have an ambiguity.
+        In general, the candidate function, whose parameters match the arguments most closely is the one that is called.
 
 
-
-
-
+#include <iostream>
+using namespace std;
+void print( int iNum )
+{
+         cout<<"int print( int )"<< endl;
+}
+template < typename _Ty >
+void print( _Ty tt, typename _Ty::value_type* pvt_dummy = NULL )
+{
+           typename _Ty::value_type vt_someval;
+           cout<<"template < typename _Ty >"<< endl;
+}
+int main()
+{
+         short siNum = 10;
+         print( siNum );
+         return 0;
+}
 
 
 
@@ -215,93 +338,13 @@ int main()
     return 1;
 }
 
-********************************************************************************************
-Recursion
-
-template <int N>
-struct Factorial {
-  static const int value = N * Factorial<N - 1>::value;
-};
-
-// Specialization of Factorial for base case = 1.
-template <>
-struct Factorial<1> {
-  static const int value = 1;
-};
-
-int main() {
-  std::cout << Factorial<5>::value << std::endl;
-}
 
 
-********************************************************************************************
-Branching: 
-A conditional branch can be constructed by writing two alternative specialisations of a template class. 
-The compiler will choose the one that fits the types provided, and a value defined in the instantiated class can then be accessed.
-
-#include <iostream>
-using namespace std;
-
-template <typename T, typename U>
-struct isSameClass
-{
-    static const bool value = false;
-};
-
-template <typename T>
-struct isSameClass<T, T>
-{
-    static const bool value = true;
-};
-
-template <class A, class B>
-bool IsSameClass() {
-    return isSameClass<A, B>::value;
-}
-
-int main() {
-    cout << IsSameClass<int, double>() << endl;
-    cout << IsSameClass<int, int>() << endl;
-    return 0;
-}
 
 
-********************************************************************************************
-SFINAE (Substitution failure is not an error)
-There are some overloading functions with template. 
-The compiler tries to substitute of arguments for one of the template function, and an error happens. 
-Instead of stopping with a compilation error, compilier continues with other functions. 
-
-When the compiler tries to compile a function call (simplified):
-    Perform a name lookup.
-    For function templates the template argument values are deduced from the types of the actual arguments passed into the function.
-        All occurrences of the template parameter (in the return type and parameters types) are substituted with those deduced types.
-        When this process leads to invalid type the particular function is removed from the overload resolution set. 
-(SFINAE)
-    At the end, we have a list of viable functions that can be used for the specific call.
-        If this set is empty, then the compilation fails.
-        If more than one function is chosen, we have an ambiguity.
-        In general, the candidate function, whose parameters match the arguments most closely is the one that is called.
 
 
-#include <iostream>
-using namespace std;
-void print( int iNum )
-{
-         cout<<"int print( int )"<< endl;
-}
-template < typename _Ty >
-void print( _Ty tt, typename _Ty::value_type* pvt_dummy = NULL )
-{
-           typename _Ty::value_type vt_someval;
-           cout<<"template < typename _Ty >"<< endl;
-}
-int main()
-{
-         short siNum = 10;
-         print( siNum );
-         return 0;
-}
+
 
 ********************************************************************************************
 enable_if is a set of tools, available in the Standard Library since C++11, that internally use SFINAE. 
@@ -322,27 +365,7 @@ foo(T t) {
   std::cout << "foo fallback\n";
 }
 
-********************************************************************************************
 
-Curiously Recurring Template Pattern (CRTP) 
-
-template <typename Derived>
-struct Base {
-    void interface() {
-        static_cast<Derived*>(this)->implementation();
-    }
-};
-
-struct Derived : Base<Derived> {
-    void implementation() {
-        std::cout << "Derived implementation called\n";
-    }
-};
-
-int main() {
-    Derived d;
-    d.interface(); // Output: Derived implementation called
-}
 
 ********************************************************************************************
     cout<<(typeid(int) == typeid(double)) << endl;
