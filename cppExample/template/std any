@@ -1,1 +1,48 @@
+#include <iostream>
+#include <memory>
+#include <typeindex>
+#include <typeinfo>
+
+class Any {
+    struct Base {
+        virtual ~Base() = default;
+        virtual std::unique_ptr<Base> clone() const = 0;
+        virtual const std::type_info& type() const = 0;
+    };
+    template<typename T>
+    struct Holder : Base {
+        T value;
+        Holder(const T& v) : value(v) {}
+        std::unique_ptr<Base> clone() const override {
+            return std::make_unique<Holder<T>>(value);
+        }
+        const std::type_info& type() const override {
+            return typeid(T);
+        }
+    };
+    std::unique_ptr<Base> ptr;
+public:
+    Any() = default;
+
+    template<typename T>
+    Any(const T& v) : ptr(std::make_unique<Holder<T>>(v)) {}
+
+    Any(const Any& other) : ptr(other.ptr ? other.ptr->clone() : nullptr) {}
+
+    Any& operator=(const Any& other) {
+        if (this != &other) ptr = other.ptr ? other.ptr->clone() : nullptr;
+        return *this;
+    }
+
+    template<typename T>
+    T& cast() {
+        if (ptr->type() != typeid(T))
+            throw std::bad_cast();
+        return static_cast<Holder<T>*>(ptr.get())->value;
+    }
+
+    const std::type_info& type() const {
+        return ptr ? ptr->type() : typeid(void);
+    }
+};
 
