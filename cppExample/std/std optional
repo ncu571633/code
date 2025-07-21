@@ -1,0 +1,151 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <cstddef>      // for std::byte
+#include <utility>      // for std::move
+#include <stdexcept>    // for std::runtime_error
+
+template<typename T>
+class Optional {
+    bool has_value_ = false;
+    alignas(T) std::byte data_[sizeof(T)];
+
+    T* ptr() noexcept { return std::launder(reinterpret_cast<T*>(data_)); }
+    const T* ptr() const noexcept { return std::launder(reinterpret_cast<const T*>(data_)); }
+
+public:
+    // Default constructor (empty)
+    Optional() noexcept = default;
+
+    // Construct with lvalue
+    Optional(const T& value) : has_value_(true) {
+        new (data_) T(value);
+    }
+
+    // Construct with rvalue
+    Optional(T&& value) : has_value_(true) {
+        new (data_) T(std::move(value));
+    }
+
+    // Copy constructor
+    Optional(const Optional& other) : has_value_(other.has_value_) {
+        if (has_value_) new (data_) T(*other);
+    }
+
+    // Move constructor
+    Optional(Optional&& other) noexcept(std::is_nothrow_move_constructible_v<T>)
+        : has_value_(other.has_value_) {
+        if (has_value_) {
+            new (data_) T(std::move(*other));
+        }
+    }
+
+    // Destructor
+    ~Optional() { reset(); }
+
+    // Copy assignment
+    Optional& operator=(const Optional& other) {
+        if (this != &other) {
+            if (has_value_) reset();
+            if (other.has_value_) {
+                new (data_) T(*other);
+                has_value_ = true;
+            }
+        }
+        return *this;
+    }
+
+    // Move assignment
+    Optional& operator=(Optional&& other) noexcept(std::is_nothrow_move_assignable_v<T>) {
+        if (this != &other) {
+            if (has_value_) reset();
+            if (other.has_value_) {
+                new (data_) T(std::move(*other));
+                has_value_ = true;
+            }
+        }
+        return *this;
+    }
+
+    // Reset to empty
+    void reset() noexcept {
+        if (has_value_) {
+            ptr()->~T();
+            has_value_ = false;
+        }
+    }
+
+    bool has_value() const noexcept { return has_value_; }
+    explicit operator bool() const noexcept { return has_value_; }
+
+    T& value() {
+        if (!has_value_) throw std::runtime_error("Bad Optional access");
+        return *ptr();
+    }
+
+    const T& value() const {
+        if (!has_value_) throw std::runtime_error("Bad Optional access");
+        return *ptr();
+    }
+
+    T* operator->() { return &value(); }
+    const T* operator->() const { return &value(); }
+    T& operator*() { return value(); }
+    const T& operator*() const { return value(); }
+};
+
+// Example function for testing use as return value
+Optional<int> find_index(const std::vector<std::string>& vec, const std::string& target) {
+    for (size_t i = 0; i < vec.size(); ++i) {
+        if (vec[i] == target) {
+            return static_cast<int>(i);
+        }
+    }
+    return Optional<int>();
+}
+
+int main() {
+    // 1. Default constructed (empty)
+    Optional<int> empty_opt;
+    std::cout << "empty_opt has value? " << (empty_opt.has_value() ? "yes" : "no") << "\n";
+
+    // 2. Constructed with a value
+    Optional<int> value_opt(42);
+    std::cout << "value_opt has value? " << (value_opt.has_value() ? "yes" : "no") << "\n";
+    if (value_opt.has_value()) {
+        std::cout << "value_opt value: " << value_opt.value() << "\n";
+    }
+
+    // 3. Assignment
+    empty_opt = value_opt;
+    std::cout << "empty_opt after assignment has value? " << (empty_opt.has_value() ? "yes" : "no") << "\n";
+
+    // 4. Resetting
+    value_opt.reset();
+    std::cout << "value_opt after reset has value? " << (value_opt.has_value() ? "yes" : "no") << "\n";
+
+    // 5. Using as return value
+    std::vector<std::string> fruits = {"apple", "banana", "cherry"};
+    auto idx = find_index(fruits, "banana");
+    if (idx.has_value()) {
+        std::cout << "\"banana\" found at index: " << idx.value() << "\n";
+    } else {
+        std::cout << "\"banana\" not found\n";
+    }
+
+    // 6. Try to access value when empty (should throw)
+    try {
+        std::cout << "Trying to access empty_opt value: " << value_opt.value() << "\n";
+    } catch (const std::exception& e) {
+        std::cout << "Exception caught: " << e.what() << "\n";
+    }
+
+    // 7. Using operator*
+    Optional<std::string> str_opt("hello");
+    if (str_opt.has_value()) {
+        std::cout << "str_opt contains: " << *str_opt << "\n";
+    }
+
+    return 0;
+}
+
