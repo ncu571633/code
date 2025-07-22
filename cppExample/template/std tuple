@@ -43,11 +43,32 @@ HeadItem& Get(TupleImpl<i, HeadItem, TailItems...>& tuple) {
 template<typename... Items>
 using Tuple = TupleImpl<0, Items...>;
 
+template <typename... Args>
+Tuple<Args...> make_tuple(Args&&... args) {
+    Tuple<Args...> tuple;
+    set_tuple_values<0>(tuple, std::forward<Args>(args)...);
+    return tuple;
+}
+
+// Helper: sets each value in the tuple, recursively
+template <std::size_t i, typename Head, typename... Tail, typename TupleType>
+void set_tuple_values(TupleType& tuple, Head&& head, Tail&&... tail) {
+    Get<i>(tuple) = std::forward<Head>(head);
+    if constexpr(sizeof...(Tail) > 0) {
+        set_tuple_values<i + 1>(tuple, std::forward<Tail>(tail)...);
+    }
+}
+
+// base case with zero arguments: do nothing
+template <std::size_t i, typename TupleType>
+void set_tuple_values(TupleType&) { /* nothing */ }
+
 int main(int argc, char** argv) {
     Tuple<int, float, std::string> tuple;
     Get<0>(tuple) = 5;
     Get<1>(tuple) = 8.3;
     Get<2>(tuple) = "Foo";
+//     auto tuple = make_tuple(123, 4.5f, std::string("hi!"));
     std::cout << Get<0>(tuple) << std::endl;
     std::cout << Get<1>(tuple) << std::endl;
     std::cout << Get<2>(tuple) << std::endl;
