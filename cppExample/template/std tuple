@@ -15,7 +15,7 @@ struct TupleLeaf {
     Item value;
 };
 
-// TupleImpl is a proxy for the final class that has an extra 
+// forward declaration: TupleImpl is a proxy for the final class that has an extra 
 // template parameter `i`.
 template<std::size_t i, typename... Items>
 struct TupleImpl;
