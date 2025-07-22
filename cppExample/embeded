@@ -27,6 +27,12 @@ void foo (void) {
 5. code segment, also known as text segment
 contains executable code and is generally read-only and fixed size
 
+vptr Stored as the First Entry in the Memory of a Class with Virtual Functions?
+1. Efficient Dynamic Dispatch: uses the object's starting address to fetch the vptr, then looks up the appropriate function in the vtable
+2. Simplicity in Inheritance: 
+In single inheritance, the derived class object layout is guaranteed to begin with the base class subobject. If both base and derived classes are polymorphic, the vptr remains at the same offset, simplifying upcasting.
+
+
 ******************************************************************************************************************************************
 Kernel Space vs User Space
 Kernel space and user space are two distinct regions of memory and execution modes in a modern operating system. 
