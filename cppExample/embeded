@@ -7,7 +7,7 @@ Access Pattern:	   Contiguous, cache-friendly        vs	Scattered, less cache-fr
 Indirection	   Direct access	  vs  Requires pointer dereferencing
 Thread Safety	No synchronization needed	  vs.  May require synchronization
 
-3. .bss   uninitialized static data, both variables and constants
+3. .bss(Block Started by Symbol)   uninitialized static data, both variables and constants
 static int i;
 static char a[12];
 
