@@ -2,112 +2,54 @@
 Variadic data structures
 
 https://github.com/mortificador/blog/blob/master/tuple.hpp
+https://stackoverflow.com/questions/4041447/how-is-stdtuple-implemented
 
-#include <cstddef> // for std::size_t
-#include <utility> // for std::foward
-#include <string>
-#include <type_traits>
+
 #include <iostream>
-using namespace std;
-template <int _index, typename T>
-class _tuple_impl
-{
-public:
-  _tuple_impl(T const &v) { val = v; }
-  _tuple_impl(T &&v) { val = std::move(v); }
-  T &get() { return val; }
 
-private:
-  T val;
+// Contains the actual value for one item in the tuple. The 
+// template parameter `i` allows the
+// `Get` function to find the value in O(1) time
+template<std::size_t i, typename Item>
+struct TupleLeaf {
+    Item value;
 };
 
-// general template, will be used only when there is no arguments
-template <int _index, typename... types>
-class _tuple_recurr_base
-{
-};
+// TupleImpl is a proxy for the final class that has an extra 
+// template parameter `i`.
+template<std::size_t i, typename... Items>
+struct TupleImpl;
 
-// This is a partial specialization, so as long as there is at least one argument
-// this specialization is preferred to the _tuple_recurr_base<std::size_t, typename ...types>
-template <int _index, typename L, typename... types>
-class _tuple_recurr_base<_index, L, types...> : public _tuple_impl<_index, L>,
-                                                public _tuple_recurr_base<_index + 1, types...>
-{
-public:
-  template <typename CL, typename... CArgs>
-  _tuple_recurr_base(const CL &arg, const CArgs &... args) : _tuple_impl<_index, CL>(arg),
-                                                   _tuple_recurr_base<_index + 1, types...>(args...)
-  {
-  }
-};
+// Base case: empty tuple
+template<std::size_t i>
+struct TupleImpl<i>{};
 
-template <typename L, typename... types>
-class mytuple : public _tuple_recurr_base<0, L, types...>
-{
-public:
-  // The constructor uses the same recursion as the inheritance
-  template <typename... CArgs>
-  mytuple(CArgs &&... args) : _tuple_recurr_base<0, L, types...>(std::forward<CArgs>(args)...)
-  {
-  }
+// Recursive specialization
+template<std::size_t i, typename HeadItem, typename... TailItems>
+struct TupleImpl<i, HeadItem, TailItems...> :
+    public TupleLeaf<i, HeadItem>, // This adds a `value` member of type HeadItem
+    public TupleImpl<i + 1, TailItems...> // This recurses
+    {};
 
-  template <typename... Args>
-  friend bool operator==(mytuple<Args...> &t1, mytuple<Args...> &t2);
-};
-
-// template deduction guideline
-template <typename... CArgs>
-mytuple(CArgs... args)->mytuple<CArgs...>;
-
-// extract_type_at is a class that, given a list of types and an index, defines a type member
-// with the type of the index given from the list (zero based index).
-// E.g. extract<1, int, double, float>::type == double
-// For this we define ::type recursively, until we hit index zero, at that point there is a specialization
-// that defines the member ::type, and stops the recursion
-template <std::size_t index, typename L, typename... Args>
-struct extract_type_at
-{
-  using type = typename extract_type_at<index - 1, Args...>::type;
-};
-
-// This is the stop type. If the index is zero, we define the member type to be the correspondent type
-template <typename L, typename... Args>
-struct extract_type_at<0, L, Args...>
-{
-  using type = L;
-};
-
-// Method to get the value of a tuple, given an index
-// We cast the tuple to the base class that corresponds to the index
-// and type for that index
-template <std::size_t index, typename... Args>
-auto &get(mytuple<Args...> &t)
-{
-  return (static_cast<_tuple_impl<index, typename extract_type_at<index, Args...>::type> &>(t)).get();
+// Obtain a reference to i-th item in a tuple
+template<std::size_t i, typename HeadItem, typename... TailItems>
+HeadItem& Get(TupleImpl<i, HeadItem, TailItems...>& tuple) {
+    // Fully qualified name for the member, to find the right one 
+    // (they are all called `value`).
+    return tuple.TupleLeaf<i, HeadItem>::value;
 }
 
-template <std::size_t index, typename... Args>
-bool compare_tuple(mytuple<Args...> &t1, mytuple<Args...> &t2)
-{
-  if constexpr (index == 0)
-  {
-    return get<0>(t1) == get<0>(t2);
-  }
-  else
-  {
-    return get<index>(t1) == get<index>(t2) && compare_tuple<index - 1>(t1, t2);
-  }
-}
+// Templated alias to avoid having to specify `i = 0`
+template<typename... Items>
+using Tuple = TupleImpl<0, Items...>;
 
-template <typename... Args>
-bool operator==(mytuple<Args...> &t1, mytuple<Args...> &t2)
-{
-  return compare_tuple<sizeof...(Args) - 1>(t1, t2);
-}
-
-int main()
-{
-    mytuple t{5.0, 6, string("hello")};
-    cout << get<2>(t); 
-    return 1;
+int main(int argc, char** argv) {
+    Tuple<int, float, std::string> tuple;
+    Get<0>(tuple) = 5;
+    Get<1>(tuple) = 8.3;
+    Get<2>(tuple) = "Foo";
+    std::cout << Get<0>(tuple) << std::endl;
+    std::cout << Get<1>(tuple) << std::endl;
+    std::cout << Get<2>(tuple) << std::endl;
+    return 0;
 }
