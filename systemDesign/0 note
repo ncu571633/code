@@ -351,3 +351,20 @@ Message Payload Size	Medium/Large	Small
 Processing Complexity	Higher (text parsing)	Lower (well-defined binary structure)
 Browser Support	Yes (native)	Yes (via gRPC-Web)
 
+
+HTTP vs. REST API
+REST (Representational State Transfer) API is an architectural style for building web services, typically over HTTP.
+HTTP provides standard methods like GET, POST, PUT, DELETE, etc.
+
+
+Cache and DB consistency
+1. Write through: in which we write DB first and then update the cache; 
+2. Write back, in which we update cache first, and then at sometime later right back to DB. 
+Write back could be used if we decided to in real time update the winning bid into the auction_table to reduce the volume of write request.
+
+It is possible that we write to DB success but failed to update cache. 
+For example, the request to update cache is failed or the node is down before try to update the cache. 
+Retry could be used here, but it could still possible that the update to cache is failed after several retry. 
+But since our Fulfillment Service reads the cache to execute the bid, 
+it might read some outdated data because of the above potential failure. 
+
