@@ -351,6 +351,9 @@ Message Payload Size	Medium/Large	Small
 Processing Complexity	Higher (text parsing)	Lower (well-defined binary structure)
 Browser Support	Yes (native)	Yes (via gRPC-Web)
 
+websocket vs SSE(server sent event)
+Websocket(bi-direction) and SSE(single direction) are 2 common way we build a connection with backend and keep it live to send/receive data; 
+
 
 HTTP vs. REST API
 REST (Representational State Transfer) API is an architectural style for building web services, typically over HTTP.
