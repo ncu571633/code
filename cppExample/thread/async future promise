@@ -1,0 +1,84 @@
+****************************************************************************
+std::future vs std::shared_future
+std::future
+    Single Ownership: A std::future is move-only and cannot be copied. Only one instance can refer to a particular asynchronous result
+    Single Retrieval: You can call .get() only once. After calling .get(), the future becomes invalid, and the result is moved out. Any further access is undefined
+    Use Case: Use std::future when only one thread needs to access the result of an asynchronous operation, or when you only need to retrieve the result once.
+std::shared_future
+    Shared Ownership: A std::shared_future is copyable. Multiple shared_future objects can refer to the same asynchronous result (shared state)
+    Multiple Retrievals: You can call .get() multiple times, even from different threads. The result is returned as a const reference, allowing safe concurrent access
+    Use Case: 
+        Multiple threads need to access the result of the same asynchronous operation.
+        The result needs to be accessed multiple times, even if only from a single thread
+****************************************************************************
+
+Use std::promise in C++ when you need a thread-safe way for one thread (the producer) to provide a value, signal completion, 
+or propagate an exception to another thread (the consumer) that is waiting for the result via a std::future. 
+
+1. Transferring results between threads: 
+When a worker thread completes a computation and needs to send the result back to the main thread or another thread, 
+use a std::promise to set the value, and a std::future to retrieve it in the consumer thread
+
+2. Signaling task completion: If you only need to signal that a task is finished (without sending a value), use std::promise<void>. 
+The consumer thread can wait for this signal using the associated std::future<void>
+
+3. Propagating exceptions across threads: 
+If an exception occurs in a worker thread, you can use std::promise::set_exception() to transfer the exception to the waiting thread,
+which can then handle it after calling future.get()
+
+4. Producer-consumer synchronization: std::promise and std::future together provide a robust way to synchronize work between threads, 
+ensuring the consumer waits until the producer has finished and set the result
+
+
+****************************************************************************
+
+
+#include <iostream>       // std::cout
+#include <future>         // std::async, std::future
+
+// a non-optimized way of checking for prime numbers:
+bool is_prime (int x) {
+  for (int i=2; i<x; ++i) if (x%i==0) return false;
+  return true;
+}
+
+int main ()
+{
+  // call function asynchronously:
+  std::future<bool> fut = std::async (is_prime,444444443); 
+
+  bool x = fut.get();     // retrieve return value
+
+  std::cout << "\n444444443 " << (x?"is":"is not") << " prime.\n";
+
+  return 0;
+}
+
+****************************************************************************
+
+#include <iostream>
+#include <thread>
+#include <future>
+
+void worker(std::promise<int> result_promise) {
+    // Simulate some work
+    int result = 42;
+    // Set the result for the main thread
+    result_promise.set_value(result);
+}
+
+int main() {
+    // Create a promise and get its associated future
+    std::promise<int> promise;
+    std::future<int> future = promise.get_future();
+
+    // Launch worker thread, moving the promise into it
+    std::thread t(worker, std::move(promise));
+
+    // Wait for the result in the main thread
+    int value = future.get();
+    std::cout << "Result from worker: " << value << std::endl;
+
+    t.join();
+    return 0;
+}
