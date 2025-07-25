@@ -1,3 +1,7 @@
+The comparator has to be a function ( T, T ) -> bool that establishes an ordering on T.
+
+If the comparator returns true for two values, that means that they "compare less", i.e. the first value comes before the 2nd in the ordering. 
+
 #include <set>
 #include <iostream>
 
