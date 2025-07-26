@@ -148,3 +148,19 @@ Q39
 Can memory leak with shared_ptr
 yes, circular references. 
 
+Q42
+vector<int> vec(10, 1);
+vec.size(); // 10
+remove(vec.begin(), vec.end(), 2);
+vec.size()
+
+10. 
+
+In C++, std::remove is an algorithm found in the <algorithm> header. 
+It is designed to "remove" elements from a range within a container that match a specified value. 
+However, it is crucial to understand that std::remove does not actually erase elements from the container or change its size.
+Instead, std::remove works by rearranging the elements within the specified range. 
+It shifts all elements that do not match the specified value to the beginning of the range, 
+effectively "removing" the matching elements by overwriting them or moving them to the end of the range in an unspecified order. 
+The function then returns an iterator to the "new logical end" of the range, 
+which marks the boundary between the "kept" elements and the "removed" elements.
