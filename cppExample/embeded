@@ -23,6 +23,8 @@ static int b = 2023;    // Initialized static global variable
 void foo (void) {
   static int c = 2023; // Initialized static local variable
 }
+The virtual table (vtable) itself is generally stored as a static data structure in the program's read-only or data segment 
+(a part of the binary image in memory). It is shared among all instances of the same class.
 
 5. code segment, also known as text segment
 contains executable code and is generally read-only and fixed size
