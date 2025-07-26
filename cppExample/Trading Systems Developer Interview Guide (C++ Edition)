@@ -1,0 +1,146 @@
+Trading Systems Developer Interview Guide (C++ Edition)
+https://www.google.com/books/edition/_/DjAEEAAAQBAJ?hl=en&gbpv=0&kptab=overview
+https://www.doc88.com/p-48139048057997.html
+
+Q3. 
+std::map<const char*, int> strMap;
+
+default comparison function compares two char pointers
+struct StrCmp
+{
+  bool operator ()(const char* a, const char* b)
+  {
+    return std::strcmp(a, b) < 0;
+  }
+};
+
+Q8:
+class Test
+{
+public:
+  static int x;
+  char c;
+};
+int Test::x = 3;
+Test t;
+
+sizeof(t)?
+
+1. 
+
+Q11:
+void f(string& s) {}
+f("test");
+
+doesn't compile. a non const reference cannot bind to a temp object. 
+
+Q13:
+Can Destructor throw exception
+Technically yes, but dangerous to do so. If stack unwinding is in progress for a previous exception and then an object's destructor throws 
+another exception, its ambiguous which exception the c++ runtime should handle from a safety perspective. 
+
+Q14
+Can ctor throw exception
+Yes. 
+
+Q15
+class Test {};
+Test t; // case 1
+Test* tp = new Test(); // case 2
+How to ensure Test objects are only created with new operator (case 2), but not on stack (case 1).
+
+class Test {
+private:
+    Test() {} // Private constructor blocks stack allocation
+public:
+    static Test* create() {
+        return new Test();
+    }
+    // Optionally: Delete copy/move constructors/operators as needed
+};
+
+Q16. 
+How to ensure Test Objects cannot be created with new operators (case 2) but only on stack(case 1).
+class Test {
+protected:
+    // Prevent allocation on the heap by making operator new(s) protected
+    static void* operator new(std::size_t) = delete;       // scalar new
+    static void* operator new[](std::size_t) = delete;     // array new
+
+public:
+    Test() = default;    // Public constructor allows stack allocation
+    ~Test() = default;
+};
+
+Q19
+class Base
+{
+public:
+  virutal void f() { cout<<"base"<<endl;}
+}
+
+class Derived: public Base
+{
+private:
+  virutal void f() { cout<<"Derived"<<endl;}
+}
+
+int main()
+{
+  Base *p = new Derived();
+  p->f();
+}
+
+print "Derived"
+access control is only checked at the compile time. 
+
+Q20 thread safe Singleton
+class Singleton
+{
+public:
+  static Singleton& getSingleton()
+  {
+    static Singleton singleton;
+    return singleton;
+  }
+private:
+  Singleton() {}
+};
+
+Q25 How is placement new useful
+Placement new in C++ is useful because it allows you to construct an object at a specific, pre-allocated memory address instead of allocating new memory on the heap. Unlike the normal new operator which both allocates memory and constructs an object, placement new separates these two steps: you provide the memory first, then placement new calls the constructor on that memory.
+Why is placement new useful?
+
+    Control over memory location: You can construct objects in a particular memory buffer, useful in embedded systems, memory pools, or shared memory regions where you manage memory explicitly.
+
+    Optimization: Avoids unnecessary heap allocations and deallocations by reusing the same memory for multiple objects over time.
+
+    Construct objects in pre-allocated arrays/buffers: Useful when you want to initialize objects in a raw buffer without additional allocation.
+
+    Custom memory management: Helps implement advanced memory allocators, object pools, or placement in hardware-specific memory like memory-mapped I/O.
+
+Syntax:
+new (address) Type(arguments);
+
+Q29:
+is shared_ptr thread safe
+Reference Counting (Control Block):
+    The reference count and control block of std::shared_ptr are thread-safe. 
+Multiple std::shared_ptr instances that share ownership of the same object can be copied or destroyed from different threads without additional synchronization. 
+This is because incrementing and decrementing the reference count use atomic operations, 
+ensuring that the managed object is correctly deleted and that the count remains consistent across threads
+
+Individual std::shared_ptr Objects:
+The internal pointer or state of a single std::shared_ptr instance is not thread-safe. 
+If multiple threads modify or access the same std::shared_ptr object (for example, assigning or resetting it), 
+you must provide your own synchronization (such as using a mutex or std::atomic<std::shared_ptr>). Without this, a data race may occur
+
+Q38
+template<typename T, typename U>
+void foo() {}
+template<typename T>
+void foo<char, T>() {}
+is case2 a valid specialization of funtion template in case 1.
+
+no, need to specify two types, not 1.
+
