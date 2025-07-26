@@ -144,3 +144,7 @@ is case2 a valid specialization of funtion template in case 1.
 
 no, need to specify two types, not 1.
 
+Q39
+Can memory leak with shared_ptr
+yes, circular references. 
+
