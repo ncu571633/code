@@ -230,11 +230,257 @@ they are the same thing
 auto lambda1 = [&] { /* ... */ };      // empty parameter list omitted
 auto lambda2 = [&]() { /* ... */ };    // empty parameter list present
 
-************************************************************
-Multithreading
 
 Q49
 when is raw pointer better to use over shared_ptr
 
 1. Use raw pointers when performance is critical and you want to avoid the overhead of atomic reference counting and control blocks that shared_ptr uses.
 2. Use raw pointers when you want a non-owning reference to an object whose lifetime is managed elsewhere
+
+************************************************************
+Multithreading
+
+Q1
+Difference between mutex and binary semaphore
+1. mutex has exclusive ownership. only the owner can release the mutex. 
+Semaphore can be signaled by any thread or process. 
+2. Mutex is a locking mechanism for critical section.
+Semaphore is a signaling mechanism. 
+
+Q2
+Difference between thread safe function and re-entrant function
+Thread Safe Function
+    A function is thread safe if it can be safely called by multiple threads at the same time, 
+without causing incorrect results or corrupting shared data. 
+Thread-safe functions use mechanisms like locks, mutexes, 
+or thread-local storage to prevent data races or ensure that critical sections are accessed by only one thread at a time
+
+Re-entrant Function
+    A function is re-entrant if it can be safely interrupted in the middle of execution and then safely called again ("re-entered") 
+before its previous invocations have finished—such as through a signal, interrupt, or recursive call—even within the same thread
+
+A re-entrant function does not depend on shared or static data and does not modify data outside its own scope. 
+All variables are typically local (usually on the stack).
+
+Reentrancy is not limited to multi-threading—it is also about functions being safe to re-invoke in single-threaded contexts, 
+like interrupts or recursion.
+
+
+Q3
+Difference between deadlock and live lock
+Deadlock is a situation where two or more processes are blocked indefinitely, 
+each waiting for a resource held by another. In deadlock, 
+the involved processes do not change their state or make any progress—they are completely stuck and waiting. 
+This results in a standstill where none of the processes proceed further
+
+Livelock, on the other hand, occurs when two or more processes continuously change their state in response to each other 
+without making actual progress. They are not blocked but actively trying to proceed by repeatedly reacting to each other, 
+yet failing to do useful work. Unlike deadlock, 
+processes in livelock keep executing but remain unable to move forward, effectively busy but stuck in a cycle of state changes
+
+T1 has lock l1, and waits on lock l2.
+T2 has lock L2, and waits on lock l1.
+T1 release L1, and task T2 release l2. but then acquire in the same order as before:
+T1 has L1 and T2 has L2. 
+
+Q4
+When to use spin lock
+
+Q5
+When to sue thread pool
+The choice between making an asynchronous (async) call and using a thread pool depends on the nature of the task and 
+your application's requirements.
+When to Use Async Calls
+    I/O-bound Tasks: Async calls are ideal for tasks that involve waiting for external resources, such as:
+        Network requests (HTTP API calls)
+        File system operations
+        Database queries
+    Non-blocking Operations: Async allows your application to continue executing other code while waiting
+for the I/O operation to complete. This is especially useful in UI applications, web servers, 
+or any scenario where you need to keep the application responsive
+
+Concurrency Without Extra Threads: Async/await enables concurrency without spawning new OS threads. 
+The calling thread is freed up for other work and is only resumed when the awaited task completes.
+
+Highly Scalable Apps: In environments where you expect thousands of concurrent waiting operations 
+(such as web servers handling many incoming requests), async/await provides massive scalability, 
+as there’s no need to allocate a thread for each pending task
+
+Example:
+Fetching data from multiple web APIs simultaneously using async/await or promises.
+
+When to Use a Thread Pool
+    CPU-bound Tasks: Thread pools are ideal when you need to perform operations that require CPU processing, such as:
+        Image processing
+        Encryption/decryption
+        Heavy computations
+    Task Parallelism: When you have many short-lived tasks that benefit from running in parallel, 
+a thread pool helps by reusing threads rather than constantly creating and destroying them, which is resource-intensive
+
+Limit Resource Usage: Thread pools control the maximum number of concurrent threads, 
+helping avoid resource exhaustion and performance degradation.
+
+Queue Work Items: If you have tasks that must be executed asynchronously (outside the main thread) 
+but are CPU-intensive or must not block other tasks, queue them in a thread pool
+
+Q6
+Implement lockguard class is uses a scoped mutex and locks/unlocks the mutex automatically
+
+Q7
+Implement thread safe queue with mutex and condition variable
+
+Q8
+Implement read write lock with priority for waiting writers
+
+#include <mutex>
+#include <condition_variable>
+
+class WritePreferringRWLock {
+    std::mutex m;
+    std::condition_variable cv;
+    int num_readers_active = 0;
+    int num_writers_waiting = 0;
+    bool writer_active = false;
+
+public:
+    void lock_read() {
+        std::unique_lock<std::mutex> lock(m);
+        // Wait if there is a waiting writer or an active writer
+        cv.wait(lock, [this]() { 
+            return num_writers_waiting == 0 && !writer_active; 
+        });
+        ++num_readers_active;
+    }
+
+    void unlock_read() {
+        std::unique_lock<std::mutex> lock(m);
+        --num_readers_active;
+        if (num_readers_active == 0)
+            cv.notify_all(); // Give a chance to waiting writers
+    }
+
+    void lock_write() {
+        std::unique_lock<std::mutex> lock(m);
+        ++num_writers_waiting;
+        cv.wait(lock, [this]() { 
+            return num_readers_active == 0 && !writer_active; 
+        });
+        --num_writers_waiting;
+        writer_active = true;
+    }
+
+    void unlock_write() {
+        std::unique_lock<std::mutex> lock(m);
+        writer_active = false;
+        cv.notify_all();
+    }
+};
+
+
+Q9
+How to prevent deadlock: thread 1 and thread 2 both need Locks l1 and l2
+make the threads acquire locks in the same order: for example, acquire L1 first and then L2
+
+Q10
+Difference between std::this_thread::yield and std::this_thread::sleep_for
+
+std::this_thread::yield
+    Purpose: Suggests to the operating system scheduler that the current thread is willing to yield its remaining CPU time slice. 
+This allows other threads of equal priority to run.
+    Behavior: The thread does not specify how long to yield—it’s possible the thread may resume running almost immediately 
+if no other thread is ready to run.
+
+    Typical Use:
+        Help avoid busy-waiting spinning loops from hogging the CPU.
+        Give a hint to the scheduler to switch context, but with minimal delay.
+
+while (!condition_met) {
+    std::this_thread::yield();
+}
+
+
+std::this_thread::sleep_for
+    Purpose: Puts the current thread to sleep (blocked state) for at least the specified duration.
+    Behavior: The current thread will not be scheduled for at least the specified period; actual sleep duration may
+be longer depending on the OS scheduler.
+    Typical Use:
+        Rate limiting, periodic tasks, or giving up CPU for a known amount of time.
+        Avoiding busy-wait when it’s OK (or required) to pause for a duration.
+while (!condition_met) {
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+}
+
+Q11
+How will you test a multiple producers multiple consumers threadsafe queue
+
+************************************************************
+Lock free programming
+
+Q2
+What are the uses of data alignment using alignas keyword
+
+cache line, false sharing
+
+Q3
+Exaplain C++ memory orders: relaxed ordering, release-acquire ordering, sequentially consistent ordering
+
+C++ atomic operations use memory orders to control how operations on atomic variables are observed in multi-threaded programs.
+
+1. Relaxed Ordering (std::memory_order_relaxed)
+    Description: Only guarantees atomicity of the operation itself—no guarantees about the ordering of this operation
+relative to other operations (even on the same variable).
+    Effects: There is no synchronization or happens-before relationship established with other threads or operations.
+    Use Cases: Useful for statistics counters, low-level performance optimizations, or when synchronization is managed by other means.
+
+Example:
+Incrementing a counter from multiple threads, when you only care about the final value (not the order).
+
+cpp
+std::atomic<int> counter = 0;
+counter.fetch_add(1, std::memory_order_relaxed);
+
+2. Release-Acquire Ordering (std::memory_order_release and std::memory_order_acquire)
+    Release: A store with memory_order_release ensures that all writes in the thread before the release are visible
+to any thread that does an acquire load from the same variable.
+    Acquire: A load with memory_order_acquire guarantees that all subsequent reads and writes after the acquire in that 
+thread happen after the acquire completes.
+    Synchronization: If one thread does a store (release) and another thread does a load (acquire) from the same atomic 
+variable (with matching conditions), a happens-before relationship is created.
+
+Use Case: Classic producer-consumer signaling.
+
+Example:
+
+cpp
+std::atomic<bool> ready = false;
+int data = 0;
+
+// Thread 1 (producer)
+data = 42; // Ordinary write
+ready.store(true, std::memory_order_release); // Release: signals that data is ready
+
+// Thread 2 (consumer)
+while (!ready.load(std::memory_order_acquire)); // Acquire: waits until data is ready
+std::cout << data << std::endl; // Safe! All prior writes (data=42) are visible
+
+3. Sequentially Consistent Ordering (std::memory_order_seq_cst)
+
+    Description: The default and the strongest memory order. All operations appear to happen in a single globally agreed order 
+that is consistent for all threads (the same order is observed everywhere).
+    Guarantees: Imposes both acquire and release semantics, plus ensures a single linear ordering of all sequentially 
+consistent operations across all threads.
+    Use Cases: Simplifies reasoning about concurrency—if unsure, use this for correctness.
+
+Example:
+
+cpp
+std::atomic<int> value = 0;
+value.store(123, std::memory_order_seq_cst); // Store with sequential consistency
+int x = value.load(std::memory_order_seq_cst); // Load with sequential consistency
+
+Q4
+Difference between atomic compare_exchange_weak and  atomic compare_exchange_strong
+
+Q5
+Implement single producer single consumer bounded lockless queue. Focus on the push and pop methods.
+
