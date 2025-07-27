@@ -2,6 +2,10 @@ Trading Systems Developer Interview Guide (C++ Edition)
 https://www.google.com/books/edition/_/DjAEEAAAQBAJ?hl=en&gbpv=0&kptab=overview
 https://www.doc88.com/p-48139048057997.html
 
+************************************************************
+C++
+
+
 Q3. 
 std::map<const char*, int> strMap;
 
@@ -164,3 +168,73 @@ It shifts all elements that do not match the specified value to the beginning of
 effectively "removing" the matching elements by overwriting them or moving them to the end of the range in an unspecified order. 
 The function then returns an iterator to the "new logical end" of the range, 
 which marks the boundary between the "kept" elements and the "removed" elements.
+
+Q44
+Can virtual function be called in constructor
+A virtual function can technically be called from a constructor in C++, 
+but it will not behave as a true virtual call during construction. 
+Instead, the version of the function called will be the one defined in the constructor’s own class, not that of any derived class.
+This is because, during construction, the most-derived type is not yet established—the base parts are being constructed first, 
+before more-derived class constructors run.
+
+Q45
+Is virtual inline function legal in C++, will it ever be inlined?
+1. The inline keyword itself is a hint, not a command. The compiler is always free to ignore the request to inline, regardless of whether virtual is specified.
+2. When called virtually (through a pointer or reference to the base class), the function call is resolved at runtime using the virtual table, 
+so the compiler cannot inline it—
+3. When called non-virtually (i.e., when the compiler can determine the exact type of the object at compile time, 
+such as when calling on a local object, a global/static object, or as a fully contained member), the compiler can potentially inline the function
+
+Q46
+difference between creating shared_ptr with make_shared and new
+class Test{};
+shared_ptr<Test> tp1 = make_shared<Test>();
+shared_ptr<Test> tp2(new Test());
+
+1. one heap allocation.
+2. make_shared can prevent memory leak if exception is thrown. 
+
+Q47
+template<class T>
+class Test
+{
+  template<class U>
+  void foo(T&& t, U&&u);
+}
+which of the T&& and U&& is forwarding reference?
+
+    T&& is a regular rvalue reference, not a forwarding (universal) reference.
+        Because T is a template parameter of the enclosing class, not of the foo function itself.
+        When used in this context (T&&), T's type is already fixed by the class; so it just makes t an rvalue reference to T.
+T is already known while instantiating the template.
+    U&& is a forwarding reference (also known as a universal reference).
+        Because U is a template parameter of the foo function.
+        In member function templates, a parameter of type U&& (when U is a deduced template parameter) is a forwarding reference, 
+and can bind to both lvalues and rvalues, depending on how foo is called.
+
+Q48
+How to call inner lambda function below?
+int myInt = 5;
+auto lambda_outer = [&] // outer lambda
+{
+  return [&myInt] // inner lambda
+  {
+    myInt = 10;
+  }
+}
+
+
+lambda_out()();
+
+they are the same thing
+auto lambda1 = [&] { /* ... */ };      // empty parameter list omitted
+auto lambda2 = [&]() { /* ... */ };    // empty parameter list present
+
+************************************************************
+Multithreading
+
+Q49
+when is raw pointer better to use over shared_ptr
+
+1. Use raw pointers when performance is critical and you want to avoid the overhead of atomic reference counting and control blocks that shared_ptr uses.
+2. Use raw pointers when you want a non-owning reference to an object whose lifetime is managed elsewhere
