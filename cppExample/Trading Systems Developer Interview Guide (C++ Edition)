@@ -484,3 +484,160 @@ Difference between atomic compare_exchange_weak and  atomic compare_exchange_str
 Q5
 Implement single producer single consumer bounded lockless queue. Focus on the push and pop methods.
 
+#include <atomic>
+#include <vector>
+#include <optional>
+
+template<typename T, size_t N>
+class SPSCQueue {
+    static_assert(N > 1, "Queue size must be at least 2");
+    std::vector<T> buffer;
+    std::atomic<size_t> head{0};
+    std::atomic<size_t> tail{0};
+
+public:
+    SPSCQueue() : buffer(N) {}
+
+    // Producer: Try to push an item. Returns false if full.
+    bool push(const T& item) {
+        size_t t = tail.load(std::memory_order_relaxed);
+        size_t next_t = (t + 1) % N;
+        if (next_t == head.load(std::memory_order_acquire)) {
+            // Buffer is full
+            return false;
+        }
+        buffer[t] = item;
+        tail.store(next_t, std::memory_order_release);
+        return true;
+    }
+
+    // Consumer: Try to pop an item. Returns std::nullopt if empty.
+    std::optional<T> pop() {
+        size_t h = head.load(std::memory_order_relaxed);
+        if (h == tail.load(std::memory_order_acquire)) {
+            // Buffer is empty
+            return std::nullopt;
+        }
+        T item = buffer[h];
+        head.store((h + 1) % N, std::memory_order_release);
+        return item;
+    }
+};
+
+
+
+Multiple Producer multiple consumer lockless queue
+
+************************************************************
+OS & IPC (Inter Process Communication)
+
+IPC Type               Directionality    Speed       Data Volume   Complexity    Local/Remote    Typical Use Cases
+Pipes (anonymous/named) Uni/Bidirectional Fast        Low/Medium   Simple       Local only     Parent-child process data transfer
+Message Queues         Bidirectional     Moderate    Medium       Moderate     Local/Remote   Asynchronous messaging, task queues
+Shared Memory          Bidirectional     Very fast   High         Complex      Local only     Large/bulk data sharing, databases
+Semaphores             N/A (sync tool)   Very fast   N/A          Simple       Local         Synchronization, resource locking
+Sockets (TCP/UDP)      Bidirectional     Moderate    Variable     Moderate     Local/Remote   Network services, local/remote communication
+RPC (e.g., gRPC)       Bidirectional     Moderate    Variable     Moderate     Local/Remote   Distributed services, microservices
+Signals                Unidirectional    Fast       Very low     Simple       Local         Notifications, process control
+Files/Mem-mapped files Uni/Bidirectional Slow/Varies Variable     Simple       Local/Remote   Simple logging, low-frequency exchange
+
+shared memory functions:
+int shmget(key_t key,size_t size, int shmflg);  returns an id for the shared memory segment
+void *shmat(int shmid ,void *shmaddr ,int shmflg); Before you can use a shared memory segment, you have to attach yourself to it using shmat().
+shmdt()  detach
+shmctl destroy/control
+
+
+Q1. 
+What happens to the shared memory segment when the last process attached to it dies unexpectedly
+
+The shared memory segment will persist, it must be explicited deleted with shmctl.
+
+Q2. 
+Why is shared memory, the fastest form of IPC. 
+
+Because data is not copied from one process address space to another process address space. 
+The downside being synchronization is now up to the processes using the shared memory. 
+
+Q3. 
+Can we increase shared memory segment size during runtime as needed. 
+No, shared memory segment once created is fixed in size. 
+
+Q4
+What's the advantage of using mmap to shared memory between two processes
+what happens if one process writes to that memory. 
+
+advantage:
+
+Q5. Why is virtual memory needed. 
+1. Large Memory: 
+OS can translate the virtual memory address to physical memory address, and give more pages of memory to the process by saving some other pages to disk. 
+
+Virtual memory allows multiple programs to run simultaneously by isolating their memory spaces and managing limited RAM among all running processes
+
+Memory Protection and Isolation: Each process operates in its own virtual address space, which enhances security and prevents processes from interfering with each other's memory.
+
+Q6
+Difference between Application Binary Interface(ABI) and Application Programming Interface(API)
+ABI: defines how the bits/bytes are passed at lower level between module and clients. Like data pushed to registers or stack. 
+API: 
+
+************************************************************
+Network Programming
+
+Q1 Explain TCP handshake
+
+3 way handshake: A sends syn packet to B, B responds with syn-ask packet to A, and A responds with Ack packet to B. 
+
+Q2:
+How can the TCP server find the status of client connections that are dead without notifying the server and close them. 
+
+using the TCP keepalive flag. 
+With the flag, a timer is setup by TCP and then the timer expires, the server side will send keepalive probe packets to client. 
+If no reply is recieved, the connection can be considered dead. 
+
+Q3
+How does TCP deal with fast sender and slow receiver
+flow control: ensures the sender cannot flood receivers. 
+Each receiver has a buffer that temporarily stores incoming data before the application reads it.
+The receiver constantly informs the sender about how much free space remains in its buffer
+
+Q4 what is MTU
+Maximum Transmission Unit
+MTU limits the size of the payload in one packet/frame on a network link.
+ If a packet exceeds the MTU size, it must be broken down (fragmented) into smaller packets before transmission, which can reduce efficiency.
+
+Q5 TCP VS UDP
+
+Q6 
+How do clients join in the IP multicast stream
+send IGMP message. 
+Routers remember the clients based on this message. 
+
+Q7
+What is the advantage of using non-blocking sockets
+don't put the thread calling the send/recv operations on socket to sleep if no data is available to be sent/read. 
+with non-blocking sockets, a thread can do some other useful work instead of going to sleep. .
+
+
+Q8
+Comapre select and poll system call.
+
+************************************************************
+Low latency programming & techniques
+
+how CPU caches work, kernel by pass, non-blocking programming, compiler optimizations, CPU pipeline, FPGA. 
+Cacheline
+type of caches: instruction cache for program instructions, data cache for data used by program, TLB caching for virtual memory address to physical memory address translation
+cache hierarchy: CPU registers, L1 L2 L3, memory
+cache coherency: uniformity of data between different caches and main memory
+temporal locality
+spatial locality
+cache warming
+CPU pinning (also called processor affinity or CPU affinity) is the practice of binding a specific process or thread to a designated CPU core or set of cores, 
+so it always runs on those CPUs rather than being freely scheduled anywhere by the operating system
+1. Reduces Overhead: Avoids context-switching the process between CPUs, reducing task switching overhead
+2. Improves Cache Efficiency: The process uses the same CPU caches repeatedly, improving data locality and reducing cache misses
+3. Isolates Workloads: Prevents interference from other tasks, ensuring lower jitter and more predictable performance
+
+about kernal bypass
