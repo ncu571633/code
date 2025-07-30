@@ -208,6 +208,21 @@ if we have a base class reference (or pointer) referring to (or pointing to) a d
         A&& a_ref4 = A();  // Ok
 
     std::move() unconditionally cast argument to an rvalue, use move for rvalue reference.
+	template <typename T>
+	struct remove_reference {
+	    using type = T;
+	};
+	
+	template <typename T>
+	struct remove_reference<T&> {
+	    using type = T;
+	};
+	
+	template <typename T>
+	struct remove_reference<T&&> {
+	    using type = T;
+	};
+
     	template<typename T> 
     	decltype(auto) move(T && p)
     	{
