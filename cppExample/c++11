@@ -647,7 +647,7 @@ If you copy a std::auto_ptr, a move operation will occur under the hood
         (4). customer deleter: second template parameter, its deleter that has a default type std::default_delete<T> .
             auto log = [](int *p)
             {
-              cout << "delete" << endl;
+              std::cout << "delete" << std::endl;
               delete p;
             };
             std::unique_ptr<int, decltype(log)> uniqueP(new int(5), log);
