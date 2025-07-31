@@ -821,6 +821,11 @@ int main() {
     return 0;
 }
 
+Storing references in standard containers
+int a = 1, b = 2, c = 3;
+std::vector<std::reference_wrapper<int>> vec = {a, b, c};
+// Modifying vec[0].get() changes 'a'
+
 ***********************************************************************************************************
 small string optimization
 
