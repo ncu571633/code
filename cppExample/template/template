@@ -130,6 +130,13 @@ Variadic Template
       return t + sum(rest...);
     }
 
+Or:
+https://www.geeksforgeeks.org/cpp/cpp-17-fold-expressions/
+template<typename... Args>
+double sum2(Args... args)
+{
+    return (... + args);
+}
 
 ********************************************************************************************
 Branching: 
