@@ -1,3 +1,8 @@
+Type is unknown at compile time: C++ templates like template<typename T> require the type to be known at compile time
+so the compiler can instantiate code for that specific type. 
+With std::any, the held type is only known at runtime, so you cannot write std::any<T>
+
+
 #include <iostream>
 #include <memory>
 #include <typeindex>
