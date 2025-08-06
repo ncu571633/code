@@ -12,7 +12,8 @@ std::counting_semaphore<MAXBUFFERSIZE> empty(MAXBUFFERSIZE);  // Tracks availabl
 std::counting_semaphore<MAXBUFFERSIZE> full(0);    // Tracks filled slots
 
 void producer() {
-    for (int i = 0; i < 20; i++) {
+    for (int i = 0; i < 20; i++) 
+    {
         empty.acquire();  // Wait for empty slot
         {
             std::lock_guard<std::mutex> lock(mtx);
@@ -24,7 +25,8 @@ void producer() {
 }
 
 void consumer() {
-    for (int i = 0; i < 20; i++) {
+    for (int i = 0; i < 20; i++) 
+    {
         full.acquire();  // Wait for item
         {
             std::lock_guard<std::mutex> lock(mtx);
