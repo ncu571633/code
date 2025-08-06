@@ -1,3 +1,8 @@
+using binary_semaphore = std::counting_semaphore<1>;
+ release: 	increments the internal counter and unblocks acquirers 
+ acquire: 	decrements the internal counter or blocks until it can 
+
+
 #include <iostream>
 #include <thread>
 #include <queue>
