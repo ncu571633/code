@@ -279,3 +279,13 @@ void foo(int a, int b) {
 }
 template <typename T1, typename T2> 
 void foo(T1 a, T2 b) = delete;
+
+Or
+template<typename T>
+concept TT = std::same_as<T, int>;
+
+template<TT tt>
+void foo(tt a)
+{
+    cout << a << endl;
+}
