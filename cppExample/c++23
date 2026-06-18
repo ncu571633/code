@@ -147,3 +147,12 @@ int main() {
     return 0;
 }
 
+******************************************************
+new data structure: std::flat_map, std::flat_set
+1. Underlying Structure: It wraps two standalone linear containers. By default, KeyContainer and MappedContainer are both std::vector templates
+2. Complexity Performance: Lookups take \(O(\log N)\) time via binary search (std::lower_bound). Insertions and deletions take linear O(N) time because elements must physically shift in the contiguous array
+3. Iterator Stability: Unlike std::map, adding or removing items invalidates all iterators and references because underlying vectors may reallocate or shift positions
+
+When to use:
+Use std::flat_map when data is built once and queried often, or if the container size remains relatively small (under a few hundred items).
+Stick to std::map if your workflow requires continuous, random insertions and deletions across a massive collection.
