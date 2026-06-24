@@ -148,3 +148,43 @@ Monadic Operations for `std::optional`
 1. and_then runs only if the std::optional has a value (is not null). It is used to keep moving forward with your successful logic pipeline.
 2. or_else runs only if the std::optional is empty (is null). It is used as a safety net or fallback when something goes wrong.
 3. transform
+
+******************************************************
+A std::expected<T, E> object contains exactly one of two things at any given moment:
+The Value (T): The successful output of your operation.
+The Unexpected Error (E): The error state, explicitly wrapped in a helper class called std::unexpected.
+
+You use std::unexpected to explicitly signal that a failure occurred
+While std::optional only tells you whether a value exists, std::expected tells you why an operation failed.
+
+Same as std::optional, there is and_then, transform function.
+
+#include <expected>
+#include <string>
+#include <print>
+
+// Define possible distinct error states
+enum class MathError {
+    DivisionByZero,
+    NegativeLogarithm
+};
+
+// Returns either a double (success) or a MathError (failure)
+std::expected<double, MathError> safe_divide(double numerator, double denominator) {
+    if (denominator == 0.0) {
+        return std::unexpected(MathError::DivisionByZero); // Explicit error wrapper
+    }
+    return numerator / denominator; // Implicitly converts to the success type
+}
+
+int main() {
+    auto result = safe_divide(10.0, 0.0);
+
+    if (result) {
+        std::println("Success! Result is: {}", result.value());
+    } else {
+        if (result.error() == MathError::DivisionByZero) {
+            std::println("Error: Cannot divide by zero.");
+        }
+    }
+}
