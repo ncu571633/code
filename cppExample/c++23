@@ -57,6 +57,8 @@ int main() {
     std::print("Hello, {}!\n", "world");
 }
 
+std::println: Only writes the newline character (\n) to the buffer
+
 ******************************************************
 A coroutine in C++ is a special kind of function that can suspend its execution at certain points 
   and later be resumed from where it left off. 
