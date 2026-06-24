@@ -142,3 +142,9 @@ new data structure: std::flat_map, std::flat_set
 When to use:
 Use std::flat_map when data is built once and queried often, or if the container size remains relatively small (under a few hundred items).
 Stick to std::map if your workflow requires continuous, random insertions and deletions across a massive collection.
+
+******************************************************
+Monadic Operations for `std::optional`
+1. and_then runs only if the std::optional has a value (is not null). It is used to keep moving forward with your successful logic pipeline.
+2. or_else runs only if the std::optional is empty (is null). It is used as a safety net or fallback when something goes wrong.
+3. transform
