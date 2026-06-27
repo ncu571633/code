@@ -9,8 +9,8 @@ imagePerPage = 13
 downloadedCount = 0
 
 # tqdm: print progress
-for i in tqdm(range(1, page), desc="Outer loop"):
-    for j in range(1, imagePerPage):
+for i in tqdm(range(1, page+1), desc="Outer loop"):
+    for j in range(1, imagePerPage+1):
         url = f"{link}/{name}/{i}/{name}-{j}.jpg"
 
         try:
