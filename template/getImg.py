@@ -4,14 +4,22 @@ from tqdm import tqdm
 
 name = "xxx-xxx"
 link = "http://www.xxx.com/xxx/"
-count = 0
+page = 7
+imagePerPage = 13
+downloadedCount = 0
 
-for i in tqdm(range(1, 67), desc="Outer loop"):
-    for j in range(1, 13):
-        path = f"{link}/{name}/{i}/{name}-{j}.jpg"
-        response = requests.get(path)
+# tqdm: print progress
+for i in tqdm(range(1, page), desc="Outer loop"):
+    for j in range(1, imagePerPage):
+        url = f"{link}/{name}/{i}/{name}-{j}.jpg"
+
+        try:
+            response = requests.get(url, timeout=10)
+            response.raise_for_status()
+        except requests.RequestException:
+            continue
+
         if response.status_code == 200:
-            with open(f"{name}-{count}.jpg", "wb") as file:
+            with open(f"{name}-{downloadedCount}.jpg", "wb") as file:
                 file.write(response.content)
-        print(f"count {count}")
-        count += 1
+            downloadedCount += 1
