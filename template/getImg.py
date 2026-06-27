@@ -1,13 +1,16 @@
 import os
 import requests
+import sys
 from tqdm import tqdm
 
-name = "xxx-xxx"
-link = "http://www.xxx.com/xxx/"
-page = 7
-imagePerPage = 13
-downloadedCount = 0
+name = sys.argv[1]
+page = int(sys.argv[2]) 
 
+# const
+link = "http://www.xxx.com/xxx/"
+imagePerPage = 13
+
+downloadedCount = 0
 os.makedirs(name, exist_ok=True)
 
 # tqdm: print progress
@@ -22,6 +25,7 @@ for i in tqdm(range(1, page+1), desc="Outer loop"):
             continue
 
         if response.status_code == 200:
-            with open(f"{name}-{downloadedCount}.jpg", "wb") as file:
+            with open(f"{name}/{name}-{downloadedCount}.jpg", "wb") as file:
                 file.write(response.content)
             downloadedCount += 1
+            
