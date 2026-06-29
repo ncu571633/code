@@ -52,6 +52,61 @@ std::future<int> fut = std::async(compute);
 std::shared_future<int> shared_fut = std::move(fut);
 
 ****************************************************************************
+std::packaged_task is a container wrapper that binds any callable target (like a function, lambda, or member function) so that it can be executed asynchronously, 
+automatically caching its return value or thrown exception inside a std::future.
+
+Move-Only: You cannot copy a std::packaged_task. You must transfer its ownership using std::move().
+Single Execution: You can only invoke the task object once. If you try to run it a second time, it will throw a std::future_error with a broken promise error.
+
+Why Use std::packaged_task Instead of std::async?
+Feature            std::async                          std::packaged_task
+Thread Management  Controlled by runtime library      Manual (You choose the thread/pool)
+Execution Timing   Starts immediately (usually)       Starts exactly when you call task()
+Best Used For      Quick, simple parallel tasks       Writing custom Thread Pools or schedulers
+
+
+#include <iostream>
+#include <future>
+#include <thread>
+
+// 1. Define a basic worker function
+int calculate_sum(int a, int b) {
+    return a + b;
+}
+
+int main() {
+    // 2. Wrap the function in a packaged_task.
+    // The template signature must match the function signature.
+    std::packaged_task<int(int, int)> task(calculate_sum);
+
+    // 3. Extract the future before moving the task
+    std::future<int> fut = task.get_future();
+
+    // 4. Pass the task to a thread to execute it.
+    // std::packaged_task is move-only, so you must use std::move.
+    std::thread t(std::move(task), 10, 20);
+
+    // 5. Do other work on main thread, then get the result
+    int result = fut.get(); // Blocks until thread 't' finishes the task
+    std::cout << "The sum is: " << result << "\n";
+
+    t.join();
+    return 0;
+}
+
+
+****************************************************************************
+std::promise is the most low-level tool in the C++ concurrency toolbox for setting asynchronous results.
+While std::packaged_task automatically wraps a function and captures its return value, std::promise gives you total control.
+
+
+| Feature                   | `std::packaged_task`                   | `std::promise` |
+| :--- | :--- | :--- |
+| **Control Level**         | Medium (Automated return capture)     | Low (Manual value injection) |
+| **Target**                | Wraps an entire callable function     | Wraps an individual data object/type |
+| **When it unblocks**      | Only when the wrapped function finishes | The exact line you call `.set_value()` |
+| **Best Used For**         | Task scheduling and executing functions | Event notifications, custom protocols, network data |
+
 
 Use std::promise in C++ when you need a thread-safe way for one thread (the producer) to provide a value, signal completion, 
 or propagate an exception to another thread (the consumer) that is waiting for the result via a std::future. 
@@ -70,11 +125,6 @@ which can then handle it after calling future.get()
 4. Producer-consumer synchronization: std::promise and std::future together provide a robust way to synchronize work between threads, 
 ensuring the consumer waits until the producer has finished and set the result
 
-
-****************************************************************************
-
-
-****************************************************************************
 
 #include <iostream>
 #include <thread>
