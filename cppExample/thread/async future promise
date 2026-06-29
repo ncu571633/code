@@ -1,3 +1,38 @@
+std::async: returns a std::future
+fut.get() blocks execution and waits for the asynchronous thread to finish if it has not completed already.
+
+#include <iostream>       // std::cout
+#include <future>         // std::async, std::future
+
+// a non-optimized way of checking for prime numbers:
+bool is_prime (int x) {
+  for (int i=2; i<x; ++i) if (x%i==0) return false;
+  return true;
+}
+
+int main ()
+{
+  // call function asynchronously:
+  
+  // runs is_prime on a separate thread immediately. fut.get() blocks only if the thread is still running when you call it.
+  // // Force background thread execution
+  // std::future<bool> fut = std::async(std::launch::async, is_prime, 444444443);
+  
+  // does not create a thread. Instead, it waits until you call fut.get() to execute is_prime sequentially on the main thread
+  // Force sequential, lazy evaluation
+  // std::future<bool> fut = std::async(std::launch::deferred, is_prime, 444444443);
+  
+  // whether async or deferred is determined at the run time based on resource available 
+  std::future<bool> fut = std::async (is_prime,444444443); 
+
+  bool x = fut.get();     // retrieve return value
+
+  std::cout << "\n444444443 " << (x?"is":"is not") << " prime.\n";
+
+  return 0;
+}
+
+
 ****************************************************************************
 std::future vs std::shared_future
 std::future
@@ -10,6 +45,12 @@ std::shared_future
     Use Case: 
         Multiple threads need to access the result of the same asynchronous operation.
         The result needs to be accessed multiple times, even if only from a single thread
+
+1. use future.share() to generate a shared_future.
+2. 
+std::future<int> fut = std::async(compute);
+std::shared_future<int> shared_fut = std::move(fut);
+
 ****************************************************************************
 
 Use std::promise in C++ when you need a thread-safe way for one thread (the producer) to provide a value, signal completion, 
@@ -32,27 +73,6 @@ ensuring the consumer waits until the producer has finished and set the result
 
 ****************************************************************************
 
-
-#include <iostream>       // std::cout
-#include <future>         // std::async, std::future
-
-// a non-optimized way of checking for prime numbers:
-bool is_prime (int x) {
-  for (int i=2; i<x; ++i) if (x%i==0) return false;
-  return true;
-}
-
-int main ()
-{
-  // call function asynchronously:
-  std::future<bool> fut = std::async (is_prime,444444443); 
-
-  bool x = fut.get();     // retrieve return value
-
-  std::cout << "\n444444443 " << (x?"is":"is not") << " prime.\n";
-
-  return 0;
-}
 
 ****************************************************************************
 
