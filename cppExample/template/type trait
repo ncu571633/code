@@ -1,0 +1,14 @@
+compile-time, template-based tools used to query or modify the properties of types
+
+1. Type Predicates (Querying Value Properties)
+Unary Predicates (checks one type): std::is_integral<T>, std::is_pointer<T>, std::is_const<T>.
+Binary Predicates (compares two types): std::is_same<T, U>, std::is_convertible<T, U>
+
+2. Property Queries 
+std::rank<T>: Returns the number of dimensions of an array type.
+std::extent<T>: Returns the size of a specific dimension of an array type.
+
+3. Type Transformations (Modifying Types)
+std::remove_const<T> → std::remove_const_t<T>
+std::add_pointer<T> → std::add_pointer_t<T>
+std::decay<T> → std::decay_t<T>  removes both references and top-level const/volatile qualifiers from a type, while also converting arrays and functions into pointers
