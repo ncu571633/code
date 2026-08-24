@@ -12,3 +12,22 @@ std::extent<T>: Returns the size of a specific dimension of an array type.
 std::remove_const<T> → std::remove_const_t<T>
 std::add_pointer<T> → std::add_pointer_t<T>
 std::decay<T> → std::decay_t<T>  removes both references and top-level const/volatile qualifiers from a type, while also converting arrays and functions into pointers
+
+Questions:
+1. "How does std::enable_if work under the hood, and what C++ mechanism does it rely on?"
+It relies on SFINAE (Substitution Failure Is Not An Error). If a type trait evaluates to false, the structure template fails to substitute, 
+which cleanly removes that function overload from the compiler's candidate list instead of throwing a compilation error.
+
+2. "Implement a custom type trait like std::is_pointer or std::is_same."
+
+3. "What is std::decay, and why is it critical when writing a generic wrapper like a thread pool or messaging queue?"
+std::decay applies the same type conversions that happen when arguments are passed by value to a function. It strips away const, volatile, and references, and converts arrays and functions into pointers. 
+In trading systems, it is heavily used to store arguments in a decoupled, asynchronous queue (like a lock-free ring buffer) where you cannot risk capturing a reference to a temporary or local stack object
+
+4. "How would you write a compile-time trait to detect if a class has a specific member function or type alias?"
+template<typename T>
+concept HasSerialize = requires(T a) {
+    { a.serialize() } -> std::same_as<void>;
+};
+
+
