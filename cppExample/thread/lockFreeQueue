@@ -1,0 +1,29 @@
+#include <atomic>
+
+class AtomicCounter {
+    std::atomic<int64_t> count_{0};
+public:
+    void increment() { count_.fetch_add(1, std::memory_order_relaxed); }
+    int64_t get() const { return count_.load(std::memory_order_relaxed); }
+};
+
+// Lock-free SPSC (Single Producer, Single Consumer) queue
+// Common pattern in trading systems for passing data between threads
+template<typename T, size_t Size>
+class SPSCQueue {
+    std::array<T, Size> buffer_;
+    std::atomic<size_t> head_{0};
+    std::atomic<size_t> tail_{0};
+
+public:
+    bool push(const T& item) {
+        size_t head = head_.load(std::memory_order_relaxed);
+        size_t next = (head + 1) % Size;
+        if (next == tail_.load(std::memory_order_acquire))
+            return false;  // Queue full
+        buffer_[head] = item;
+        head_.store(next, std::memory_order_release);
+        return true;
+    }
+    // ... pop() similarly
+};
