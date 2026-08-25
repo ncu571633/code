@@ -69,4 +69,10 @@ concept HasSerialize = requires(T a) {
     { a.serialize() } -> std::same_as<void>;
 };
 
+template <typename T>
+concept HasSerializeWithArgs = requires(T t, std::string str) {
+    // Simulates passing a string into the function
+    { t.serialize(str) } -> std::same_as<void>; 
+};
+
 
