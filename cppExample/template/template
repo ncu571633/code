@@ -289,3 +289,10 @@ void foo(tt a)
 {
     cout << a << endl;
 }
+
+********************************************************************************************
+Compare to function pointer, why std function is slower
+Blocks Compiler Inlining: It hides the true type of the function until runtime, preventing the compiler from eliminating the function call overhead.
+Indirect CPU Jumps: It requires multiple pointer lookups (indirections) to find and execute the target code, disrupting CPU instruction pipelining.
+Hidden Heap Allocations: If you pass a large functor or a lambda that captures many variables, it will trigger a dynamic new allocation to store that state.
+Cache Misses: It breaks data locality because the underlying callable object and its state are often stored elsewhere in memory rather than locally on the stack.
