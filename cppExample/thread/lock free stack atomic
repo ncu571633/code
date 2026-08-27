@@ -22,6 +22,9 @@ Memory order: compiler/CPU may reorder the instructions.
 5. memory_order_seq_cst: The strongest ordering; all operations appear in a single global order, seen the same by all threads.
 memory_order_acq_rel	是memory_order_acquire和memory_order_release的合并，这条语句前后的语句都不能被reorder。
 
+acquire: Read (Load) only, Syncs with a release store; protects code after it.
+release: Write (Store) only, Syncs with an acquire load; protects code before it.
+
 #include <atomic>
  
 template<typename T>
